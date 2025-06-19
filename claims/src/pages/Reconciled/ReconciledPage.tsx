@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Visibility } from "@mui/icons-material";
 import { reconciledClaimsNTR,reconciledClaimsOther } from "./data"; 
-import { DynamicTabs } from '../../Components/reusable/tabs';
-import { DynamicFilterBar } from "../../Components/reusable/filter";
-import { DynamicClaimDialog } from "../../Components/reusable/dialog";
+import { DynamicTabs } from '../../components/reusable/tabs';
+import { DynamicFilterBar } from "../../components/reusable/filter";
+import { DynamicClaimDialog } from "../../components/reusable/dialog";
 import { Chip } from "@mui/material";
-import DynamicTable from "../../Components/reusable/dynamicTable";
+import DynamicTable from "../../components/reusable/dynamicTable";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 export default function ReconciledPage() {
