@@ -24,7 +24,7 @@ export function DynamicTabs({
       sx={{
         borderBottom: 1,
         borderColor: 'divider',
-        backgroundColor: '#f9fafb',
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
         borderRadius: '8px',
         px: 2,
         py: 1,

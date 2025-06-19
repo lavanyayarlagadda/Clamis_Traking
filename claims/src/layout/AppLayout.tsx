@@ -9,12 +9,18 @@ const AppLayout = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-    // Extract tab from pathname
   const activeTab = location.pathname.split('/')[1] || 'dashboard';
-  console.log("activeTab", activeTab)
+  console.log("activeTab", activeTab);
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box
+      sx={{
+        minHeight: '100vh',            // Tailwind: min-h-screen
+        display: 'flex',               // Tailwind: flex
+        width: '100%',                 // Tailwind: w-full
+        backgroundImage: 'linear-gradient(to bottom right, #eff6ff, #e0e7ff)', // from-blue-50 to-indigo-100
+      }}
+    >
       <CssBaseline />
 
       {/* HEADER */}
@@ -27,8 +33,7 @@ const AppLayout = () => {
       {/* SIDEBAR */}
       <Sidebar
         activeTab={activeTab}
-        // setActiveTab={setActiveTab}
-         setActiveTab={() => {}}
+        setActiveTab={() => {}}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         mobileOpen={mobileOpen}
@@ -42,14 +47,13 @@ const AppLayout = () => {
           flexGrow: 1,
           mt: 8,
           ml: `${isOpen ? 20 : 20}px`,
-          pr:2,
+          pr: 2,
           transition: 'margin-left 0.3s ease',
-          overflow:'hidden',
-          mb:2
+          overflow: 'hidden',
+          mb: 2,
         }}
       >
-        {/* <h1>{activeTab.toUpperCase()} Content</h1> */}
-         <Outlet />
+        <Outlet />
       </Box>
     </Box>
   );

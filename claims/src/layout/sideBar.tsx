@@ -40,18 +40,15 @@ interface SidebarProps {
 const drawerWidth = 240;
 
 const menuItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: Activity },
-  { id: 'reports', label: 'Reports & Analytics', icon: FileText },
-  { id: 'reconciled', label: 'Reconciled', icon: Check },
-  { id: 'unreconciled', label: 'Unreconciled', icon: Clock },
-  { id: 'workQueue', label: 'Work Queue', icon: Users },
+  { id: 'dashboard', label: 'Dashboard', icon: Activity, color: '#3b82f6' },        // Blue
+  { id: 'reports', label: 'Reports & Analytics', icon: FileText, color: '#22c55e' }, // Green
+  { id: 'reconciled', label: 'Reconciled Claims', icon: Check, color: '#6366f1' },  // Indigo
+  { id: 'unreconciled', label: 'Unreconciled Claims', icon: Clock, color: '#ef4444' }, // Red
+  { id: 'workQueue', label: 'Work Queue', icon: Users, color: '#a855f7' },          // Purple
 ];
 
-// const DrawerContent = ({
-//   isOpen,
-//   activeTab,
-//   setActiveTab,
-// }
+
+
 const DrawerContent = ({
   isOpen,
   activeTab,
@@ -60,59 +57,68 @@ const DrawerContent = ({
   const location = useLocation();
 
   return (
-    <List>
+    <List sx={{ px: 1 }}>
       {menuItems.map((item) => {
         const Icon = item.icon;
+        const selected = location.pathname === `/${item.id}`;
+        const baseColor = item.color;
+
         return (
           <ListItemButton
             key={item.id}
             component={Link}
             to={`/${item.id}`}
-            selected={location.pathname === `/${item.id}`}
+            onClick={() => setActiveTab(item.id)}
+            selected={selected}
             sx={{
               justifyContent: isOpen ? 'initial' : 'center',
               px: 2.5,
+              py: 1.2,
+              my: 0.5,
+              borderRadius: 2,
+              background: selected
+                ? 'linear-gradient(to right, #6366f1, #3b82f6)' // Active gradient
+                : 'transparent',
+              color: selected ? '#fff' : '#111827',
+              fontWeight: selected ? 600 : 500,
+              '&:hover': {
+                background: selected
+                  ? 'linear-gradient(to right, #6366f1, #3b82f6)'
+                  : '#f3f4f6',
+              },
             }}
           >
             <ListItemIcon
-              sx={{ minWidth: 0, mr: isOpen ? 2 : 'auto', justifyContent: 'center' }}
+              sx={{
+                minWidth: 0,
+                mr: isOpen ? 2 : 'auto',
+                justifyContent: 'center',
+                color: selected ? '#fff' : baseColor,
+              }}
             >
               <Icon size={20} />
             </ListItemIcon>
-            {isOpen && <ListItemText primary={item.label} />}
+            {isOpen && (
+             <ListItemText
+  primary={item.label}
+  primaryTypographyProps={{
+    fontWeight: selected ? 500 : 500,
+    fontSize: '0.95rem',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  }}
+/>
+
+            )}
           </ListItemButton>
         );
       })}
     </List>
   );
-}
-// : Pick<SidebarProps, 'isOpen' | 'activeTab' | 'setActiveTab'>) => (
-//   <>
-//     <List>
-//       {menuItems.map((item) => {
-//         const Icon = item.icon;
-//         return (
-//           <ListItemButton
-//             key={item.id}
-//             selected={activeTab === item.id}
-//             onClick={() => setActiveTab(item.id)}
-//             sx={{
-//               justifyContent: isOpen ? 'initial' : 'center',
-//               px: 2.5,
-//             }}
-//           >
-//             <ListItemIcon
-//               sx={{ minWidth: 0, mr: isOpen ? 2 : 'auto', justifyContent: 'center' }}
-//             >
-//               <Icon size={20} />
-//             </ListItemIcon>
-//             {isOpen && <ListItemText primary={item.label} />}
-//           </ListItemButton>
-//         );
-//       })}
-//     </List>
-//   </>
-// );
+};
+
+
 
 const Sidebar = ({
   activeTab,

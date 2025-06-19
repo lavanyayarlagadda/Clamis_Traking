@@ -4,11 +4,7 @@ import {
   Card,
   CardContent,
   CardHeader,
-  MenuItem,
-  Select,
   TextField,
-  InputLabel,
-  FormControl,
   Typography,
   Stack,
 } from "@mui/material";
@@ -30,8 +26,8 @@ export function DynamicFilterBar({
       sx={{
         mb: 2,
         borderRadius: 2,
-        boxShadow: 3,
-        backgroundColor: "#fafafa",
+        boxShadow: 1,
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
       }}
     >
       <CardHeader

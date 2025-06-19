@@ -46,7 +46,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
       sx={{
         width: "100%",
         p: 3,
-        backgroundColor: "#f9fbfc", 
+        backgroundColor: "rgba(255, 255, 255, 0.8)", 
         borderRadius: 2,
         boxShadow: 3,
       }}
