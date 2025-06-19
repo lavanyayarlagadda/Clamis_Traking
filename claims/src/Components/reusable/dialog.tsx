@@ -20,7 +20,7 @@ type DynamicClaimDialogProps = {
   open: boolean;
   onClose: () => void;
   title: string;
-  data: {
+  data?: {
     claimInfo?: Record<string, any>;
     financialDetails?: Record<string, any>;
     timeline?: {
