@@ -1,3 +1,5 @@
+import { Box } from "@mui/material";
+import FiltersPane from "./Filters";
 import React from "react";
 
 interface WorkQueueProps {
@@ -7,7 +9,13 @@ interface WorkQueueProps {
 const WorkQueue: React.FC<WorkQueueProps> = ({}) => {
   return (
     <>
-      <h1>WorkQuueu component</h1>
+    <Box sx={{border:"2px solid red"}}>
+        <FiltersPane />
+        <h3> metrics cards</h3> 
+        <h3>Kanban table</h3>
+    </Box>
     </>
   );
 };
+
+export default WorkQueue;

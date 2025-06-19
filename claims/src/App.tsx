@@ -4,7 +4,7 @@ import DashboardPage from './pages/Dashboard/DashboardPage';
 import ReportsPage from './pages/Reports/ReportsPAge';
 import ReconciledPage from './pages/Reconciled/ReconciledPage';
 import UnReconciledPage from './pages/Unreconciled/UnreconciledPAge';
-import WorkQueuePage from './pages/WorkQueue/WorkQueuePage';
+import WorkQueuePage from './pages/workQueue';
 const App = () => (
     <Routes>
       <Route path="/" element={<AppLayout />}>

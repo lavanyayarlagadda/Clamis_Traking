@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Visibility } from "@mui/icons-material";
 import { reconciledClaims } from "./data"; 
-import { DynamicTabs } from '../../reusable/tabs';
-import { DynamicFilterBar } from "../../reusable/filter";
-import { DynamicDialog } from "../../reusable/dialog";
+import { DynamicTabs } from '../../Components/reusable/tabs';
+import { DynamicFilterBar } from "../../Components/reusable/filter";
+import { DynamicDialog } from "../../Components/reusable/dialog";
 import DynamicTable from "../../reusable/dynamicTable";
 
 export default function ReconciledPage() {
