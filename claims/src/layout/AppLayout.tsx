@@ -41,10 +41,11 @@ const AppLayout = () => {
         sx={{
           flexGrow: 1,
           mt: 8,
-          ml: `${isOpen ? 20 : 60}px`,
+          ml: `${isOpen ? 20 : 20}px`,
           pr:2,
           transition: 'margin-left 0.3s ease',
-          overflow:'hidden'
+          overflow:'hidden',
+          mb:2
         }}
       >
         {/* <h1>{activeTab.toUpperCase()} Content</h1> */}
