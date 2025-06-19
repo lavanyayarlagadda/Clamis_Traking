@@ -13,6 +13,7 @@ import {
   Paper,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { SvgIconComponent } from '@mui/icons-material';
 
 type ColumnType = {
   key: string;
@@ -32,6 +33,9 @@ type DynamicTableProps = {
   columns: ColumnType[];
   data: any[];
   actions?: ActionType[];
+  chipColor: 'success' | 'error' | 'warning' | 'info' | 'default';
+  Icon: SvgIconComponent;
+   iconColor?: 'inherit' | 'disabled' | 'primary' | 'secondary' | 'action' | 'error' | 'info' | 'success' | 'warning';
 };
 
 const DynamicTable: React.FC<DynamicTableProps> = ({
@@ -40,6 +44,9 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
   columns,
   data,
   actions = [],
+  chipColor,
+  Icon ,
+   iconColor = chipColor === 'default' ? 'action' : chipColor,
 }) => {
   return (
     <Box
@@ -58,16 +65,17 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
           display: "flex",
           // justifyContent: "space-between",
           alignItems: "center",
-          gap:2
+          gap: 2
         }}
       >
         <Box display="flex" alignItems="center" gap={1}>
-          <CheckCircleIcon color="success" fontSize="small" />
+          {/* <CheckCircleIcon color="success" fontSize="small" /> */}
+          <Icon color={iconColor} fontSize="small" />
           <Typography variant="h6" fontWeight="bold">
             {title}
           </Typography>
         </Box>
-        <Chip label={countLabel} color="success" size="small" />
+        <Chip label={countLabel} color={chipColor} size="small" />
       </Box>
 
       {/* Table */}

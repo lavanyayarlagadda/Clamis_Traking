@@ -77,7 +77,7 @@ const DrawerContent = ({
               my: 0.5,
               borderRadius: 2,
               background: selected
-                ? 'linear-gradient(to right, #6366f1, #3b82f6)' // Active gradient
+                ? 'linear-gradient(to right, #6366f1, #3b82f6)' 
                 : 'transparent',
               color: selected ? '#fff' : '#111827',
               fontWeight: selected ? 600 : 500,

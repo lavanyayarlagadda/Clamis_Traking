@@ -6,6 +6,7 @@ import { DynamicFilterBar } from "../../components/reusable/filter";
 import { DynamicClaimDialog } from "../../components/reusable/dialog";
 import { Chip } from "@mui/material";
 import DynamicTable from "../../components/reusable/dynamicTable";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 export default function ReconciledPage() {
   const [activeTab, setActiveTab] = useState("ntr");
@@ -107,6 +108,7 @@ const currentClaims =
     <>
       <div style={{ marginTop: "20px" }}>
       <DynamicFilterBar
+      title={"Filter Reconciled Claims"}
         filters={[
           {
             type: "select",
@@ -161,6 +163,9 @@ const currentClaims =
       },
     },
   ]}
+ chipColor={"success"}
+        Icon={CheckCircleIcon}
+        iconColor={"success"}
 />
 
 

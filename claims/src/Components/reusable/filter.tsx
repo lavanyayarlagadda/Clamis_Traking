@@ -4,22 +4,21 @@ import {
   Card,
   CardContent,
   CardHeader,
+  MenuItem,
+  Select,
   TextField,
-  Typography,
-  Stack,
 } from "@mui/material";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import TuneIcon from "@mui/icons-material/Tune"; // For header icon
 
 export function DynamicFilterBar({
   filters,
   onApply,
   onExport,
+  title
 }: {
   filters: any[];
   onApply: () => void;
   onExport: () => void;
+  title: string;
 }) {
   return (
     <Card
@@ -29,26 +28,9 @@ export function DynamicFilterBar({
         boxShadow: 1,
         backgroundColor: "rgba(255, 255, 255, 0.8)",
       }}
-    >
-      <CardHeader
-        title={
-          <Box display="flex" alignItems="center" gap={1}>
-            <TuneIcon color="primary" />
-            <Typography variant="h6" fontWeight="bold">
-              Filter Reconciled Claims
-            </Typography>
-          </Box>
-        }
-        sx={{ pb: 0 }}
-      />
+    >      <CardHeader title={title} />
       <CardContent>
-        <Box
-          display="flex"
-          flexWrap="wrap"
-          gap={2}
-          alignItems="center"
-          justifyContent="flex-start"
-        >
+        <Box display="flex" flexWrap="wrap" gap={2}>
           {filters.map((filter, idx) => {
             // if (filter.type === "select") {
             //   return (
@@ -77,30 +59,18 @@ export function DynamicFilterBar({
                   value={filter.value}
                   onChange={(e) => filter.onChange(e.target.value)}
                   InputLabelProps={{ shrink: true }}
-                  size="small"
                   sx={{ minWidth: 200 }}
                 />
               );
             }
             return null;
           })}
-
-          <Stack direction="row" spacing={1} mt={{ xs: 2, sm: 0 }}>
-            <Button
-              variant="contained"
-              onClick={onApply}
-              startIcon={<FilterAltIcon />}
-            >
-              Apply
-            </Button>
-            <Button
-              variant="outlined"
-              onClick={onExport}
-              startIcon={<FileDownloadIcon />}
-            >
-              Export
-            </Button>
-          </Stack>
+          <Button variant="contained" onClick={onApply}>
+            Apply
+          </Button>
+          <Button variant="outlined" onClick={onExport}>
+            Export
+          </Button>
         </Box>
       </CardContent>
     </Card>
