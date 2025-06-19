@@ -42,7 +42,7 @@ const AppLayout = () => {
           flexGrow: 1,
           mt: 8,
           ml: `${isOpen ? 20 : 60}px`,
-          p: 3,
+          pr:2,
           transition: 'margin-left 0.3s ease',
           overflow:'hidden'
         }}

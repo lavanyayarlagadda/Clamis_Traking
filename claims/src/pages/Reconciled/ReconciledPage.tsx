@@ -3,8 +3,8 @@ import { Visibility } from "@mui/icons-material";
 import { reconciledClaims } from "./data"; 
 import { DynamicTabs } from '../../reusable/tabs';
 import { DynamicFilterBar } from "../../reusable/filter";
-import { DynamicTable } from "../../reusable/dynamicTable";
 import { DynamicDialog } from "../../reusable/dialog";
+import DynamicTable from "../../reusable/dynamicTable";
 
 export default function ReconciledPage() {
   const [activeTab, setActiveTab] = useState("ntr");
@@ -72,20 +72,22 @@ export default function ReconciledPage() {
         onExport={() => {}}
       />
 
-      <DynamicTable
-        columns={columns}
-        data={reconciledClaims}
-        actions={[
-          {
-            label: "View",
-            icon: <Visibility fontSize="small" />,
+<DynamicTable
+      title="Reconciled Claims - NTR Vaidyaseva"
+      countLabel={`${reconciledClaims.length} Claims`}
+      columns={columns}
+      data={reconciledClaims}
+      actions={[
+        {
+          label: "View Timeline",
+         icon: <Visibility fontSize="small" />,
             onClick: (row) => {
               setDialogData(row);
               setDialogOpen(true);
             },
-          },
-        ]}
-      />
+          },        
+      ]}
+    />
 
       <DynamicDialog
         open={dialogOpen}
