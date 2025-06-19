@@ -26,6 +26,7 @@ import {
   Check,
   HeartPulse,
 } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
   activeTab: string;
@@ -43,23 +44,31 @@ const menuItems = [
   { id: 'reports', label: 'Reports & Analytics', icon: FileText },
   { id: 'reconciled', label: 'Reconciled', icon: Check },
   { id: 'unreconciled', label: 'Unreconciled', icon: Clock },
-  { id: 'work-queue', label: 'Work Queue', icon: Users },
+  { id: 'workQueue', label: 'Work Queue', icon: Users },
 ];
 
+// const DrawerContent = ({
+//   isOpen,
+//   activeTab,
+//   setActiveTab,
+// }
 const DrawerContent = ({
   isOpen,
   activeTab,
   setActiveTab,
-}: Pick<SidebarProps, 'isOpen' | 'activeTab' | 'setActiveTab'>) => (
-  <>
+}: Pick<SidebarProps, 'isOpen' | 'activeTab' | 'setActiveTab'>) => {
+  const location = useLocation();
+
+  return (
     <List>
       {menuItems.map((item) => {
         const Icon = item.icon;
         return (
           <ListItemButton
             key={item.id}
-            selected={activeTab === item.id}
-            onClick={() => setActiveTab(item.id)}
+            component={Link}
+            to={`/${item.id}`}
+            selected={location.pathname === `/${item.id}`}
             sx={{
               justifyContent: isOpen ? 'initial' : 'center',
               px: 2.5,
@@ -75,8 +84,35 @@ const DrawerContent = ({
         );
       })}
     </List>
-  </>
-);
+  );
+}
+// : Pick<SidebarProps, 'isOpen' | 'activeTab' | 'setActiveTab'>) => (
+//   <>
+//     <List>
+//       {menuItems.map((item) => {
+//         const Icon = item.icon;
+//         return (
+//           <ListItemButton
+//             key={item.id}
+//             selected={activeTab === item.id}
+//             onClick={() => setActiveTab(item.id)}
+//             sx={{
+//               justifyContent: isOpen ? 'initial' : 'center',
+//               px: 2.5,
+//             }}
+//           >
+//             <ListItemIcon
+//               sx={{ minWidth: 0, mr: isOpen ? 2 : 'auto', justifyContent: 'center' }}
+//             >
+//               <Icon size={20} />
+//             </ListItemIcon>
+//             {isOpen && <ListItemText primary={item.label} />}
+//           </ListItemButton>
+//         );
+//       })}
+//     </List>
+//   </>
+// );
 
 const Sidebar = ({
   activeTab,

@@ -1,49 +1,23 @@
-import React, { useState } from 'react';
-import { Box, CssBaseline } from '@mui/material';
-import Header from './layout/header';
-import Sidebar from './layout/sideBar';
+import {Routes, Route, Navigate } from 'react-router-dom';
+import AppLayout from './layout/AppLayout';
+import DashboardPage from './pages/Dashboard/DashboardPage';
+import ReportsPage from './pages/Reports/ReportsPAge';
+import ReconciledPage from './pages/Reconciled/ReconciledPage';
+import UnReconciledPage from './pages/Unreconciled/UnreconciledPAge';
+import WorkQueuePage from './pages/WorkQueue/WorkQueuePage';
+const App = () => (
+    <Routes>
+      <Route path="/" element={<AppLayout />}>
+        <Route index element={<Navigate to="/dashboard" replace />} />
+        <Route path="dashboard" element={<DashboardPage />} />
+        <Route path="reports" element={<ReportsPage />} />
+        <Route path="reconciled" element={<ReconciledPage />} />
+        <Route path="unreconciled" element={<UnReconciledPage />} />
+        <Route path="workQueue" element={<WorkQueuePage />} />
+      </Route>
+    </Routes>
 
-const AppLayout = () => {
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const [isOpen, setIsOpen] = useState(true);
-  const [mobileOpen, setMobileOpen] = useState(false);
+);
 
-  return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
+export default App;
 
-      {/* HEADER */}
-      <Header
-        isSidebarOpen={isOpen}
-        currentTab={activeTab}
-        onSidebarToggle={() => setMobileOpen(true)}
-      />
-
-      {/* SIDEBAR */}
-      <Sidebar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        mobileOpen={mobileOpen}
-        handleMobileToggle={() => setMobileOpen(false)}
-      />
-
-      {/* MAIN CONTENT */}
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          mt: 8,
-          ml: `${isOpen ? 240 : 60}px`,
-          p: 3,
-          transition: 'margin-left 0.3s ease',
-        }}
-      >
-        <h1>{activeTab.toUpperCase()} Content</h1>
-      </Box>
-    </Box>
-  );
-};
-
-export default AppLayout;

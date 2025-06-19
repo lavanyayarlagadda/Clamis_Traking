@@ -33,7 +33,7 @@ const Header: React.FC<HeaderProps> = ({ isSidebarOpen, currentTab, onSidebarTog
         return 'Reconciled Claims';
       case 'unreconciled':
         return 'Unreconciled Claims';
-      case 'work-queue':
+      case 'workQueue':
         return 'Work Queue';
       default:
         return 'Healthcare Insurance Management';
