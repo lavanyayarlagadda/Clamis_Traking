@@ -36,3 +36,32 @@ export const unreconciledClaimsData = [
         status: "Exception"
     },
 ];
+
+
+export const unreconciledClaimsOther = [
+    {
+        claimId: "CLM009",
+        ihxRefId: "IHX2024009",
+        hospitalName: "Yashoda Hospitals",
+        diagnosis: "Cardiovascular Surgery",
+        claimedAmount: 150000,
+        approvedAmount: 135000,
+        differenceAmout: 15000,
+        exceptionType: "Amount Mismatch",
+        reason: "Claimed amount exceeds approved limit",
+        status: "Exception"
+    },
+    {
+        claimId: "CLM010",
+        ihxRefId: "IHX2024010",
+        hospitalName: "Rainbow Hospitals",
+        diagnosis: "Orthopedic Surgery",
+        claimedAmount: 120000,
+        approvedAmount: 120000,
+        differenceAmout: 0,
+        exceptionType: "Documents",
+        reason: "Discharge Summary not provided",
+        status: "Exception"
+    },
+    
+];

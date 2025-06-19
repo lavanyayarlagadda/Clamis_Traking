@@ -1,22 +1,37 @@
 import { useState } from "react";
 import { Visibility } from "@mui/icons-material";
-import { unreconciledClaimsData } from "./data";
+import { unreconciledClaimsData, unreconciledClaimsOther } from "./data";
 import { DynamicTabs } from '../../Components/reusable/tabs';
 import { DynamicFilterBar } from "../../Components/reusable/filter";
+import ReusableDialog from "../../Components/reusable/ReusableDialog";
 
 
-import { Chip } from "@mui/material";
+import { Chip, Typography, Box, Card, CardContent, Grid } from "@mui/material";
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 import DynamicTable from "../../Components/reusable/dynamicTable";
 import { DynamicClaimDialog } from "../../Components/reusable/dialog";
+import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
+
+interface ClaimRow {
+  approvedAmount: number;
+  claimId: string;
+  claimedAmount: number;
+  diagnosis: string;
+  differenceAmout: number;
+  exceptionType: string;
+  hospitalName: string;
+  ihxRefId: string;
+  reason: string;
+  status: string;
+}
 
 
 export default function UnReconciledPage() {
   const [activeTab, setActiveTab] = useState("ntr");
-  const [dialogData, setDialogData] = useState(null);
+  const [dialogData, setDialogData] = useState<ClaimRow | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const statusColorMap: Record<  "Rejected" |"Exception", "success" | "warning" | "error"> = {
+  const statusColorMap: Record<"Rejected" | "Exception", "success" | "warning" | "error"> = {
     Exception: "error",
     Rejected: "warning",
   };
@@ -24,8 +39,8 @@ export default function UnReconciledPage() {
   const columns = [
     { key: "claimId", label: "Claim ID" },
     { key: "ihxRefId", label: "IHX Ref ID" },
-    {key:"hospitalName", label:"Hospital Name"},
-    {key:"diagnosis", label:"Diagnosis"},
+    { key: "hospitalName", label: "Hospital Name" },
+    { key: "diagnosis", label: "Diagnosis" },
     {
       key: "claimedAmount",
       label: "Claimed Amount",
@@ -35,7 +50,7 @@ export default function UnReconciledPage() {
       key: "approvedAmount",
       label: "Approved Amount",
       render: (r: any) => `₹${r.approvedAmount.toLocaleString()}`,
-    },{
+    }, {
       key: "differenceAmout",
       label: "Difference Amount",
       render: (r: any) => `₹${r.differenceAmout.toLocaleString()}`,
@@ -52,9 +67,10 @@ export default function UnReconciledPage() {
       },
     },
   ];
+  console.log("dialogData", dialogData)
 
-
-
+const currentClaims =
+  activeTab === "ntr" ? unreconciledClaimsData : unreconciledClaimsOther;
   return (
     <>
       <div style={{ marginTop: "20px" }}>
@@ -98,17 +114,28 @@ export default function UnReconciledPage() {
 
 
       <DynamicTable
-        title="Unreconciled Claims - NTR Vaidyaseva"
-        countLabel={`${unreconciledClaimsData.length} Claims`}
+        // title="Unreconciled Claims - NTR Vaidyaseva"
+        title={`Unreconciled Claims - ${activeTab === "ntr" ? "NTR Vaidyaseva" : "Other Schemes"
+          }`}
+        countLabel={`${currentClaims.length} Claims`}
         columns={columns}
-        data={unreconciledClaimsData}
+        data={currentClaims}
         chipColor={"error"}
         iconColor={"error"}
         Icon={ReportProblemOutlinedIcon}
         actions={[
           {
-            label: "View Timeline",
+            label: "View",
             icon: <Visibility fontSize="small" />,
+            onClick: (row) => {
+              setDialogData(row);
+              setDialogOpen(true);
+            },
+          },
+          {
+            label: "Start Manual Reconcilation",
+
+            icon: <PlayArrowOutlinedIcon fontSize="small" />,
             onClick: (row) => {
               setDialogData(row);
               setDialogOpen(true);
@@ -117,12 +144,31 @@ export default function UnReconciledPage() {
         ]}
       />
 
-      <DynamicClaimDialog
+      <ReusableDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        title="Claim Timeline"
-        // data={dialogData}
-      />
+        title={`Claim Details - ${dialogData?.claimId ?? ''}`}
+
+      >
+
+        <Card p-2>
+          <Typography style={{ padding: "10px", fontWeight: "600" }}>Basic Information</Typography>
+          <div style={{ padding: "10px" }}>
+            <Typography variant="body1" gutterBottom>
+              <strong>Claim ID:</strong> {dialogData?.claimId}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              <strong>Status:</strong> {dialogData?.status}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              <strong>Hospital:</strong> {dialogData?.hospitalName}
+            </Typography>
+          </div>
+        </Card>
+
+      </ReusableDialog>
+
+
     </>
   );
 }
