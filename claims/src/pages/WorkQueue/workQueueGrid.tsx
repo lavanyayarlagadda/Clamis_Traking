@@ -1,9 +1,10 @@
 // components/WorkQueueTableGrid.tsx
 
 import React from "react";
-import DynamicTable from "../../components/reusable/dynamicTable";
+
 import { Chip, Avatar, Typography, Stack } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
+import DynamicTable from "../../components/reusable/dynamicTable";
 
 // Mock task data
 const taskData = [

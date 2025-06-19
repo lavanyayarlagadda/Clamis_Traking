@@ -1,8 +1,9 @@
 import { Box } from "@mui/material";
 import FiltersPane from "./Filters";
-import MetricsCards from "./metricsCards";
+
 import WorkQueueTableGrid from "./workQueueGrid";
 import React from "react";
+import MetricsCards from "./MetricsCards";
 
 interface WorkQueueProps {
   name?: string;

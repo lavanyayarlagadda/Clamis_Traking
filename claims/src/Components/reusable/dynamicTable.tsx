@@ -33,8 +33,8 @@ type DynamicTableProps = {
   columns: ColumnType[];
   data: any[];
   actions?: ActionType[];
-  chipColor: 'success' | 'error' | 'warning' | 'info' | 'default';
-  Icon: SvgIconComponent;
+  chipColor?: 'success' | 'error' | 'warning' | 'info' | 'default';
+  Icon?: SvgIconComponent;
    iconColor?: 'inherit' | 'disabled' | 'primary' | 'secondary' | 'action' | 'error' | 'info' | 'success' | 'warning';
 };
 
@@ -70,7 +70,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
       >
         <Box display="flex" alignItems="center" gap={1}>
           {/* <CheckCircleIcon color="success" fontSize="small" /> */}
-          <Icon color={iconColor} fontSize="small" />
+          {iconColor  && Icon &&
+          <Icon color={iconColor} fontSize="small" />}
           <Typography variant="h6" fontWeight="bold">
             {title}
           </Typography>
