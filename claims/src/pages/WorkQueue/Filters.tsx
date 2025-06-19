@@ -18,7 +18,7 @@ const FiltersPane: React.FC = () => {
   };
 
   return (
-    <Paper elevation={2} style={{ padding: '16px', marginBottom: '16px' }}>
+    <Paper elevation={2} style={{ padding: '16px', marginBottom: '16px', marginTop:"1rem" }}>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, sm: 3 }}>
           <Dropdown

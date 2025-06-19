@@ -1,5 +1,7 @@
 import { Box } from "@mui/material";
 import FiltersPane from "./Filters";
+import MetricsCards from "./metricsCards";
+import WorkQueueTableGrid from "./workQueueGrid";
 import React from "react";
 
 interface WorkQueueProps {
@@ -9,10 +11,10 @@ interface WorkQueueProps {
 const WorkQueue: React.FC<WorkQueueProps> = ({}) => {
   return (
     <>
-    <Box sx={{border:"2px solid red"}}>
+    <Box >
         <FiltersPane />
-        <h3> metrics cards</h3> 
-        <h3>Kanban table</h3>
+        <MetricsCards/>
+        <WorkQueueTableGrid/>
     </Box>
     </>
   );
