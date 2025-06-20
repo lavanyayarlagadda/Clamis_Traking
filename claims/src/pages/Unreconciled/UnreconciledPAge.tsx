@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { FilterList } from "@mui/icons-material";
 import { unreconciledClaimsData, unreconciledClaimsOther } from "./data";
-import { DynamicTabs } from '../../components/reusable/tabs';
+import { DynamicTabs } from '../../Components/reusable/tabs';
 import { Chip, Typography, Box, Card, CardContent, Grid, Tooltip, Button } from "@mui/material";
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
-import DynamicTable from "../../components/reusable/dynamicTable";
-import { DynamicClaimDialog } from "../../components/reusable/dialog";
+import DynamicTable from "../../Components/reusable/dynamicTable";
+import { DynamicClaimDialog } from "../../Components/reusable/dialog";
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
-import { FilterDrawer } from "../../components/reusable/filter";
+import { FilterDrawer } from "../../Components/reusable/filter";
 
 interface ClaimRow {
   claimId: string;

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Filter, FilterList, Visibility } from "@mui/icons-material";
 import { reconciledClaimsNTR, reconciledClaimsOther } from "./data";
-import { DynamicTabs } from '../../components/reusable/tabs';
-import { DynamicClaimDialog } from "../../components/reusable/dialog";
+import { DynamicTabs } from '../../Components/reusable/tabs';
+import { DynamicClaimDialog } from "../../Components/reusable/dialog";
 import { Box, Chip } from "@mui/material";
-import DynamicTable from "../../components/reusable/dynamicTable";
+import DynamicTable from "../../Components/reusable/dynamicTable";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { FilterDrawer } from "../../components/reusable/filter";
+import { FilterDrawer } from "../../Components/reusable/filter";
 
 export default function ReconciledPage() {
   const [activeTab, setActiveTab] = useState("ntr");
