@@ -20,9 +20,11 @@ type DynamicClaimDialogProps = {
   open: boolean;
   onClose: () => void;
   title: string;
+  pageType: "reconciliation" | "unreconciliation";
   data?: {
     claimInfo?: Record<string, any>;
     financialDetails?: Record<string, any>;
+    exceptionDetails?: Record<string, any>;
     timeline?: {
       label: string;
       description: string;
@@ -31,9 +33,9 @@ type DynamicClaimDialogProps = {
   };
 };
 
-export const DynamicClaimDialog = ({ open, onClose, title, data }: DynamicClaimDialogProps) => {
+export const DynamicClaimDialog = ({ open, onClose, title, data, pageType }: DynamicClaimDialogProps) => {
   if (!data) return null;
-const timeline = data.timeline ?? [];
+  const timeline = data.timeline ?? [];
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle
@@ -88,7 +90,24 @@ const timeline = data.timeline ?? [];
                     </Typography>
                     <Divider sx={{ mb: 2 }} />
                     {Object.entries(data.financialDetails).map(([label, value]) => (
-                      <Info key={label} label={label} value={value} color={label === "Approved Amount" ? "#4caf50" : "#1e88e5"} />
+                      <Info key={label} label={label} value={value} color={label === "Approved Amount" ? "#4caf50" : label === "Difference" ? "#dc295e" : "#1e88e5"} />
+                    ))}
+                  </Paper>
+                </Grid>
+              )}
+
+              {pageType === "unreconciliation" && data.exceptionDetails && (
+                <Grid size={{ xs: 12 }}>
+                  <Paper
+                    variant="outlined"
+                    sx={{ p: 3, borderRadius: 2, borderColor: "#d0d7de", height: "100%" }}
+                  >
+                    <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                      Exception Details
+                    </Typography>
+                    <Divider sx={{ mb: 2 }} />
+                    {Object.entries(data.exceptionDetails).map(([label, value]) => (
+                      <Info key={label} label={label} value={value} color={label === "Exception Type" ? "#dc295e" : "#1e88e5"} />
                     ))}
                   </Paper>
                 </Grid>
@@ -129,7 +148,11 @@ const timeline = data.timeline ?? [];
                       <ListItem alignItems="flex-start" disableGutters sx={{ position: "relative", zIndex: 1 }}>
                         <ListItemIcon sx={{ minWidth: 40 }}>
                           <FiberManualRecordIcon
-                            sx={{ fontSize: 14, color: "#4caf50", zIndex: 1 }}
+                            sx={{
+                              fontSize: 14,
+                              color: "#4caf50",
+                              zIndex: 1
+                            }}
                           />
                         </ListItemIcon>
                         <ListItemText

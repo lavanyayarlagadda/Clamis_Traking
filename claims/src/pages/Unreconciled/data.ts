@@ -11,7 +11,8 @@ export const unreconciledClaimsData = [
         chequeNumber: "CHQ10090021",
         exceptionType: "Amount Mismatch",
         reason: "Claimed amount exceeds approved limit",
-        status: "Exception"
+        status: "Exception",
+        scheme:"NTR Vaidyaseva"
     },
     {
         claimId: "CLM010",
@@ -25,7 +26,8 @@ export const unreconciledClaimsData = [
         chequeNumber: "CHQ10090020",
         exceptionType: "Documents",
         reason: "Discharge Summary not provided",
-        status: "Exception"
+        status: "Exception",
+        scheme:"NTR Vaidyaseva"
     },
     {
         claimId: "CLM011",
@@ -39,7 +41,8 @@ export const unreconciledClaimsData = [
         chequeNumber: "CHQ10090030",
         exceptionType: "Manual Review Requied",
         reason: "Policy Verification required",
-        status: "Exception"
+        status: "Exception",
+        scheme:"NTR Vaidyaseva"
     },
 ];
 
@@ -57,7 +60,8 @@ export const unreconciledClaimsOther = [
         chequeNumber: "CHQ10090000",
         exceptionType: "Amount Mismatch",
         reason: "Claimed amount exceeds approved limit",
-        status: "Exception"
+        status: "Exception",
+        scheme:"Aarogyasri"
     },
     {
         claimId: "CLM010",
@@ -71,7 +75,8 @@ export const unreconciledClaimsOther = [
         chequeNumber: "CHQ10098000",
         exceptionType: "Documents",
         reason: "Discharge Summary not provided",
-        status: "Exception"
+        status: "Exception",
+        scheme:"CGHS"
     },
 
 ];

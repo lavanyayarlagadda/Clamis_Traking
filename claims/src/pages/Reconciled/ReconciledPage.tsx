@@ -221,6 +221,7 @@ export default function ReconciledPage() {
       {dummyDialogData && (
         <DynamicClaimDialog
           open={dialogOpen}
+          pageType="reconciliation"
           onClose={() => {
             setDialogOpen(false);
             // setdummyDialogData(null); // Optional: reset dialog data
