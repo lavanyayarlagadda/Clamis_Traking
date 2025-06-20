@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { FilterList } from "@mui/icons-material";
 import { unreconciledClaimsData, unreconciledClaimsOther } from "./data";
-import { DynamicTabs } from '../../Components/reusable/tabs';
-// import { DynamicFilterBar } from "../../Components/reusable/filter";
-import ReusableDialog from "../../Components/reusable/ReusableDialog";
+import { DynamicTabs } from '../../components/reusable/tabs';
+// import { DynamicFilterBar } from "../../components/reusable/filter";
+import ReusableDialog from "../../components/reusable/ReusableDialog";
 
 
 
 import { Chip, Typography, Box, Card, CardContent, Grid, Tooltip, Button } from "@mui/material";
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
-import DynamicTable from "../../Components/reusable/dynamicTable";
-import { DynamicClaimDialog } from "../../Components/reusable/dialog";
+import DynamicTable from "../../components/reusable/dynamicTable";
+import { DynamicClaimDialog } from "../../components/reusable/dialog";
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
-import { FilterDrawer } from "../../Components/reusable/filter";
+import { FilterDrawer } from "../../components/reusable/filter";
 
 interface ClaimRow {
   claimId: string;
@@ -52,9 +52,10 @@ export default function UnReconciledPage() {
     reconciliationStatus: null,
   });
 
-  const statusColorMap: Record<"Rejected" | "Exception", "success" | "warning" | "error"> = {
-    Exception: "error",
-    Rejected: "warning",
+const statusColorMap: Record<"Settled" | "Exception" | "Rejected", string> = {
+  Settled: "#48D56B",   // green
+   Exception: "#fb923c",
+   Rejected: "#EF4444",  // red
   };
 
   const columns = [
@@ -121,14 +122,24 @@ export default function UnReconciledPage() {
       }
     },
 
-    {
-      key: "status",
-      label: "Status",
-      render: (row: any) => {
-        const color = statusColorMap[row.status as keyof typeof statusColorMap] || "default";
-        return <Chip label={row.status} color={color} size="small" />;
-      },
-    },
+       {
+  key: "status",
+  label: "Status",
+  render: (row: any) => {
+    const backgroundColor = statusColorMap[row.status as keyof typeof statusColorMap] || "#E5E7EB"; // default gray
+    return (
+      <Chip
+        label={row.status}
+        size="small"
+        sx={{
+          backgroundColor,
+          color: "#fff",
+          fontWeight: 500,
+        }}
+      />
+    );
+  },
+},
   ];
   console.log("dialogData", dialogData)
 
@@ -142,10 +153,11 @@ export default function UnReconciledPage() {
           justifyContent: "space-between",
           alignItems: "center",
           flexWrap: "wrap",
-          mb: 1,
+          mb: 2,
+          
         }}
       >
-
+        <Box sx={{            mt:1}}>
         <DynamicTabs
           tabs={[
             { label: "NTR Vaidyaseva", value: "ntr" },
@@ -154,6 +166,7 @@ export default function UnReconciledPage() {
           currentValue={activeTab}
           onChange={setActiveTab}
         />
+        </Box>
 
         <Box
           sx={{
@@ -171,7 +184,7 @@ export default function UnReconciledPage() {
             '&:hover': {
               backgroundColor: "#BAE6FD",
             },
-            mt: 0
+
           }}
           onClick={() => setFilterOpen(true)}
         >
@@ -186,8 +199,8 @@ export default function UnReconciledPage() {
         countLabel={`${currentClaims.length} Claims`}
         columns={columns}
         data={currentClaims}
-        chipColor={"error"}
-        iconColor={"error"}
+        chipColor={"#EF4444"}
+        iconColor={"#EF4444"}
         Icon={ReportProblemOutlinedIcon}
         actions={[
           {

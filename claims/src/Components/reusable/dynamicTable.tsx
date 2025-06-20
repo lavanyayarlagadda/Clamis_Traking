@@ -38,9 +38,10 @@ type DynamicTableProps = {
   columns: ColumnType[];
   data: any[];
   actions?: ActionType[];
-  chipColor?: 'success' | 'error' | 'warning' | 'info' | 'default';
+ chipColor?: string;
+
   Icon?: SvgIconComponent;
-  iconColor?: 'inherit' | 'disabled' | 'primary' | 'secondary' | 'action' | 'error' | 'info' | 'success' | 'warning';
+  iconColor?: string;
 };
 
 const DynamicTable: React.FC<DynamicTableProps> = ({
@@ -51,7 +52,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
   actions = [],
   chipColor,
   Icon,
-  iconColor = chipColor === 'default' ? 'action' : chipColor,
+  iconColor =  chipColor,
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -113,13 +114,22 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
         }}
       >
         {/* LEFT SIDE: Icon, Title, Chip */}
-        <Box display="flex" alignItems="center" gap={1}>
-          {iconColor && Icon && <Icon color={iconColor} fontSize="small" />}
-          <Typography variant="h6" fontWeight="bold">
-            {title}
-          </Typography>
-          <Chip label={countLabel} color={chipColor} size="small" />
-        </Box>
+     <Box display="flex" alignItems="center" gap={1}>
+  {iconColor && Icon && <Icon sx={{ color: iconColor }} fontSize="small" />}
+  <Typography variant="h6" fontWeight="bold">
+    {title}
+  </Typography>
+ <Chip
+  label={countLabel}
+  size="small"
+  sx={{
+    backgroundColor: chipColor, // e.g., '#48D56B'
+    color: '#fff',               // white text for better contrast
+    fontWeight: 500,
+  }}
+/>
+
+</Box>
 
         {/* RIGHT SIDE: Search + Download */}
         <Box display="flex" alignItems="center" gap={1}>

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Filter, FilterList, Visibility } from "@mui/icons-material";
 import { reconciledClaimsNTR, reconciledClaimsOther } from "./data";
-import { DynamicTabs } from '../../Components/reusable/tabs';
-import { DynamicClaimDialog } from "../../Components/reusable/dialog";
+import { DynamicTabs } from '../../components/reusable/tabs';
+import { DynamicClaimDialog } from "../../components/reusable/dialog";
 import { Box, Chip } from "@mui/material";
-import DynamicTable from "../../Components/reusable/dynamicTable";
+import DynamicTable from "../../components/reusable/dynamicTable";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { FilterDrawer } from "../../Components/reusable/filter";
+import { FilterDrawer } from "../../components/reusable/filter";
 
 export default function ReconciledPage() {
   const [activeTab, setActiveTab] = useState("ntr");
@@ -29,11 +29,12 @@ export default function ReconciledPage() {
   });
 
 
-  const statusColorMap: Record<"Settled" | "Pending" | "Rejected", "success" | "warning" | "error"> = {
-    Settled: "success",
-    Pending: "warning",
-    Rejected: "error",
-  };
+ const statusColorMap: Record<"Settled" | "Pending" | "Rejected", string> = {
+  Settled: "#48D56B",   // green
+  Pending: "#FACC15",   // yellow
+  Rejected: "#EF4444",  // red
+};
+
 
   const columns = [
     { key: "claimId", label: "Claim ID" },
@@ -63,14 +64,25 @@ export default function ReconciledPage() {
     { key: "chequeNumber", label: "Cheque No." },
     { key: "insuranceCompany", label: "Insurance Company" },
 
-    {
-      key: "status",
-      label: "Status",
-      render: (row: any) => {
-        const color = statusColorMap[row.status as keyof typeof statusColorMap] || "default";
-        return <Chip label={row.status} color={color} size="small" />;
-      },
-    },
+   {
+  key: "status",
+  label: "Status",
+  render: (row: any) => {
+    const backgroundColor = statusColorMap[row.status as keyof typeof statusColorMap] || "#E5E7EB"; // default gray
+    return (
+      <Chip
+        label={row.status}
+        size="small"
+        sx={{
+          backgroundColor,
+          color: "#fff",
+          fontWeight: 500,
+        }}
+      />
+    );
+  },
+},
+
 
     { key: "paymentDate", label: "Payment Date" },
   ];
@@ -129,9 +141,11 @@ export default function ReconciledPage() {
           justifyContent: "space-between",
           alignItems: "center",
           flexWrap: "wrap",
-          mb: 1,
+          mb: 2,
+          
         }}
       >
+        <Box sx={{            mt:1}}>
         <DynamicTabs
           tabs={[
             { label: "NTR Vaidyaseva", value: "ntr" },
@@ -140,6 +154,7 @@ export default function ReconciledPage() {
           currentValue={activeTab}
           onChange={setActiveTab}
         />
+        </Box>
 
         <Box
           sx={{
@@ -157,7 +172,7 @@ export default function ReconciledPage() {
             '&:hover': {
               backgroundColor: "#BAE6FD",
             },
-            mt: 0
+
           }}
           onClick={() => setFilterOpen(true)}
         >
@@ -197,9 +212,9 @@ export default function ReconciledPage() {
             },
           },
         ]}
-        chipColor={"success"}
+        chipColor={"#48D56B"}
         Icon={CheckCircleIcon}
-        iconColor={"success"}
+        iconColor={"#48D56B"}
       />
 
 

@@ -30,7 +30,7 @@ export function DynamicTabs({
         backgroundColor: 'white', // light blue container
         borderRadius: 2,
         overflowX: 'auto',
-        mb:2
+        mb:1
       }}
     >
       <Tabs
