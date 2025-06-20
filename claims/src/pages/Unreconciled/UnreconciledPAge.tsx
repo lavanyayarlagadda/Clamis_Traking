@@ -34,7 +34,7 @@ export default function UnReconciledPage() {
   const [dialogMode, setDialogMode] = useState<"view" | "reconcile">("view");
   const [filterOpen, setFilterOpen] = useState(false);
 
-const [open, setOpen] = useState(true);
+const [open, setOpen] = useState(false);
 
   const hospitalDetails = [
     { label: "Hospital", value: "Max Healthcare" },
@@ -222,6 +222,7 @@ const statusColorMap: Record<"Settled" | "Exception" | "Rejected", string> = {
           },
         ]}
       />
+      {open &&
 <ManualReconciliationDialog
       open={open}
       onClose={() => setOpen(false)}
@@ -230,6 +231,7 @@ const statusColorMap: Record<"Settled" | "Exception" | "Rejected", string> = {
       reasons={["Typo", "System Error", "Manual Override"]}
       priorities={["High", "Medium", "Low"]}
     />
+      }
    
       {dialogData && (
         <DynamicClaimDialog
