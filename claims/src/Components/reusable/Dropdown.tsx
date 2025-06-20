@@ -1,7 +1,13 @@
 // components/Dropdown.tsx
 
 import React from 'react';
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import {
+  FormControl,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Typography,
+} from '@mui/material';
 
 interface DropdownProps {
   label: string;
@@ -16,15 +22,35 @@ const Dropdown: React.FC<DropdownProps> = ({ label, value, options, onChange }) 
   };
 
   return (
-    <FormControl fullWidth size="small" margin="normal">
-      <InputLabel>{label}</InputLabel>
+    <FormControl fullWidth size="small" margin="none">
+      {/* Top label */}
+      <Typography
+        variant="subtitle2"
+        fontWeight={500}
+        gutterBottom
+        sx={{ color: 'text.primary' }}
+      >
+        {label}
+      </Typography>
+
       <Select
         value={value}
-        label={label}
         onChange={handleChange}
+        displayEmpty
+        fullWidth
+        size="small"
+        sx={{
+          backgroundColor: '#fff',
+          borderRadius: 1,
+        }}
       >
+        <MenuItem value="" disabled>
+          Select {label}
+        </MenuItem>
         {options.map((option) => (
-          <MenuItem key={option} value={option}>{option}</MenuItem>
+          <MenuItem key={option} value={option}>
+            {option}
+          </MenuItem>
         ))}
       </Select>
     </FormControl>
