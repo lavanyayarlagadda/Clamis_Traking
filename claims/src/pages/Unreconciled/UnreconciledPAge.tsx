@@ -2,11 +2,6 @@ import { useState } from "react";
 import { FilterList } from "@mui/icons-material";
 import { unreconciledClaimsData, unreconciledClaimsOther } from "./data";
 import { DynamicTabs } from '../../components/reusable/tabs';
-// import { DynamicFilterBar } from "../../components/reusable/filter";
-import ReusableDialog from "../../components/reusable/ReusableDialog";
-
-
-
 import { Chip, Typography, Box, Card, CardContent, Grid, Tooltip, Button } from "@mui/material";
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 import DynamicTable from "../../components/reusable/dynamicTable";
@@ -27,6 +22,7 @@ interface ClaimRow {
   exceptionType: string;
   reason: string;
   status: string;
+  scheme: string;
 }
 
 
@@ -122,10 +118,10 @@ const statusColorMap: Record<"Settled" | "Exception" | "Rejected", string> = {
       }
     },
 
-       {
-  key: "status",
-  label: "Status",
-  render: (row: any) => {
+    {
+      key: "status",
+      label: "Status",
+      render: (row: any) => {
     const backgroundColor = statusColorMap[row.status as keyof typeof statusColorMap] || "#E5E7EB"; // default gray
     return (
       <Chip
@@ -138,8 +134,8 @@ const statusColorMap: Record<"Settled" | "Exception" | "Rejected", string> = {
         }}
       />
     );
-  },
-},
+      },
+    },
   ];
   console.log("dialogData", dialogData)
 
@@ -184,14 +180,14 @@ const statusColorMap: Record<"Settled" | "Exception" | "Rejected", string> = {
             '&:hover': {
               backgroundColor: "#BAE6FD",
             },
-
+            mt: 0
           }}
           onClick={() => setFilterOpen(true)}
         >
           <FilterList fontSize="small" />
           Filter Claims
         </Box>
-      </Box>
+        </Box>
       <DynamicTable
         // title="Unreconciled Claims - NTR Vaidyaseva"
         title={`Unreconciled Claims - ${activeTab === "ntr" ? "NTR Vaidyaseva" : "Other Schemes"
@@ -216,62 +212,67 @@ const statusColorMap: Record<"Settled" | "Exception" | "Rejected", string> = {
         ]}
       />
 
-      <ReusableDialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        title={
-          dialogMode === "view"
-            ? `Claim Details - ${dialogData?.claimId ?? ""}`
-            : `Start Manual Reconciliation - ${dialogData?.claimId ?? ""}`
-        }
-      >
-        {dialogMode === "view" ? (
-          <Card sx={{ p: 2 }}>
-            <Typography sx={{ fontWeight: 600, mb: 1 }}>Basic Information</Typography>
-            <Typography variant="body1" gutterBottom>
-              <strong>Claim ID:</strong> {dialogData?.claimId}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              <strong>Status:</strong> {dialogData?.status}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              <strong>Insurance Company:</strong> {dialogData?.insuranceCompanyName}
-            </Typography>
-          </Card>
-        ) : (
-          <Box sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Start Manual Reconciliation
-            </Typography>
-            {/* Custom Reconciliation UI */}
-            <Typography variant="body2" gutterBottom>
-              Claim ID: {dialogData?.claimId}
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              Exception Type: {dialogData?.exceptionType}
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ mt: 2 }}
-              onClick={() => {
-                // Handle reconciliation logic here
-                console.log("Reconciliation started for", dialogData?.claimId);
-              }}
-            >
-              Start Reconciliation
-            </Button>
-          </Box>
-        )}
-      </ReusableDialog>
+   
+      {dialogData && (
+        <DynamicClaimDialog
+          open={dialogOpen}
+          pageType="unreconciliation"
+          onClose={() => {
+            setDialogOpen(false);
+            // setdummyDialogData(null); // Optional: reset dialog data
+          }}
+          title={`Claim Details - ${dialogData.claimId}`}
+          data={{
+            claimInfo: {
+              "Claim ID": dialogData.claimId,
+              "Insurance Company": dialogData.insuranceCompanyName,
+              "Cheque Number": dialogData.chequeNumber,
+              "Scheme": dialogData.scheme,
+              "status": dialogData.status,
 
+            },
+            exceptionDetails: {
+              "Exception Type": dialogData.exceptionType,
+              " Exception Reason": dialogData.reason,
+            },
+            financialDetails: {
+              "Claimed Amount": `₹${dialogData.claimedAmount?.toLocaleString()}`,
+              "Approved Amount": `₹${dialogData.approvedAmount?.toLocaleString()}`,
+              "Difference": `₹${dialogData.differenceAmout?.toLocaleString()}`,
+
+            },
+            timeline: [
+              {
+                label: "Claim Created",
+                description: "Claim created in system",
+                date: dialogData.claimCreationDate,
+              },
+              {
+                label: "Claim Submitted",
+                description: "Initial claim submission received",
+                date: dialogData.claimedDate,
+              },
+              {
+                label: "Approved",
+                description: "Claim approved for settlement",
+                date: dialogData.approvedDate,
+              },
+              {
+                label: "Exception Raised",
+                description: dialogData.reason,
+                date:dialogData. claimCreationDate,
+              },
+            ],
+          }}
+        />
+      )}
       <FilterDrawer
         open={filterOpen}
         onClose={() => setFilterOpen(false)}
         filters={filters}
         onChange={setFilters}
         includeExtraFilters={true}
-         pageType="unreconciliation"
+        pageType="unreconciliation"
         insuranceOptions={[
           "ICICI Lombard",
           "Star Health",
