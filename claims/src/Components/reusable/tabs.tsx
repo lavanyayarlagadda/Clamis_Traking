@@ -5,60 +5,66 @@ interface TabItem {
   value: string;
 }
 
+interface DynamicTabsProps {
+  tabs: TabItem[];
+  currentValue: string;
+  onChange: (val: string) => void;
+  width?: string | number;
+}
+
 export function DynamicTabs({
   tabs,
   currentValue,
   onChange,
-}: {
-  tabs: TabItem[];
-  currentValue: string;
-  onChange: (val: string) => void;
-}) {
+  width = 'auto',
+}: DynamicTabsProps) {
   return (
-    // <Tabs value={currentValue} onChange={(_, val) => onChange(val)}>
-    //   {tabs.map((tab) => (
-    //     <Tab key={tab.value} label={tab.label} value={tab.value} />
-    //   ))}
-    // </Tabs>
-     <Box
+    <Box
       sx={{
-        borderBottom: 1,
-        borderColor: 'divider',
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
-        borderRadius: '8px',
-        px: 2,
-        py: 1,
-        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-        marginBottom:"20px"
+        width,
+        maxWidth: '100%',
+        display: 'inline-flex',
+        alignItems: 'center',
+        px: 1,
+        py: 0.5,
+        backgroundColor: 'white', // light blue container
+        borderRadius: 2,
+        overflowX: 'auto',
+        mb:2
       }}
     >
       <Tabs
         value={currentValue}
         onChange={(_, val) => onChange(val)}
-        textColor="primary"
-        indicatorColor="primary"
-        TabIndicatorProps={{
-          sx: {
-            height: '4px',
-            borderRadius: '4px',
-          },
-        }}
+        TabIndicatorProps={{ sx: { display: 'none' } }} // remove underline
+        variant="scrollable"
+        scrollButtons="auto"
         sx={{
+          minHeight: 'unset',
+          '& .MuiTabs-flexContainer': {
+            display: 'flex',
+            gap: '8px',
+          },
           '& .MuiTab-root': {
+            minHeight: 'unset',
             textTransform: 'none',
-            fontWeight: 600,
-            fontSize: '14px',
-            px: 2,
-            py: 1,
-            color: '#374151',
+            fontSize: '13px',
+            fontWeight: 500,
+            padding: '4px 12px',
+            borderRadius: '999px',
+            transition: '0.2s',
+            color: '#64748B', // Tailwind gray-500
+            backgroundColor: 'transparent',
             '&.Mui-selected': {
-              color: '#1d4ed8',
+              backgroundColor: '#48D56B',
+              color: '#ffffff',
+              fontWeight: 600,
             },
           },
         }}
       >
         {tabs.map((tab) => (
-          <Tab key={tab.value} label={tab.label} value={tab.value} />
+          <Tab key={tab.value} label={tab.label} value={tab.value} disableRipple />
         ))}
       </Tabs>
     </Box>

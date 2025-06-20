@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { Visibility } from "@mui/icons-material";
+import { Filter, FilterList, Visibility } from "@mui/icons-material";
 import { reconciledClaimsNTR,reconciledClaimsOther } from "./data"; 
-import { DynamicTabs } from '../../Components/reusable/tabs';
-import { DynamicFilterBar } from "../../Components/reusable/filter";
-import { DynamicClaimDialog } from "../../Components/reusable/dialog";
-import { Chip } from "@mui/material";
-import DynamicTable from "../../Components/reusable/dynamicTable";
+import { DynamicTabs } from '../../components/reusable/tabs';
+import { DynamicFilterBar } from "../../components/reusable/filter";
+import { DynamicClaimDialog } from "../../components/reusable/dialog";
+import { Box, Chip } from "@mui/material";
+import DynamicTable from "../../components/reusable/dynamicTable";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 export default function ReconciledPage() {
   const [activeTab, setActiveTab] = useState("ntr");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
+
 
   const statusColorMap: Record<"Settled" | "Pending" | "Rejected", "success" | "warning" | "error"> = {
   Settled: "success",
@@ -106,44 +108,50 @@ const currentClaims =
 
   return (
     <>
-      <div style={{ marginTop: "20px" }}>
-      <DynamicFilterBar
-      title={"Filter Reconciled Claims"}
-        filters={[
-          {
-            type: "select",
-            label: "Hospital",
-            value: "",
-            options: ["Apollo Hospitals", "Fortis Healthcare", "Max Healthcare"],
-            onChange: () => {},
-          },
-          {
-            type: "date",
-            label: "Date Range",
-            value: "",
-            onChange: () => {},
-          },
-          {
-            type: "select",
-            label: "Status",
-            value: "",
-            options: ["Settled"],
-            onChange: () => {},
-          },
-        ]}
-        onApply={() => {}}
-        onExport={() => {}}
-      />
-      </div>
+<Box
+    sx={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      flexWrap: "wrap",
+      mb: 1,
+    }}
+  >
+    <DynamicTabs
+      tabs={[
+        { label: "NTR Vaidyaseva", value: "ntr" },
+        { label: "Other Schemes", value: "other" },
+      ]}
+      currentValue={activeTab}
+      onChange={setActiveTab}
+    />
 
-      <DynamicTabs
-        tabs={[
-          { label: "NTR Vaidyaseva", value: "ntr" },
-          { label: "Other Schemes", value: "other" },
-        ]}
-        currentValue={activeTab}
-        onChange={setActiveTab}
-      />
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 1,
+        cursor: "pointer",
+        px: 1,
+        py: 0.5,
+        borderRadius: 2,
+        backgroundColor: "white",
+        color: "#2563EB",
+        fontSize: "14px",
+        fontWeight: 500,
+        '&:hover': {
+          backgroundColor: "#BAE6FD",
+        },
+        mt:0
+      }}
+      onClick={() => setFilterOpen((prev) => !prev)}
+    >
+      <FilterList fontSize="small" />
+      Filter Claims
+    </Box>
+  </Box>
+
+
 
 
 <DynamicTable

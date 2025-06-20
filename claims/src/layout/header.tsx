@@ -11,7 +11,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { Search, Bell, HeartPulse } from 'lucide-react';
+import { CircleNotifications, Search } from '@mui/icons-material';
 
 interface HeaderProps {
   isSidebarOpen: boolean;
@@ -96,7 +96,7 @@ const Header: React.FC<HeaderProps> = ({ isSidebarOpen, currentTab, onSidebarTog
 
           <IconButton>
             <Badge variant="dot" color="error">
-              <Bell size={20} />
+              <CircleNotifications  />
             </Badge>
           </IconButton>
 

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Button, Grid, Paper } from '@mui/material';
-import Dropdown from "../../Components/reusable/Dropdown";
+import Dropdown from "../../components/reusable/Dropdown";
 const people = ['Alice', 'Bob', 'Charlie'];
 const taskTypes = ['Bug', 'Feature', 'Improvement'];
 const priorities = ['High', 'Medium', 'Low'];

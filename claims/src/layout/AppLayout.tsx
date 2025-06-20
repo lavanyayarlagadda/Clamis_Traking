@@ -45,7 +45,7 @@ const AppLayout = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          mt: 8,
+          mt: 10,
           ml: `${isOpen ? 20 : 20}px`,
           pr: 2,
           transition: 'margin-left 0.3s ease',

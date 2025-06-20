@@ -17,15 +17,14 @@ import {
   Menu as MenuIcon,
   ChevronLeft,
   ChevronRight,
-} from '@mui/icons-material';
-import {
-  Activity,
-  FileText,
-  Users,
-  Clock,
+  LocalActivity,
   Check,
-  HeartPulse,
-} from 'lucide-react';
+  LockClock,
+  Group,
+  HealthAndSafety,
+  InsertDriveFile
+} from '@mui/icons-material';
+
 import { Link, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
@@ -40,11 +39,11 @@ interface SidebarProps {
 const drawerWidth = 240;
 
 const menuItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: Activity, color: '#3b82f6' },        // Blue
-  { id: 'reports', label: 'Reports & Analytics', icon: FileText, color: '#22c55e' }, // Green
-  { id: 'reconciled', label: 'Reconciled Claims', icon: Check, color: '#6366f1' },  // Indigo
-  { id: 'unreconciled', label: 'Unreconciled Claims', icon: Clock, color: '#ef4444' }, // Red
-  { id: 'workQueue', label: 'Work Queue', icon: Users, color: '#a855f7' },          // Purple
+  { id: 'dashboard', label: 'Dashboard', icon: LocalActivity, color: '#3b82f6' },
+  { id: 'reports', label: 'Reports & Analytics', icon: InsertDriveFile, color: '#22c55e' }, // ✅ FIXED
+  { id: 'reconciled', label: 'Reconciled Claims', icon: Check, color: '#6366f1' },
+  { id: 'unreconciled', label: 'Unreconciled Claims', icon: LockClock, color: '#ef4444' },
+  { id: 'workQueue', label: 'Work Queue', icon: Group, color: '#a855f7' },
 ];
 
 
@@ -57,64 +56,64 @@ const DrawerContent = ({
   const location = useLocation();
 
   return (
-    <List sx={{ px: 1 }}>
-      {menuItems.map((item) => {
-        const Icon = item.icon;
-        const selected = location.pathname === `/${item.id}`;
-        const baseColor = item.color;
+<List sx={{ px: 1 }}>
+  {menuItems.map((item) => {
+    const Icon = item.icon;
+    const selected = location.pathname === `/${item.id}`;
+    const baseColor = item.color;
 
-        return (
-          <ListItemButton
-            key={item.id}
-            component={Link}
-            to={`/${item.id}`}
-            onClick={() => setActiveTab(item.id)}
-            selected={selected}
-            sx={{
-              justifyContent: isOpen ? 'initial' : 'center',
-              px: 2.5,
-              py: 1.2,
-              my: 0.5,
-              borderRadius: 2,
-              background: selected
-                ? 'linear-gradient(to right, #6366f1, #3b82f6)' 
-                : 'transparent',
-              color: selected ? '#fff' : '#111827',
-              fontWeight: selected ? 600 : 500,
-              '&:hover': {
-                background: selected
-                  ? 'linear-gradient(to right, #6366f1, #3b82f6)'
-                  : '#f3f4f6',
-              },
+    return (
+      <ListItemButton
+        key={item.id}
+        component={Link}
+        to={`/${item.id}`}
+        onClick={() => setActiveTab(item.id)}
+        selected={selected}
+        sx={{
+          justifyContent: isOpen ? 'initial' : 'center',
+          px: 2.5,
+          py: 1.2,
+          my: 0.5,
+          borderRadius: 2,
+          background: selected
+            ? 'linear-gradient(to right, #6366f1, #3b82f6)'
+            : 'transparent',
+          color: selected ? '#fff' : '#111827',
+          fontWeight: selected ? 600 : 500,
+          '&:hover': {
+            background: selected
+              ? 'linear-gradient(to right, #6366f1, #3b82f6)'
+              : '#f3f4f6',
+          },
+        }}
+      >
+        <ListItemIcon
+          sx={{
+            minWidth: 0,
+            mr: isOpen ? 2 : 'auto',
+            justifyContent: 'center',
+            color: selected ? '#fff' : baseColor,
+          }}
+        >
+          <Icon />
+        </ListItemIcon>
+        {isOpen && (
+          <ListItemText
+            primary={item.label}
+            primaryTypographyProps={{
+              fontWeight: selected ? 500 : 500,
+              fontSize: '0.95rem',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
             }}
-          >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                mr: isOpen ? 2 : 'auto',
-                justifyContent: 'center',
-                color: selected ? '#fff' : baseColor,
-              }}
-            >
-              <Icon size={20} />
-            </ListItemIcon>
-            {isOpen && (
-             <ListItemText
-  primary={item.label}
-  primaryTypographyProps={{
-    fontWeight: selected ? 500 : 500,
-    fontSize: '0.95rem',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  }}
-/>
+          />
+        )}
+      </ListItemButton>
+    );
+  })}
+</List>
 
-            )}
-          </ListItemButton>
-        );
-      })}
-    </List>
   );
 };
 
@@ -188,7 +187,7 @@ const Sidebar = ({
 
   <IconButton onClick={() => setIsOpen(!isOpen)}>
     {isOpen ? <ChevronLeft /> :<>
-    <HeartPulse size={20} color="#3b82f6" />
+    <HealthAndSafety  />
    <ChevronRight /></>}
   </IconButton>
 
