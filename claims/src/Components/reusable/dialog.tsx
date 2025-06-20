@@ -150,7 +150,7 @@ export const DynamicClaimDialog = ({ open, onClose, title, data, pageType }: Dyn
                           <FiberManualRecordIcon
                             sx={{
                               fontSize: 14,
-                              color: "#4caf50",
+                              color: item.label.toLowerCase().includes("exception") ? "#dc3545" : "#4caf50",
                               zIndex: 1
                             }}
                           />
