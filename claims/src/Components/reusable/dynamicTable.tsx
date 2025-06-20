@@ -179,7 +179,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
                     fontWeight: "bold",
                     whiteSpace: "nowrap",
                     backgroundColor: "#f3f4f6",
-                    minWidth: "max-content",
+                    // minWidth: "max-content",
+                    width:"100px"
                   }}
                 >
                   Actions
