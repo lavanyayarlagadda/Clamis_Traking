@@ -1,96 +1,76 @@
 // components/WorkQueueTableGrid.tsx
 
 import React from "react";
-
-import { Chip, Avatar, Typography, Stack } from "@mui/material";
+import DynamicTable from "../../Components/reusable/dynamicTable"
+import { Chip, Stack, Typography } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
-import DynamicTable from "../../components/reusable/dynamicTable";
 
-// Mock task data
+// Sample data for demo
 const taskData = [
   {
-    id: "T-1001",
-    title: "Fix login bug",
-    assignedTo: {
-      name: "Alice",
-      avatar: "https://i.pravatar.cc/150?img=1",
-    },
-    priority: "High",
-    status: "To Do",
-    dueDate: "2025-06-21",
+    claimNumber: "CLM-001",
+    claimStatus: "Approved",
+    chequeNumber: "CHQ-98765",
+    patientPaid: 1200,
+    claimedAmount: 2000,
+    approvedAmount: 1800,
+    settledAmount: 1800,
+    chequeDate: "2025-06-18",
+    insuranceCompany: "HealthSecure",
+    inpatientNumber: "INP-2345",
+    customerId: "CUST-101",
+    tags: ["urgent", "follow-up"],
   },
   {
-    id: "T-1002",
-    title: "Update dashboard layout",
-    assignedTo: {
-      name: "Bob",
-      avatar: "https://i.pravatar.cc/150?img=2",
-    },
-    priority: "Medium",
-    status: "In Progress",
-    dueDate: "2025-06-22",
-  },
-  {
-    id: "T-1003",
-    title: "Write unit tests",
-    assignedTo: {
-      name: "Charlie",
-      avatar: "https://i.pravatar.cc/150?img=3",
-    },
-    priority: "Low",
-    status: "Completed",
-    dueDate: "2025-06-20",
+    claimNumber: "CLM-002",
+    claimStatus: "Pending",
+    chequeNumber: "CHQ-12345",
+    patientPaid: 300,
+    claimedAmount: 1500,
+    approvedAmount: 0,
+    settledAmount: 0,
+    chequeDate: "2025-06-20",
+    insuranceCompany: "MediLife",
+    inpatientNumber: "INP-9876",
+    customerId: "CUST-202",
+    tags: ["high-priority"],
   },
 ];
 
 // Column definitions
 const columns = [
-  {
-    key: "id",
-    label: "Task ID",
+  { key: "claimNumber", label: "Claim Number" },
+  { key: "claimStatus", label: "Claim Status", render: (row: any) => (
+      <Chip 
+        label={row.claimStatus} 
+        color={
+          row.claimStatus === "Approved" ? "success" : 
+          row.claimStatus === "Pending" ? "warning" : 
+          "default"
+        } 
+        size="small"
+      />
+    ) 
   },
+  { key: "chequeNumber", label: "Cheque Number" },
+  { key: "patientPaid", label: "Patient Paid Amount", render: (row: any) => `₹${row.patientPaid}` },
+  { key: "claimedAmount", label: "Claimed Amount", render: (row: any) => `₹${row.claimedAmount}` },
+  { key: "approvedAmount", label: "Approved Amount", render: (row: any) => `₹${row.approvedAmount}` },
+  { key: "settledAmount", label: "Settled Amount", render: (row: any) => `₹${row.settledAmount}` },
+  { key: "chequeDate", label: "Cheque Date", render: (row: any) => new Date(row.chequeDate).toLocaleDateString() },
+  { key: "insuranceCompany", label: "Insurance Company" },
+  { key: "inpatientNumber", label: "Inpatient Number" },
+  { key: "customerId", label: "Customer ID" },
   {
-    key: "title",
-    label: "Title",
-  },
-  {
-    key: "assignedTo",
-    label: "Assigned To",
+    key: "tags",
+    label: "Tags",
     render: (row: any) => (
-      <Stack direction="row" spacing={1} alignItems="center">
-        <Avatar src={row.assignedTo.avatar} alt={row.assignedTo.name} sx={{ width: 24, height: 24 }} />
-        <Typography variant="body2">{row.assignedTo.name}</Typography>
+      <Stack direction="row" spacing={1}>
+        {row.tags.map((tag: string, idx: number) => (
+          <Chip key={idx} label={tag} size="small" variant="outlined" />
+        ))}
       </Stack>
     ),
-  },
-  {
-    key: "priority",
-    label: "Priority",
-    render: (row: any) => {
-      const colorMap: Record<string, "error" | "warning" | "success"> = {
-        High: "error",
-        Medium: "warning",
-        Low: "success",
-      };
-      return <Chip label={row.priority} color={colorMap[row.priority]} size="small" />;
-    },
-  },
-  {
-    key: "status",
-    label: "Status",
-    render: (row: any) => {
-      const colorMap: Record<string, "default" | "info" | "success"> = {
-        "To Do": "default",
-        "In Progress": "info",
-        "Completed": "success",
-      };
-      return <Chip label={row.status} color={colorMap[row.status]} size="small" />;
-    },
-  },
-  {
-    key: "dueDate",
-    label: "Due Date",
-    render: (row: any) => new Date(row.dueDate).toLocaleDateString(),
   },
 ];
 
@@ -100,7 +80,7 @@ const actions = [
     label: "Mark as Done",
     icon: <DoneIcon fontSize="small" />,
     onClick: (row: any) => {
-      alert(`Marked Task ${row.id} as done`);
+      alert(`Marked claim ${row.claimNumber} as done`);
     },
   },
 ];
@@ -108,8 +88,8 @@ const actions = [
 const WorkQueueTableGrid: React.FC = () => {
   return (
     <DynamicTable
-      title="Work Queue"
-      countLabel={`${taskData.length} Tasks`}
+      title="Claim Work Queue"
+      countLabel={`${taskData.length} Claims`}
       columns={columns}
       data={taskData}
       actions={actions}
