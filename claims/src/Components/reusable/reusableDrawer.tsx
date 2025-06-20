@@ -18,6 +18,7 @@ interface ReusableDrawerProps {
   children: React.ReactNode;
   submitLabel?: string;
   cancelLabel?: string;
+  clearOnClick?:()=> void;
 }
 
 const ReusableDrawer: React.FC<ReusableDrawerProps> = ({
@@ -28,12 +29,13 @@ const ReusableDrawer: React.FC<ReusableDrawerProps> = ({
   children,
   submitLabel = "Submit",
   cancelLabel = "Cancel",
+  clearOnClick
 }) => {
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
       <Box
         sx={{
-          width: 340,
+          width: 430,
           height: "100%",
           display: "flex",
           flexDirection: "column",
@@ -84,7 +86,7 @@ const ReusableDrawer: React.FC<ReusableDrawerProps> = ({
           }}
         >
           <Button
-            onClick={onClose}
+            onClick={clearOnClick ? clearOnClick :onClose}
             variant="outlined"
             color="error"
             sx={{

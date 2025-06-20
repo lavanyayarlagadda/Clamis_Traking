@@ -1,36 +1,21 @@
-import React from "react";
+// FilterDrawer.tsx
+import React, { useState } from "react";
 import {
-  Drawer,
-  Box,
-  Typography,
-  IconButton,
-  Button,
-  Chip,
-  TextField,
-  Divider,
+  Drawer, Box, Typography, IconButton, Button, Chip,
+  TextField, Divider, InputAdornment,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import ClearIcon from "@mui/icons-material/Clear";
+import CalendarToday from "@mui/icons-material/CalendarToday";
+import ArrowForward from "@mui/icons-material/ArrowForward";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
-
-// interface FilterDrawerProps {
-//   open: boolean;
-//   onClose: () => void;
-//   filters: {
-//     // dateRange: any;
-//     dateRange: { startDate?: string; endDate?: string } | null;
-//     insuranceCompanies: string[];
-//     reconciliationStatus: string | null;
-//   };
-//   onChange: (filters: FilterDrawerProps["filters"]) => void;
-//   insuranceOptions: string[];
-// }
-interface FilterState {
-  dateRange: {
-    startDate?: string;
-    endDate?: string;
-  } | null;
+interface FilterValues {
+  fromDate: Date | null;
+  toDate: Date | null;
   insuranceCompanies: string[];
-  reconciliationStatus: 'Manual Reconciled' | 'Agent Reconciled' | null;
+  reconciledBy: string;
   claimStatus?: string | null;
   claimAge?: string | null;
 }
@@ -38,40 +23,41 @@ interface FilterState {
 interface FilterDrawerProps {
   open: boolean;
   onClose: () => void;
-  filters: FilterState;
-  onChange: (filters: FilterState) => void;
+  filters: FilterValues;
+  onChange: (filters: FilterValues) => void;
   insuranceOptions: string[];
-  includeExtraFilters?: boolean;
-  pageType: "reconciliation" | "unreconciliation"; 
+  reconciledOptions: string[];
+  pageType: "reconciliation" | "unreconciliation";
 }
+
 export const FilterDrawer: React.FC<FilterDrawerProps> = ({
   open,
   onClose,
   filters,
   onChange,
   insuranceOptions,
-  includeExtraFilters,
-  pageType
+  reconciledOptions,
+  pageType,
 }) => {
-  // const statuses = ["Manual", "Auto"];
-  const statuses: FilterState["reconciliationStatus"][] = [
-    "Manual Reconciled",
-    "Agent Reconciled",
-  ];
+  const [openFrom, setOpenFrom] = useState(false);
+  const [openTo, setOpenTo] = useState(false);
 
-  const handleToggleInsurance = (company: string) => {
-    const newList = filters.insuranceCompanies.includes(company)
-      ? filters.insuranceCompanies.filter((c) => c !== company)
-      : [...filters.insuranceCompanies, company];
-    onChange({ ...filters, insuranceCompanies: newList });
+  const handleDateChange = (value: Date | null, field: "fromDate" | "toDate") => {
+    onChange({
+      ...filters,
+      [field]: value,
+      ...(field === "fromDate" && filters.toDate && value && filters.toDate < value
+        ? { toDate: null }
+        : {}),
+    });
   };
-
 
   const handleClear = () => {
     onChange({
-      dateRange: null,
+      fromDate: null,
+      toDate: null,
       insuranceCompanies: [],
-      reconciliationStatus: null,
+      reconciledBy: "",
       claimStatus: null,
       claimAge: null,
     });
@@ -79,130 +65,200 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
 
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
-      <Box sx={{ width: 340, display: "flex", flexDirection: "column", height: "100%" }}>
+      <Box sx={{ width: 430, display: "flex", flexDirection: "column", height: "100%" }}>
         {/* HEADER */}
-        <Box
-          sx={{
-            p: 2,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            borderBottom: "1px solid #e0e0e0",
-            bgcolor: "#eaf1ff",
-          }}
-        >
-          <Typography variant="h6" fontWeight={600} color="text.primary">
-            Filter Claims
-          </Typography>
-          <IconButton size="small"
-            onClick={onClose}
-            sx={{
-              bgcolor: "#e0e0e0",
-              "&:hover": {
-                bgcolor: "#d32f2f",
-                color: "#fff",
-              },
-              transition: "background-color 0.3s ease",
-            }}
-          >
+        <Box sx={{
+          p: 2, display: "flex", justifyContent: "space-between", alignItems: "center",
+          borderBottom: "1px solid #e0e0e0", bgcolor: "#eaf1ff",
+        }}>
+          <Typography variant="h6" fontWeight={600}>Filter Claims</Typography>
+          <IconButton onClick={onClose}>
             <CloseIcon />
           </IconButton>
         </Box>
 
         {/* CONTENT */}
         <Box sx={{ p: 2, flexGrow: 1, overflowY: "auto" }}>
-          {/* Payment Date */}
-          <Box mb={2}>
-            <Typography variant="subtitle2" gutterBottom fontWeight={600}>
-              Payment Date
-            </Typography>
-            <TextField
-              fullWidth
-              type="date"
-              label="Start Date"
-              size="small"
-              InputLabelProps={{ shrink: true }}
-              value={filters.dateRange?.startDate || ""}
-              onChange={(e) =>
-                onChange({
-                  ...filters,
-                  dateRange: {
-                    ...filters.dateRange,
-                    startDate: e.target.value,
-                  },
-                })
-              }
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              type="date"
-              label="End Date"
-              size="small"
-              InputLabelProps={{ shrink: true }}
-              value={filters.dateRange?.endDate || ""}
-              onChange={(e) =>
-                onChange({
-                  ...filters,
-                  dateRange: {
-                    ...filters.dateRange,
-                    endDate: e.target.value,
-                  },
-                })
-              }
-            />
-          </Box>
+          {/* DATE RANGE */}
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+             <Box
+                   p={0}
+                   display="flex"
+                   flexWrap="wrap"
+                   gap={2}
+                   borderRadius={2}
+                 >
+                   {/* Date Range */}
+                   <Box
+                     sx={{
+                       display: "flex",
+                       gap: "8px",
+                       flexDirection: { md: "row", sm: "column" },
+                     }}
+                   >
+                     <Box display="flex" flexDirection="column" flex="1" maxWidth="170px">
+                         <Typography variant="subtitle1" fontWeight="bold" mb={1}>
+              From Date
+             </Typography>
+                  <DatePicker
+                    open={openFrom}
+                    onOpen={() => setOpenFrom(true)}
+                    onClose={() => setOpenFrom(false)}
+                    value={filters.fromDate}
+                    onChange={(val) => handleDateChange(val, "fromDate")}
+                    format="dd/MM/yyyy"
+                    slotProps={{
+                      textField: {
+                        placeholder: "dd/MM/yyyy",
+                        onClick: () => setOpenFrom(true),
+                        InputProps: {
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              {filters.fromDate ? (
+                                <IconButton onClick={(e) => {
+                                  e.stopPropagation();
+                                  onChange({ ...filters, fromDate: null });
+                                }}>
+                                  <ClearIcon />
+                                </IconButton>
+                              ) : (
+                                <IconButton onClick={() => setOpenFrom(true)}>
+                                  <CalendarToday />
+                                </IconButton>
+                              )}
+                            </InputAdornment>
+                          ),
+                        },
+                      },
+                    }}
+                  />
+                </Box>
 
-          {/* Insurance Companies */}
+                <ArrowForward sx={{ alignSelf: "center" ,marginTop:4}} />
+
+          <Box display="flex" flexDirection="column" flex="1" maxWidth="170px">
+             <Typography variant="subtitle1" fontWeight="bold" mb={1}>
+   To Date
+  </Typography>
+                  <DatePicker
+                    open={openTo}
+                    onOpen={() => setOpenTo(true)}
+                    onClose={() => setOpenTo(false)}
+                    value={filters.toDate}
+                    onChange={(val) => handleDateChange(val, "toDate")}
+                    format="dd/MM/yyyy"
+                  shouldDisableDate={(date) => {
+  if (!filters.fromDate) return false; // ✅ return a boolean
+  return date < filters.fromDate;
+}}
+
+                    slotProps={{
+                      textField: {
+                        placeholder: "dd/MM/yyyy",
+                        onClick: () => setOpenTo(true),
+                        InputProps: {
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              {filters.toDate ? (
+                                <IconButton onClick={(e) => {
+                                  e.stopPropagation();
+                                  onChange({ ...filters, toDate: null });
+                                }}>
+                                  <ClearIcon />
+                                </IconButton>
+                              ) : (
+                                <IconButton onClick={() => setOpenTo(true)}>
+                                  <CalendarToday />
+                                </IconButton>
+                              )}
+                            </InputAdornment>
+                          ),
+                        },
+                      },
+                    }}
+                  />
+                </Box>
+              </Box>
+            </Box>
+          </LocalizationProvider>
+
+          {/* INSURANCE COMPANIES */}
           <Box mb={3}>
-            <Typography variant="subtitle2" gutterBottom fontWeight={600}>
+            <Typography variant="subtitle1" fontWeight="bold" mb={1}>
               Insurance Companies
             </Typography>
             <Box display="flex" flexWrap="wrap" gap={1}>
-              {insuranceOptions.map((company) => (
-                <Chip
-                  key={company}
-                  label={company}
-                  clickable
-                  variant={filters.insuranceCompanies.includes(company) ? "filled" : "outlined"}
-                  color={filters.insuranceCompanies.includes(company) ? "primary" : "default"}
-                  onClick={() => handleToggleInsurance(company)}
-                />
-              ))}
+              {insuranceOptions.map((company) => {
+                const isSelected = filters.insuranceCompanies.includes(company);
+                return (
+                  <Chip
+                    key={company}
+                    label={company}
+                    clickable={!isSelected}
+                    onClick={() => {
+                      if (!isSelected) {
+                        onChange({
+                          ...filters,
+                          insuranceCompanies: [...filters.insuranceCompanies, company],
+                        });
+                      }
+                    }}
+                    onDelete={isSelected ? () =>
+                      onChange({
+                        ...filters,
+                        insuranceCompanies: filters.insuranceCompanies.filter((c) => c !== company),
+                      }) : undefined}
+                    sx={{
+                      backgroundColor: isSelected ? "#4DB6AC" : "#e0e0e0",
+                      color: isSelected ? "#fff" : "#000",
+                      "& .MuiChip-deleteIcon": {
+                        color: "#fff",
+                      },
+                    }}
+                  />
+                );
+              })}
             </Box>
           </Box>
 
-          {/* Reconciliation Status */}
-          <Box mb={2}>
-            <Typography variant="subtitle2" gutterBottom fontWeight={600}>
-               {pageType === "reconciliation" ? "Reconciliation Status" : "UnReconciliation Status"}
+          {/* RECONCILED BY */}
+          <Box mb={3}>
+            <Typography variant="subtitle1" fontWeight="bold" mb={1}>
+              Reconciled By
             </Typography>
             <Box display="flex" gap={1}>
-              {statuses.map((status) => (
-                <Chip
-                  key={status}
-                  label={status}
-                  clickable
-                  variant={filters.reconciliationStatus === status ? "filled" : "outlined"}
-                  color={filters.reconciliationStatus === status ? "success" : "default"}
-                  // onClick={() => handleStatusSelect(status)}
-                  onClick={() => {
-                    onChange({
-                      ...filters,
-                      reconciliationStatus: filters.reconciliationStatus === status ? null : status,
-                    });
-                  }}
-                />
-              ))}
+              {reconciledOptions.map((user) => {
+                const isSelected = filters.reconciledBy === user;
+                return (
+                  <Chip
+                    key={user}
+                    label={user}
+                    clickable={!isSelected}
+                    onClick={() => {
+                      if (!isSelected) {
+                        onChange({ ...filters, reconciledBy: user });
+                      }
+                    }}
+                    onDelete={isSelected ? () => onChange({ ...filters, reconciledBy: "" }) : undefined}
+                    sx={{
+                      backgroundColor: isSelected ? "#4DB6AC" : "#e0e0e0",
+                      color: isSelected ? "#fff" : "#000",
+                      "& .MuiChip-deleteIcon": {
+                        color: "#fff",
+                      },
+                    }}
+                  />
+                );
+              })}
             </Box>
           </Box>
 
-          {includeExtraFilters && (
+          {/* Extra Filters for "unreconciliation" */}
+          {pageType === "unreconciliation" && (
             <>
-              {/* Claim Status */}
-              {/* Claim Status */}
+              {/* CLAIM STATUS */}
               <Box mb={2}>
-                <Typography variant="subtitle2" gutterBottom fontWeight={600}>
+                <Typography variant="subtitle1" fontWeight="bold" mb={1}>
                   Claim Status
                 </Typography>
                 <Box display="flex" gap={1} flexWrap="wrap">
@@ -224,11 +280,10 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
                 </Box>
               </Box>
 
-
-              {/* Claim Age */}
-              <Box >
-                <Typography variant="subtitle2" gutterBottom fontWeight={600}>
-                  Claim Age
+              {/* CLAIM AGE */}
+              <Box>
+                <Typography variant="subtitle1" fontWeight="bold" mb={1}>
+                  Claim Age (days)
                 </Typography>
                 <TextField
                   fullWidth
@@ -241,48 +296,23 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
               </Box>
             </>
           )}
-
         </Box>
 
         {/* FOOTER */}
-        <Box
-          sx={{
-            p: 2,
-            borderTop: "1px solid #e0e0e0",
-            display: "flex",
-            justifyContent: "space-between",
-            gap: 2,
-            bgcolor: "#f9fafc",
-          }}
-        >
-          <Button
-            onClick={handleClear}
-            variant="outlined"
-            color="error"
-            sx={{
-              textTransform: "none",
-              borderRadius: 2,
-              px: 3,
-              fontWeight: 500,
-            }}
-          >
+        <Box sx={{
+          p: 2,
+          borderTop: "1px solid #e0e0e0",
+          display: "flex",
+          justifyContent: "space-between",
+          bgcolor: "#f9fafc",
+        }}>
+          <Button onClick={handleClear} variant="outlined" color="error" sx={{ borderRadius: 2, px: 3 }}>
             Clear
           </Button>
-          <Button
-            onClick={onClose}
-            variant="contained"
-            color="primary"
-            sx={{
-              textTransform: "none",
-              borderRadius: 2,
-              px: 3,
-              fontWeight: 500,
-            }}
-          >
+          <Button onClick={onClose} variant="contained" sx={{ borderRadius: 2, px: 3 }}>
             Apply
           </Button>
         </Box>
-
       </Box>
     </Drawer>
   );

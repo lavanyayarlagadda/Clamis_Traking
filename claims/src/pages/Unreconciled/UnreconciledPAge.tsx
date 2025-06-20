@@ -8,6 +8,7 @@ import DynamicTable from "../../components/reusable/dynamicTable";
 import { DynamicClaimDialog } from "../../components/reusable/dialog";
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 import { FilterDrawer } from "../../components/reusable/filter";
+import ManualReconciliationDialog from "./Manual_reconciled_Dialog";
 
 interface ClaimRow {
   claimId: string;
@@ -32,21 +33,31 @@ export default function UnReconciledPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState<"view" | "reconcile">("view");
   const [filterOpen, setFilterOpen] = useState(false);
-  interface FilterState {
-    // dateRange: { startDate: string; endDate: string } | null;
-    dateRange: {
-      startDate?: string;
-      endDate?: string;
-    } | null;
-    insuranceCompanies: string[];
-    reconciliationStatus: 'Manual Reconciled' | 'Agent Reconciled' | null;
-  }
 
-  const [filters, setFilters] = useState<FilterState>({
-    dateRange: null,
-    insuranceCompanies: [],
-    reconciliationStatus: null,
-  });
+const [open, setOpen] = useState(true);
+
+  const hospitalDetails = [
+    { label: "Hospital", value: "Max Healthcare" },
+    { label: "Diagnosis", value: "Cardiovascular Surgery" },
+    { label: "Exception Type", value: "Amount Mismatch", color: "error" },
+    { label: "Claimed Amount", value: "₹150,000", color: "primary" },
+    { label: "Approved Amount", value: "₹135,000", color: "green" },
+    { label: "Difference", value: "₹15,000", color: "error" },
+  ];
+
+interface FilterValues {
+  fromDate: Date | null;
+  toDate: Date | null;
+  insuranceCompanies: string[];
+  reconciledBy: string;
+}
+
+   const [filters, setFilters] = useState<FilterValues>({
+     fromDate: null,
+     toDate: null,
+     insuranceCompanies: [],
+     reconciledBy: "",
+   });
 
 const statusColorMap: Record<"Settled" | "Exception" | "Rejected", string> = {
   Settled: "#48D56B",   // green
@@ -205,13 +216,20 @@ const statusColorMap: Record<"Settled" | "Exception" | "Rejected", string> = {
             icon: <PlayArrowOutlinedIcon fontSize="small" />,
             onClick: (row) => {
               setDialogData(row);
-              setDialogMode("reconcile");
-              setDialogOpen(true);
+
+              setOpen(true);
             },
           },
         ]}
       />
-
+<ManualReconciliationDialog
+      open={open}
+      onClose={() => setOpen(false)}
+      hospitalDetails={hospitalDetails}
+      assignees={["John", "Jane", "Support Team"]}
+      reasons={["Typo", "System Error", "Manual Override"]}
+      priorities={["High", "Medium", "Low"]}
+    />
    
       {dialogData && (
         <DynamicClaimDialog
@@ -266,12 +284,12 @@ const statusColorMap: Record<"Settled" | "Exception" | "Rejected", string> = {
           }}
         />
       )}
-      <FilterDrawer
+
+    <FilterDrawer
         open={filterOpen}
         onClose={() => setFilterOpen(false)}
-        filters={filters}
-        onChange={setFilters}
-        includeExtraFilters={true}
+  filters={filters}
+  onChange={setFilters}
         pageType="unreconciliation"
         insuranceOptions={[
           "ICICI Lombard",
@@ -279,7 +297,8 @@ const statusColorMap: Record<"Settled" | "Exception" | "Rejected", string> = {
           "HDFC ERGO",
           "United India",
         ]}
-      />
+        reconciledOptions={['Manual', 'Arogya Setu']}
+/>
 
     </>
   );

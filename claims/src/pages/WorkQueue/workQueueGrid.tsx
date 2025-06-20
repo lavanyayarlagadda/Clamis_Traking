@@ -4,6 +4,7 @@ import React from "react";
 import DynamicTable from "../../components/reusable/dynamicTable"
 import { Chip, Stack, Typography } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 // Sample data for demo
 const taskData = [
@@ -93,6 +94,9 @@ const WorkQueueTableGrid: React.FC = () => {
       columns={columns}
       data={taskData}
       actions={actions}
+       chipColor={"#48D56B"}
+        Icon={CheckCircleIcon}
+        iconColor={"#48D56B"}
     />
   );
 };

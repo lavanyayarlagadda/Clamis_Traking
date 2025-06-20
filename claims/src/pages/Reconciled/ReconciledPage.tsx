@@ -12,22 +12,19 @@ export default function ReconciledPage() {
   const [activeTab, setActiveTab] = useState("ntr");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
-  interface FilterState {
-    // dateRange: { startDate: string; endDate: string } | null;
-    dateRange: {
-      startDate?: string;
-      endDate?: string;
-    } | null;
-    insuranceCompanies: string[];
-    reconciliationStatus: 'Manual Reconciled' | 'Agent Reconciled' | null;
-  }
+interface FilterValues {
+  fromDate: Date | null;
+  toDate: Date | null;
+  insuranceCompanies: string[];
+  reconciledBy: string;
+}
 
-  const [filters, setFilters] = useState<FilterState>({
-    dateRange: null,
-    insuranceCompanies: [],
-    reconciliationStatus: null,
-  });
-
+   const [filters, setFilters] = useState<FilterValues>({
+     fromDate: null,
+     toDate: null,
+     insuranceCompanies: [],
+     reconciledBy: "",
+   });
 
  const statusColorMap: Record<"Settled" | "Pending" | "Rejected", string> = {
   Settled: "#48D56B",   // green
@@ -181,19 +178,16 @@ export default function ReconciledPage() {
         </Box>
       </Box>
 
-      <FilterDrawer
+    <FilterDrawer
         open={filterOpen}
         onClose={() => setFilterOpen(false)}
-        filters={filters}
-        onChange={setFilters}
-        pageType="reconciliation"
-        insuranceOptions={[
-          "ICICI Lombard",
-          "Star Health",
-          "HDFC ERGO",
-          "United India",
-        ]}
-      />
+  filters={filters}
+  onChange={setFilters}
+  insuranceOptions={['ICICI', 'Star', 'Religare']}
+  reconciledOptions={['Manual', 'Arogya Setu']}
+  pageType="reconciliation" // or "reconciliation"
+/>
+
 
 
       <DynamicTable
