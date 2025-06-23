@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
-import { Box, CssBaseline } from '@mui/material';
-import Header from './header';
-import Sidebar from './sideBar';
-import { Outlet, useLocation } from 'react-router-dom';
+import React, { useState } from "react";
+import { Box, CssBaseline } from "@mui/material";
+import Header from "./header";
+import Sidebar from "./sideBar";
+import { Outlet, useLocation } from "react-router-dom";
 
 const AppLayout = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const activeTab = location.pathname.split('/')[1] || 'dashboard';
+  const activeTab = location.pathname.split("/")[1] || "dashboard";
   console.log("activeTab", activeTab);
 
   return (
     <Box
       sx={{
-        minHeight: '100vh',            // Tailwind: min-h-screen
-        display: 'flex',               // Tailwind: flex
-        width: '100%',                 // Tailwind: w-full
-        backgroundImage: 'linear-gradient(to bottom right, #eff6ff, #e0e7ff)', // from-blue-50 to-indigo-100
+        minHeight: "100vh",
+        display: "flex",
+        width: "100%",
+        backgroundImage: "linear-gradient(to bottom right, #eff6ff, #e0e7ff)",
       }}
     >
       <CssBaseline />
@@ -40,18 +40,20 @@ const AppLayout = () => {
         handleMobileToggle={() => setMobileOpen(false)}
       />
 
-      {/* MAIN CONTENT */}
       <Box
         component="main"
-        sx={{
+        sx={(theme) => ({
           flexGrow: 1,
           mt: 9,
-          ml: `${isOpen ? 20 : 20}px`,
+          ml: {
+            xs: "15px",
+            sm: `20px`,
+          },
           pr: 2,
-          transition: 'margin-left 0.3s ease',
-          overflow: 'hidden',
+          transition: "margin-left 0.3s ease",
+          overflow: "hidden",
           mb: 2,
-        }}
+        })}
       >
         <Outlet />
       </Box>

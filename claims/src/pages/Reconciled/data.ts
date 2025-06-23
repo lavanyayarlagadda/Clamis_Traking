@@ -13,7 +13,7 @@ export const reconciledClaimsNTR = [
     insuranceCompany: "ICICI Lombard",
     status: "Settled",
     paymentDate: "2024-06-10",
-    manualReconciled: true,
+    manualReconciled: false,
   },
   {
     claimId: "CLM002",
@@ -45,7 +45,7 @@ export const reconciledClaimsNTR = [
     insuranceCompany: "Religare",
     status: "Settled",
     paymentDate: "2024-04-20",
-    manualReconciled: true,
+    manualReconciled: false,
   },
   {
     claimId: "CLM004",
@@ -59,7 +59,7 @@ export const reconciledClaimsNTR = [
     utrNo: "UTR004",
     chequeNumber: "CHQ004",
     insuranceCompany: "ICICI Lombard",
-    status: "Pending",
+    status: "Settled",
     paymentDate: "2024-03-10",
     manualReconciled: false,
   },
@@ -77,7 +77,7 @@ export const reconciledClaimsNTR = [
     insuranceCompany: "Star Health",
     status: "Settled",
     paymentDate: "2024-02-25",
-    manualReconciled: true,
+    manualReconciled: false,
   }
 ];
 
