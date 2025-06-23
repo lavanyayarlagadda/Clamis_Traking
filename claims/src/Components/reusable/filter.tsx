@@ -1,8 +1,19 @@
 // FilterDrawer.tsx
 import React, { useState } from "react";
 import {
-  Drawer, Box, Typography, IconButton, Button, Chip,
-  TextField, Divider, InputAdornment,
+  Drawer,
+  Box,
+  Typography,
+  IconButton,
+  Button,
+  Chip,
+  TextField,
+  Divider,
+  InputAdornment,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -15,7 +26,6 @@ interface FilterValues {
   fromDate: Date | null;
   toDate: Date | null;
   insuranceCompanies: string[];
-  reconciledBy: string;
   claimStatus?: string | null;
   claimAge?: string | null;
 }
@@ -26,7 +36,6 @@ interface FilterDrawerProps {
   filters: FilterValues;
   onChange: (filters: FilterValues) => void;
   insuranceOptions: string[];
-  reconciledOptions: string[];
   pageType: "reconciliation" | "unreconciliation";
 }
 
@@ -36,17 +45,22 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
   filters,
   onChange,
   insuranceOptions,
-  reconciledOptions,
   pageType,
 }) => {
   const [openFrom, setOpenFrom] = useState(false);
   const [openTo, setOpenTo] = useState(false);
 
-  const handleDateChange = (value: Date | null, field: "fromDate" | "toDate") => {
+  const handleDateChange = (
+    value: Date | null,
+    field: "fromDate" | "toDate"
+  ) => {
     onChange({
       ...filters,
       [field]: value,
-      ...(field === "fromDate" && filters.toDate && value && filters.toDate < value
+      ...(field === "fromDate" &&
+      filters.toDate &&
+      value &&
+      filters.toDate < value
         ? { toDate: null }
         : {}),
     });
@@ -57,7 +71,6 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
       fromDate: null,
       toDate: null,
       insuranceCompanies: [],
-      reconciledBy: "",
       claimStatus: null,
       claimAge: null,
     });
@@ -65,13 +78,28 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
 
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
-      <Box sx={{ width: 430, display: "flex", flexDirection: "column", height: "100%" }}>
+      <Box
+        sx={{
+          width: 430,
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+        }}
+      >
         {/* HEADER */}
-        <Box sx={{
-          p: 2, display: "flex", justifyContent: "space-between", alignItems: "center",
-          borderBottom: "1px solid #e0e0e0", bgcolor: "#eaf1ff",
-        }}>
-          <Typography variant="h6" fontWeight={600}>Filter Claims</Typography>
+        <Box
+          sx={{
+            p: 2,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderBottom: "1px solid #e0e0e0",
+            bgcolor: "#eaf1ff",
+          }}
+        >
+          <Typography variant="h6" fontWeight={600}>
+            Filter Claims
+          </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
           </IconButton>
@@ -81,25 +109,24 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
         <Box sx={{ p: 2, flexGrow: 1, overflowY: "auto" }}>
           {/* DATE RANGE */}
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-             <Box
-                   p={0}
-                   display="flex"
-                   flexWrap="wrap"
-                   gap={2}
-                   borderRadius={2}
-                 >
-                   {/* Date Range */}
-                   <Box
-                     sx={{
-                       display: "flex",
-                       gap: "8px",
-                       flexDirection: { md: "row", sm: "column" },
-                     }}
-                   >
-                     <Box display="flex" flexDirection="column" flex="1" maxWidth="170px">
-                         <Typography variant="subtitle1" fontWeight="bold" mb={1}>
-              From Date
-             </Typography>
+            <Box p={0} display="flex" flexWrap="wrap" gap={2} borderRadius={2}>
+              {/* Date Range */}
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: "8px",
+                  flexDirection: { md: "row", sm: "column" },
+                }}
+              >
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  flex="1"
+                  maxWidth="170px"
+                >
+                  <Typography variant="subtitle1" fontWeight="bold" mb={1}>
+                    From Date
+                  </Typography>
                   <DatePicker
                     open={openFrom}
                     onOpen={() => setOpenFrom(true)}
@@ -115,10 +142,12 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
                           endAdornment: (
                             <InputAdornment position="end">
                               {filters.fromDate ? (
-                                <IconButton onClick={(e) => {
-                                  e.stopPropagation();
-                                  onChange({ ...filters, fromDate: null });
-                                }}>
+                                <IconButton
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onChange({ ...filters, fromDate: null });
+                                  }}
+                                >
                                   <ClearIcon />
                                 </IconButton>
                               ) : (
@@ -134,12 +163,17 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
                   />
                 </Box>
 
-                <ArrowForward sx={{ alignSelf: "center" ,marginTop:4}} />
+                <ArrowForward sx={{ alignSelf: "center", marginTop: 4 }} />
 
-          <Box display="flex" flexDirection="column" flex="1" maxWidth="170px">
-             <Typography variant="subtitle1" fontWeight="bold" mb={1}>
-   To Date
-  </Typography>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  flex="1"
+                  maxWidth="170px"
+                >
+                  <Typography variant="subtitle1" fontWeight="bold" mb={1}>
+                    To Date
+                  </Typography>
                   <DatePicker
                     open={openTo}
                     onOpen={() => setOpenTo(true)}
@@ -147,11 +181,10 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
                     value={filters.toDate}
                     onChange={(val) => handleDateChange(val, "toDate")}
                     format="dd/MM/yyyy"
-                  shouldDisableDate={(date) => {
-  if (!filters.fromDate) return false; // ✅ return a boolean
-  return date < filters.fromDate;
-}}
-
+                    shouldDisableDate={(date) => {
+                      if (!filters.fromDate) return false; // ✅ return a boolean
+                      return date < filters.fromDate;
+                    }}
                     slotProps={{
                       textField: {
                         placeholder: "dd/MM/yyyy",
@@ -160,10 +193,12 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
                           endAdornment: (
                             <InputAdornment position="end">
                               {filters.toDate ? (
-                                <IconButton onClick={(e) => {
-                                  e.stopPropagation();
-                                  onChange({ ...filters, toDate: null });
-                                }}>
+                                <IconButton
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onChange({ ...filters, toDate: null });
+                                  }}
+                                >
                                   <ClearIcon />
                                 </IconButton>
                               ) : (
@@ -199,47 +234,25 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
                       if (!isSelected) {
                         onChange({
                           ...filters,
-                          insuranceCompanies: [...filters.insuranceCompanies, company],
+                          insuranceCompanies: [
+                            ...filters.insuranceCompanies,
+                            company,
+                          ],
                         });
                       }
                     }}
-                    onDelete={isSelected ? () =>
-                      onChange({
-                        ...filters,
-                        insuranceCompanies: filters.insuranceCompanies.filter((c) => c !== company),
-                      }) : undefined}
-                    sx={{
-                      backgroundColor: isSelected ? "#4DB6AC" : "#e0e0e0",
-                      color: isSelected ? "#fff" : "#000",
-                      "& .MuiChip-deleteIcon": {
-                        color: "#fff",
-                      },
-                    }}
-                  />
-                );
-              })}
-            </Box>
-          </Box>
-
-          {/* RECONCILED BY */}
-          <Box mb={3}>
-            <Typography variant="subtitle1" fontWeight="bold" mb={1}>
-              Reconciled By
-            </Typography>
-            <Box display="flex" gap={1}>
-              {reconciledOptions.map((user) => {
-                const isSelected = filters.reconciledBy === user;
-                return (
-                  <Chip
-                    key={user}
-                    label={user}
-                    clickable={!isSelected}
-                    onClick={() => {
-                      if (!isSelected) {
-                        onChange({ ...filters, reconciledBy: user });
-                      }
-                    }}
-                    onDelete={isSelected ? () => onChange({ ...filters, reconciledBy: "" }) : undefined}
+                    onDelete={
+                      isSelected
+                        ? () =>
+                            onChange({
+                              ...filters,
+                              insuranceCompanies:
+                                filters.insuranceCompanies.filter(
+                                  (c) => c !== company
+                                ),
+                            })
+                        : undefined
+                    }
                     sx={{
                       backgroundColor: isSelected ? "#4DB6AC" : "#e0e0e0",
                       color: isSelected ? "#fff" : "#000",
@@ -267,12 +280,17 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
                       key={status}
                       label={status}
                       clickable
-                      variant={filters.claimStatus === status ? "filled" : "outlined"}
-                      color={filters.claimStatus === status ? "info" : "default"}
+                      variant={
+                        filters.claimStatus === status ? "filled" : "outlined"
+                      }
+                      color={
+                        filters.claimStatus === status ? "info" : "default"
+                      }
                       onClick={() =>
                         onChange({
                           ...filters,
-                          claimStatus: filters.claimStatus === status ? null : status,
+                          claimStatus:
+                            filters.claimStatus === status ? null : status,
                         })
                       }
                     />
@@ -282,34 +300,58 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
 
               {/* CLAIM AGE */}
               <Box>
-                <Typography variant="subtitle1" fontWeight="bold" mb={1}>
-                  Claim Age (days)
-                </Typography>
-                <TextField
-                  fullWidth
-                  size="small"
-                  type="number"
-                  placeholder="Enter number of days"
-                  value={filters.claimAge || ""}
-                  onChange={(e) => onChange({ ...filters, claimAge: e.target.value })}
-                />
+                <FormControl fullWidth size="small">
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight="bold"
+                    mb={1}
+                    id="claim-age-label"
+                  >
+                    Claim Age (days)
+                  </Typography>
+                  <Select
+                    labelId="claim-age-label"
+                    value={filters.claimAge || ""}
+                    onChange={(e) =>
+                      onChange({ ...filters, claimAge: e.target.value })
+                    }
+                  >
+                    <MenuItem value="">None</MenuItem>
+                    <MenuItem value={7}>7 days</MenuItem>
+                    <MenuItem value={15}>15 days</MenuItem>
+                    <MenuItem value={30}>30 days</MenuItem>
+                    <MenuItem value={60}>60 days</MenuItem>
+                    <MenuItem value={90}>90 days</MenuItem>
+                  </Select>
+                </FormControl>
               </Box>
             </>
           )}
         </Box>
 
         {/* FOOTER */}
-        <Box sx={{
-          p: 2,
-          borderTop: "1px solid #e0e0e0",
-          display: "flex",
-          justifyContent: "space-between",
-          bgcolor: "#f9fafc",
-        }}>
-          <Button onClick={handleClear} variant="outlined" color="error" sx={{ borderRadius: 2, px: 3 }}>
+        <Box
+          sx={{
+            p: 2,
+            borderTop: "1px solid #e0e0e0",
+            display: "flex",
+            justifyContent: "space-between",
+            bgcolor: "#f9fafc",
+          }}
+        >
+          <Button
+            onClick={handleClear}
+            variant="outlined"
+            color="error"
+            sx={{ borderRadius: 2, px: 3 }}
+          >
             Clear
           </Button>
-          <Button onClick={onClose} variant="contained" sx={{ borderRadius: 2, px: 3 }}>
+          <Button
+            onClick={onClose}
+            variant="contained"
+            sx={{ borderRadius: 2, px: 3 }}
+          >
             Apply
           </Button>
         </Box>

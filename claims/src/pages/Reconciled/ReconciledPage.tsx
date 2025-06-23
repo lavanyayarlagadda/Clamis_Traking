@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Filter, FilterList, Visibility } from "@mui/icons-material";
 import { reconciledClaimsNTR, reconciledClaimsOther } from "./data";
-import { DynamicTabs } from '../../components/reusable/tabs';
+import { DynamicTabs } from "../../components/reusable/tabs";
 import { DynamicClaimDialog } from "../../components/reusable/dialog";
 import { Box, Chip } from "@mui/material";
 import DynamicTable from "../../components/reusable/dynamicTable";
@@ -12,91 +12,83 @@ export default function ReconciledPage() {
   const [activeTab, setActiveTab] = useState("ntr");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
-interface FilterValues {
-  fromDate: Date | null;
-  toDate: Date | null;
-  insuranceCompanies: string[];
-  reconciledBy: string;
-}
+  interface FilterValues {
+    fromDate: Date | null;
+    toDate: Date | null;
+    insuranceCompanies: string[];
+  }
 
-   const [filters, setFilters] = useState<FilterValues>({
-     fromDate: null,
-     toDate: null,
-     insuranceCompanies: [],
-     reconciledBy: "",
-   });
+  const [filters, setFilters] = useState<FilterValues>({
+    fromDate: null,
+    toDate: null,
+    insuranceCompanies: [],
+  });
 
- const statusColorMap: Record<"Settled" | "Pending" | "Rejected", string> = {
-  Settled: "#48D56B",   // green
-  Pending: "#FACC15",   // yellow
-  Rejected: "#EF4444",  // red
-};
-
+  const statusColorMap: Record<"Settled" | "Pending" | "Rejected", string> = {
+    Settled: "#48D56B", // green
+    Pending: "#FACC15", // yellow
+    Rejected: "#EF4444", // red
+  };
 
   const columns = [
-    { key: "claimId", label: "Claim ID" },
-    { key: "ihxRefId", label: "IHX Ref ID" },
+    { key: "claimNumber", label: "Claim Number" },
+    { key: "insuranceCompany", label: "Insurance Company" },
+    { key: "chequeNumber", label: "Cheque No." },
+    { key: "chequeReceivedDate", label: "Cheque Received Date" },
+    { key: "claimedDate", label: "Claimed Date" },
     {
-      key: "admissionDischarge",
-      label: "Admission / Discharge",
-      render: (row: any) => `${row.admissionDate} - ${row.dischargeDate}`,
+      key: "claimedAmount",
+      label: "Claimed Amount",
+      render: (row: any) => `₹${row.claimedAmount?.toLocaleString()}`,
     },
     {
-      key: "claimedVsApproved",
-      label: "Claimed vs Approved",
-      render: (row: any) =>
-        `₹${row.claimedAmount.toLocaleString()} / ₹${row.approvedAmount.toLocaleString()}`,
+      key: "approvedAmount",
+      label: "Approved Amount",
+      render: (row: any) => `₹${row.approvedAmount?.toLocaleString()}`,
     },
     {
       key: "settledAmount",
-      label: "Settled",
-      render: (r: any) => `₹${r.settledAmount.toLocaleString()}`,
+      label: "Settled Amount",
+      render: (row: any) => `₹${row.settledAmount?.toLocaleString()}`,
     },
     {
-      key: "tds",
-      label: "TDS",
-      render: (r: any) => `₹${r.tds.toLocaleString()}`,
+      key: "status",
+      label: "Status",
+      render: (row: any) => {
+        const backgroundColor =
+          statusColorMap[row.status as keyof typeof statusColorMap] ||
+          "#E5E7EB";
+        return (
+          <Chip
+            label={row.status}
+            size="small"
+            sx={{
+              backgroundColor,
+              color: "#fff",
+              fontWeight: 500,
+            }}
+          />
+        );
+      },
     },
-    { key: "utrNo", label: "UTR No." },
-    { key: "chequeNumber", label: "Cheque No." },
-    { key: "insuranceCompany", label: "Insurance Company" },
-
-   {
-  key: "status",
-  label: "Status",
-  render: (row: any) => {
-    const backgroundColor = statusColorMap[row.status as keyof typeof statusColorMap] || "#E5E7EB"; // default gray
-    return (
-      <Chip
-        label={row.status}
-        size="small"
-        sx={{
-          backgroundColor,
-          color: "#fff",
-          fontWeight: 500,
-        }}
-      />
-    );
-  },
-},
-
-
-    { key: "paymentDate", label: "Payment Date" },
   ];
+
   const dummyDialogData = {
-    claimId: "CLM-001245",
-    ihxRefId: "IHX-789654",
-    hospitalName: "Apollo Hospitals, Hyderabad",
-    patientName: "Ravi Kumar",
-    diagnosis: "Acute Appendicitis",
+    claimNumber: "CLM-001245",
+    insuranceCompany: "ICICI Lombard",
+    chequeNumber: "CHQ90887711",
+    chequeReceivedDate: "2024-06-19", // add if needed
+    claimedDate: "2024-06-01",
     claimedAmount: 85000,
     approvedAmount: 80000,
     settledAmount: 78000,
     tds: 2000,
     utrNo: "UTR202406180001",
-    chequeNumber: "CHQ90887711",
-    insuranceCompany: "ICICI Lombard",
     paymentDate: "2024-06-18",
+    hospitalName: "Apollo Hospitals, Hyderabad",
+    patientName: "Ravi Kumar",
+    diagnosis: "Acute Appendicitis",
+    manualReconciled: true,
     timeline: [
       {
         label: "Claim Submitted",
@@ -129,7 +121,7 @@ interface FilterValues {
   const currentClaims =
     activeTab === "ntr" ? reconciledClaimsNTR : reconciledClaimsOther;
 
-
+  console.log(activeTab, "ACTIVETAB");
   return (
     <>
       <Box
@@ -139,18 +131,17 @@ interface FilterValues {
           alignItems: "center",
           flexWrap: "wrap",
           mb: 2,
-          
         }}
       >
-        <Box sx={{            mt:1}}>
-        <DynamicTabs
-          tabs={[
-            { label: "NTR Vaidyaseva", value: "ntr" },
-            { label: "Other Schemes", value: "other" },
-          ]}
-          currentValue={activeTab}
-          onChange={setActiveTab}
-        />
+        <Box sx={{ mt: 1 }}>
+          <DynamicTabs
+            tabs={[
+              { label: "NTR Vaidyaseva", value: "ntr" },
+              { label: "Other Schemes", value: "other" },
+            ]}
+            currentValue={activeTab}
+            onChange={setActiveTab}
+          />
         </Box>
 
         <Box
@@ -166,10 +157,9 @@ interface FilterValues {
             color: "#2563EB",
             fontSize: "14px",
             fontWeight: 500,
-            '&:hover': {
+            "&:hover": {
               backgroundColor: "#BAE6FD",
             },
-
           }}
           onClick={() => setFilterOpen(true)}
         >
@@ -178,21 +168,19 @@ interface FilterValues {
         </Box>
       </Box>
 
-    <FilterDrawer
+      <FilterDrawer
         open={filterOpen}
         onClose={() => setFilterOpen(false)}
-  filters={filters}
-  onChange={setFilters}
-  insuranceOptions={['ICICI', 'Star', 'Religare']}
-  reconciledOptions={['Manual', 'Arogya Setu']}
-  pageType="reconciliation" // or "reconciliation"
-/>
-
-
+        filters={filters}
+        onChange={setFilters}
+        insuranceOptions={["ICICI", "Star", "Religare"]}
+        pageType="reconciliation" // or "reconciliation"
+      />
 
       <DynamicTable
-        title={`Reconciled Claims - ${activeTab === "ntr" ? "NTR Vaidyaseva" : "Other Schemes"
-          }`}
+        title={`Reconciled Claims - ${
+          activeTab === "ntr" ? "NTR Vaidyaseva" : "Other Schemes"
+        }`}
         countLabel={`${currentClaims.length} Claims`}
         columns={columns}
         data={currentClaims}
@@ -211,54 +199,31 @@ interface FilterValues {
         iconColor={"#48D56B"}
       />
 
-
       {dummyDialogData && (
         <DynamicClaimDialog
           open={dialogOpen}
           pageType="reconciliation"
-          onClose={() => {
-            setDialogOpen(false);
-            // setdummyDialogData(null); // Optional: reset dialog data
-          }}
-          title={`Claim Details - ${dummyDialogData.claimId}`}
+          onClose={() => setDialogOpen(false)}
+          title={`Claim Details - ${dummyDialogData.claimNumber}`}
           data={{
             claimInfo: {
-              "Claim ID": dummyDialogData.claimId,
-              "IHX Ref ID": dummyDialogData.ihxRefId,
-              "Hospital": dummyDialogData.hospitalName,
-              "Patient": dummyDialogData.patientName ?? "N/A",
-              "Diagnosis": dummyDialogData.diagnosis ?? "N/A",
+              "Claim Number": dummyDialogData.claimNumber,
+              Hospital: dummyDialogData.hospitalName,
+              Patient: dummyDialogData.patientName ?? "N/A",
+              Diagnosis: dummyDialogData.diagnosis ?? "N/A",
             },
             financialDetails: {
               "Claimed Amount": `₹${dummyDialogData.claimedAmount?.toLocaleString()}`,
               "Approved Amount": `₹${dummyDialogData.approvedAmount?.toLocaleString()}`,
               "Settled Amount": `₹${dummyDialogData.settledAmount?.toLocaleString()}`,
-              "TDS": `₹${dummyDialogData.tds?.toLocaleString()}`,
+              TDS: `₹${dummyDialogData.tds?.toLocaleString()}`,
               "UTR Number": dummyDialogData.utrNo,
               "Payment Date": dummyDialogData.paymentDate,
             },
-            timeline: [
-              {
-                label: "Claim Submitted",
-                description: "Initial claim submission received",
-                date: "2024-01-15",
-              },
-              {
-                label: "Approved",
-                description: "Claim approved for settlement",
-                date: "2024-01-20",
-              },
-              {
-                label: "Reconciled",
-                description: "Reconciled with bank",
-                date: "2024-01-25",
-              },
-            ],
+            timeline: dummyDialogData.timeline,
           }}
         />
       )}
-
-
     </>
   );
 }
