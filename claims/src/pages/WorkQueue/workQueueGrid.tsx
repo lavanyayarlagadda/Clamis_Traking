@@ -5,6 +5,7 @@ import DynamicTable from "../../components/reusable/dynamicTable"
 import { Chip, Stack, Typography } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import AssigneePopover, { Assignee } from './AssigneSelect';
 
 // Sample data for demo
 const taskData = [
@@ -38,6 +39,12 @@ const taskData = [
   },
 ];
 
+const assigneesList: Assignee[] = [
+  { id: '1', name: 'Alice ', },
+  { id: '2', name: 'Bob', },
+  { id: '3', name: 'Charlie', }
+];
+
 // Column definitions
 const columns = [
   { key: "claimNumber", label: "Claim Number" },
@@ -52,6 +59,24 @@ const columns = [
         size="small"
       />
     ) 
+  },
+  {
+    key: 'assignee',
+    label: 'Assignee',
+    render: (params: any) => {
+      const [selectedAssigneeId, setSelectedAssigneeId] = React.useState<string | null>(params.value);
+
+      return (
+        <AssigneePopover
+          assignees={assigneesList}
+          selectedAssigneeId={selectedAssigneeId}
+          onSelect={(assignee:Assignee) => {
+            setSelectedAssigneeId(assignee.id);
+            // Optional: Call API or update parent state
+          }}
+        />
+      );
+    },
   },
   { key: "chequeNumber", label: "Cheque Number" },
   { key: "patientPaid", label: "Patient Paid Amount", render: (row: any) => `₹${row.patientPaid}` },
