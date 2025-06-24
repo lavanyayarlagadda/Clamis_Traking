@@ -9,7 +9,7 @@ import {
   useTheme
 } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
-import Dropdown from '../../Components/reusable/Dropdown';
+import Dropdown from '../../components/reusable/Dropdown';
 
 const InsurancePerformance: React.FC = () => {
   const theme = useTheme()
