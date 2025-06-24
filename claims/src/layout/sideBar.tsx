@@ -118,7 +118,9 @@ const DrawerContent = ({
                   color: isChildActive ? '#fff' : '#111827',
                   fontWeight: isChildActive ? 600 : 500,
                   '&:hover': {
-                    background: '#f3f4f6',
+                    background: isChildActive
+                    ? 'linear-gradient(to right, #6366f1, #3b82f6)'
+                    : 'transparent',
                   },
                 }}
               >
@@ -168,7 +170,7 @@ const DrawerContent = ({
                       e.stopPropagation();
                       toggleMenu(item.id);
                     }}
-                    sx={{ color: isChildActive ? '#fff' : '#6b7280', ml: 1 }}
+                    sx={{ color: isChildActive ? '#fff' : '#6b7280', ml: 0 }}
                   >
                     {isParentOpen ? <ExpandLess fontSize="small" /> : <ExpandMore fontSize="small" />}
                   </IconButton>

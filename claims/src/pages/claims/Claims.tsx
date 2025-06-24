@@ -149,24 +149,7 @@ const columns = [
         <Chip label="N/A" size="small" variant="outlined" sx={{ color: "#9CA3AF" }} />
       ),
   },
-  {
-    key: "varianceAmount",
-    label: "Variance",
-    render: (row: any) => (
-      <Chip
-        label={`₹${row.varianceAmount?.toLocaleString() ?? 0}`}
-        size="small"
-        sx={{
-          backgroundColor: "#FCD34D",
-          color: "#78350F",
-          fontWeight: 500,
-        }}
-      />
-    ),
-  },
-
-  // Status
-  {
+    {
     key: "status",
     label: "Status",
     render: (row: any) => {
@@ -186,6 +169,24 @@ const columns = [
       );
     },
   },
+  {
+    key: "varianceAmount",
+    label: "Variance",
+    render: (row: any) => (
+      <Chip
+        label={`₹${row.varianceAmount?.toLocaleString() ?? 0}`}
+        size="small"
+        sx={{
+          backgroundColor: "#FCD34D",
+          color: "#78350F",
+          fontWeight: 500,
+        }}
+      />
+    ),
+  },
+
+  // Status
+
 
   // Meta Data
   {
@@ -361,7 +362,7 @@ const columns = [
         chipColor={"#EF4444"}
         iconColor={"#EF4444"}
         Icon={DescriptionIcon}
-        minColumns={12}
+        minColumns={8}
         // actions={[
         //   {
         //     label: "Start Manual Reconcilation",
