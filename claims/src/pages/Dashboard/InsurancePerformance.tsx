@@ -6,10 +6,11 @@ import {
   Typography,
   Box,
   Stack,
-  useTheme
+  useTheme,
+  Tooltip
 } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
-import Dropdown from '../../components/reusable/Dropdown';
+import Dropdown from '../../Components/reusable/Dropdown';
 
 const InsurancePerformance: React.FC = () => {
   const theme = useTheme()
@@ -28,42 +29,48 @@ const InsurancePerformance: React.FC = () => {
     { name: 'HDFC ERGO', amount: 876543, percentage: 19, claims: 320 },
     { name: 'Bajaj Allianz', amount: 745321, percentage: 17, claims: 275 },
     { name: 'Others', amount: 576892, percentage: 13, claims: 180 },
-      { name: 'NTR Vaidyaseva', amount: 954789, percentage: 58, claims: 200 },
+    { name: 'NTR Vaidyaseva', amount: 954789, percentage: 58, claims: 200 },
   ];
 
- 
 
 
 
-const allData = allTimeData;
-const ntrData = allTimeData.filter((d) => d.name === 'NTR Vaidyaseva');
-const privateData = allTimeData.filter((d) =>
-  ['ICICI Lombard', 'Star Health', 'HDFC ERGO', 'Bajaj Allianz'].includes(d.name)
-);
 
-const getData = () => {
-  switch (selectedInsurance) {
-    case 'NTR vaidhya seva':
-      return ntrData;
-    case 'Private Insurance':
-      return privateData;
-    default:
-      return allData;
-  }
-};
+  const allData = allTimeData;
+  const ntrData = allTimeData.filter((d) => d.name === 'NTR Vaidyaseva');
+  const privateData = allTimeData.filter((d) =>
+    ['ICICI Lombard', 'Star Health', 'HDFC ERGO', 'Bajaj Allianz'].includes(d.name)
+  );
 
-const data = getData();
+  const getData = () => {
+    switch (selectedInsurance) {
+      case 'NTR vaidhya seva':
+        return ntrData;
+      case 'Private Insurance':
+        return privateData;
+      default:
+        return allData;
+    }
+  };
+
+  const data = getData();
 
 
   const handleTimeChange = (value: string) => {
     setSelectedInsurance(value);
   };
 
+  // Truncate and tooltip map
+  const truncatedLabels = data.map((item) => ({
+    full: item.name,
+    short: item.name.length > 10 ? item.name.slice(0, 10) + '…' : item.name
+  }));
+
   return (
     <Card
       elevation={3}
-     sx={{
-       background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+      sx={{
+        background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
         borderRadius: 3,
         boxShadow: 2,
         transition: 'transform 0.2s ease-in-out',
@@ -84,8 +91,9 @@ const data = getData();
             </Box>
           </Stack>
         }
-          sx={{ px: 3, pt: 3, pb: 0 }}
+        sx={{ px: 3, pt: 3, pb: 0 }}
       />
+  
       <CardContent sx={{ px: 3, pt: 1, pb: 3 }}>
         <Box height={300}>
           <LineChart
@@ -93,21 +101,26 @@ const data = getData();
             xAxis={[
               {
                 id: 'company',
-                data: data.map((d) => d.name),
+                data: truncatedLabels.map(label => label.short),
                 scaleType: 'point',
                 label: 'Insurance Company',
+                valueFormatter: (value) =>
+                  value.length > 12
+                    ? `${value.slice(0, 10)}…` // truncating the label
+                    : value,
+
               },
             ]}
             series={[
               {
                 id: 'amount',
-                data: data.map((d) => d.amount),
+                data: data.map(d => d.amount),
                 label: 'Settlement Amount',
                 color: '#3b82f6',
               },
               {
                 id: 'claims',
-                data: data.map((d) => d.claims),
+                data: data.map(d => d.claims),
                 label: 'Claims Count',
                 color: '#10b981',
               },
@@ -123,6 +136,11 @@ const data = getData();
               '.MuiChartsAxis-tickLabel': {
                 fontSize: 12,
                 fill: '#4b5563',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                maxWidth: 60,
+                 cursor: 'default',
               },
               '.MuiChartsLegend-series text': {
                 fontSize: 13,
@@ -134,9 +152,13 @@ const data = getData();
                 stroke: '#f3f4f6',
               },
             }}
+            
           />
         </Box>
+
+
       </CardContent>
+
     </Card>
   );
 };

@@ -9,7 +9,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { PieChart } from '@mui/x-charts/PieChart';
-import Dropdown from '../../components/reusable/Dropdown'
+import Dropdown from '../../Components/reusable/Dropdown'
 
 const ClaimsByStatus: React.FC = () => {
     const theme = useTheme();
