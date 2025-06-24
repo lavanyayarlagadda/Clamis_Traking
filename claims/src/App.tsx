@@ -5,7 +5,7 @@ import ReportsPage from './pages/Reports/ReportsPAge';
 import ReconciledPage from './pages/Reconciled/ReconciledPage';
 import UnReconciledPage from './pages/Unreconciled/UnreconciledPAge';
 import ClaimsPage from './pages/claims/Claims';
-import WorkQueuePage from './pages/workQueue';
+// import WorkQueuePage from './pages/workQueue';
 const App = () => (
     <Routes>
       <Route path="/" element={<AppLayout />}>
@@ -14,8 +14,8 @@ const App = () => (
         <Route path="reports" element={<ReportsPage />} />
         <Route path="reconciled" element={<ReconciledPage />} />
         <Route path="unreconciled" element={<UnReconciledPage />} />
-        <Route path="claims" element={<ClaimsPage />} />
-        <Route path="workQueue" element={<WorkQueuePage />} />
+        <Route path="allclaims" element={<ClaimsPage />} />
+        {/* <Route path="workQueue" element={<WorkQueuePage />} /> */}
       </Route>
     </Routes>
 
