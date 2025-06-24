@@ -4,16 +4,56 @@ import {
   CardContent,
   CardHeader,
   Typography,
-  Box
+  Box,
+  Stack,
 } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
+import Dropdown from '../../components/reusable/Dropdown';
 
 const ClaimAmountChart: React.FC = () => {
-  const months = ['JAN', 'FEB', 'MAR', 'APR'];
-  const claimAmount = [4234567, 4876543, 5214789, 4567890];
-  const approvedAmount = [3890234, 4456789, 4789456, 4123567];
+  // Dropdown options and state
+  const insuranceOptions = ['All', 'NTR vaidhya seva', 'Private Insurance'];
+  const [selectedInsurance, setSelectedInsurance] = React.useState<string>(insuranceOptions[0]);
 
+  // Format currency for y-axis
   const formatCurrency = (value: number) => `₹${(value / 100000).toFixed(1)}L`;
+
+  // Sample data for different insurance types
+  const allData = {
+    months: ['JAN', 'FEB', 'MAR', 'APR'],
+    claimAmount: [4234567, 4876543, 5214789, 4567890],
+    approvedAmount: [3890234, 4456789, 4789456, 4123567]
+  };
+
+  const ntrData = {
+    months: ['JAN', 'FEB', 'MAR', 'APR'],
+    claimAmount: [3234567, 3876543, 4214789, 3567890],
+    approvedAmount: [2890234, 3456789, 3789456, 3123567]
+  };
+
+  const privateData = {
+    months: ['JAN', 'FEB', 'MAR', 'APR'],
+    claimAmount: [1000000, 1000000, 1000000, 1000000],
+    approvedAmount: [900000, 900000, 900000, 900000]
+  };
+
+  // Get data based on selected insurance
+  const getData = () => {
+    switch (selectedInsurance) {
+      case 'NTR vaidhya seva':
+        return ntrData;
+      case 'Private Insurance':
+        return privateData;
+      default:
+        return allData;
+    }
+  };
+
+  const { months, claimAmount, approvedAmount } = getData();
+
+  const handleInsuranceChange = (value: string) => {
+    setSelectedInsurance(value);
+  };
 
   return (
     <Card
@@ -25,16 +65,30 @@ const ClaimAmountChart: React.FC = () => {
     >
       <CardHeader
         title={
-          <Typography variant="h6" fontWeight="medium" color="text.primary">
-            Claim Amount vs Approved Amount
-          </Typography>
+          <Stack direction="row" justifyContent="space-between" alignItems="center" width="100%">
+            <Typography variant="h6" fontWeight="medium" color="text.primary">
+              Claim Amount vs Approved Amount
+            </Typography>
+            <Box sx={{ width: '40%' }}>
+              <Dropdown
+                value={selectedInsurance}
+                options={insuranceOptions}
+                onChange={handleInsuranceChange}
+              />
+            </Box>
+          </Stack>
         }
       />
       <CardContent>
         <Box height={300}>
           <BarChart
             height={300}
-            xAxis={[{ id: 'months', data: months, scaleType: 'band', label: 'Month' }]}
+            xAxis={[{ 
+              id: 'months', 
+              data: months, 
+              scaleType: 'band', 
+              label: 'Month' 
+            }]}
             series={[
               {
                 id: 'claimAmount',

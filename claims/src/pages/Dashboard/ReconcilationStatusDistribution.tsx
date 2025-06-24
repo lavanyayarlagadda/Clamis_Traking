@@ -5,8 +5,10 @@ import {
   CardHeader,
   Typography,
   Box,
-  LinearProgress
+  LinearProgress,
+  Stack
 } from '@mui/material';
+import Dropdown from '../../components/reusable/Dropdown';
 
 interface StatusData {
   name: string;
@@ -16,15 +18,52 @@ interface StatusData {
 }
 
 const ReconciliationStatusDistribution: React.FC = () => {
-  const data: StatusData[] = [
-    { name: 'Fully Reconciled', value: 72, amount: 2867890, color: '#22c55e' }, // green-500
-    { name: 'Pending Reconciled', value: 15, amount: 598234, color: '#eab308' }, // yellow-500
-    { name: 'Unreconciled', value: 8, amount: 323456, color: '#ef4444' }, // red-500
-    { name: 'Others', value: 5, amount: 156789, color: '#a855f7' } // purple-500
+  // Dropdown options and state
+  const insuranceOptions = ['All', 'NTR vaidhya seva', 'Private Insurance'];
+  const [selectedInsurance, setSelectedInsurance] = React.useState<string>(insuranceOptions[0]);
+
+  // Sample data for different insurance types
+  const allData: StatusData[] = [
+    { name: 'Fully Reconciled', value: 72, amount: 2867890, color: '#22c55e' },
+    { name: 'Pending Reconciled', value: 15, amount: 598234, color: '#eab308' },
+    { name: 'Unreconciled', value: 8, amount: 323456, color: '#ef4444' },
+    { name: 'Others', value: 5, amount: 156789, color: '#a855f7' }
   ];
+
+  const ntrData: StatusData[] = [
+    { name: 'Fully Reconciled', value: 68, amount: 1867890, color: '#22c55e' },
+    { name: 'Pending Reconciled', value: 18, amount: 498234, color: '#eab308' },
+    { name: 'Unreconciled', value: 10, amount: 273456, color: '#ef4444' },
+    { name: 'Others', value: 4, amount: 106789, color: '#a855f7' }
+  ];
+
+  const privateData: StatusData[] = [
+    { name: 'Fully Reconciled', value: 75, amount: 1000000, color: '#22c55e' },
+    { name: 'Pending Reconciled', value: 12, amount: 100000, color: '#eab308' },
+    { name: 'Unreconciled', value: 5, amount: 50000, color: '#ef4444' },
+    { name: 'Others', value: 8, amount: 50000, color: '#a855f7' }
+  ];
+
+  // Get data based on selected insurance
+  const getData = () => {
+    switch (selectedInsurance) {
+      case 'NTR vaidhya seva':
+        return ntrData;
+      case 'Private Insurance':
+        return privateData;
+      default:
+        return allData;
+    }
+  };
+
+  const data = getData();
 
   const formatCurrency = (value: number): string => {
     return `₹${(value / 100000).toFixed(1)}L`;
+  };
+
+  const handleInsuranceChange = (value: string) => {
+    setSelectedInsurance(value);
   };
 
   return (
@@ -37,9 +76,18 @@ const ReconciliationStatusDistribution: React.FC = () => {
     >
       <CardHeader
         title={
-          <Typography variant="h6" fontWeight="medium" color="text.primary">
-            Reconciliation Status Distribution
-          </Typography>
+          <Stack direction="row" justifyContent="space-between" alignItems="center" width="100%">
+            <Typography variant="h6" fontWeight="medium" color="text.primary">
+              Reconciliation Status Distribution
+            </Typography>
+            <Box sx={{ width: '40%' }}>
+              <Dropdown
+                value={selectedInsurance}
+                options={insuranceOptions}
+                onChange={handleInsuranceChange}
+              />
+            </Box>
+          </Stack>
         }
       />
       <CardContent>
@@ -66,7 +114,7 @@ const ReconciliationStatusDistribution: React.FC = () => {
                 height: 10,
                 borderRadius: 5,
                 mt: 1,
-                backgroundColor: '#e5e7eb', // gray-200
+                backgroundColor: '#e5e7eb',
                 '& .MuiLinearProgress-bar': {
                   backgroundColor: item.color,
                 },
