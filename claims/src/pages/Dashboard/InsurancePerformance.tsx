@@ -21,7 +21,7 @@ const InsurancePerformance: React.FC = () => {
   // Format currency for y-axis
   const formatCurrency = (value: number) => `₹${(value / 100000).toFixed(1)}L`;
 
-  // Sample data for different time periods
+  // Sample data for different insurance companies
   const allTimeData = [
     { name: 'NTR Vaidyaseva', amount: 1245678, percentage: 28, claims: 450 },
     { name: 'ICICI Lombard', amount: 1245678, percentage: 28, claims: 425 },
@@ -29,17 +29,21 @@ const InsurancePerformance: React.FC = () => {
     { name: 'HDFC ERGO', amount: 876543, percentage: 19, claims: 320 },
     { name: 'Bajaj Allianz', amount: 745321, percentage: 17, claims: 275 },
     { name: 'Others', amount: 576892, percentage: 13, claims: 180 },
-    { name: 'NTR Vaidyaseva', amount: 954789, percentage: 58, claims: 200 },
   ];
 
+  // Get top 5 companies by amount
+  const getTop5Companies = (data: typeof allTimeData) => {
+    return [...data]
+      .sort((a, b) => b.amount - a.amount)
+      .slice(0, 5);
+  };
 
-
-
-
-  const allData = allTimeData;
+  const allData = getTop5Companies(allTimeData);
   const ntrData = allTimeData.filter((d) => d.name === 'NTR Vaidyaseva');
-  const privateData = allTimeData.filter((d) =>
-    ['ICICI Lombard', 'Star Health', 'HDFC ERGO', 'Bajaj Allianz'].includes(d.name)
+  const privateData = getTop5Companies(
+    allTimeData.filter((d) =>
+      ['ICICI Lombard', 'Star Health', 'HDFC ERGO', 'Bajaj Allianz'].includes(d.name)
+    )
   );
 
   const getData = () => {
@@ -80,7 +84,7 @@ const InsurancePerformance: React.FC = () => {
         title={
           <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
             <Typography variant="subtitle1" fontWeight={600} sx={{ color: theme.palette.text.primary, letterSpacing: 0.3 }}>
-              Insurance Company Performance
+              Top 5 Insurance Companies Performance
             </Typography>
             <Box sx={{ minWidth: 180 }}>
               <Dropdown
@@ -106,9 +110,8 @@ const InsurancePerformance: React.FC = () => {
                 label: 'Insurance Company',
                 valueFormatter: (value) =>
                   value.length > 12
-                    ? `${value.slice(0, 10)}…` // truncating the label
+                    ? `${value.slice(0, 10)}…`
                     : value,
-
               },
             ]}
             series={[
@@ -140,7 +143,7 @@ const InsurancePerformance: React.FC = () => {
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
                 maxWidth: 60,
-                 cursor: 'default',
+                cursor: 'default',
               },
               '.MuiChartsLegend-series text': {
                 fontSize: 13,
@@ -152,13 +155,9 @@ const InsurancePerformance: React.FC = () => {
                 stroke: '#f3f4f6',
               },
             }}
-            
           />
         </Box>
-
-
       </CardContent>
-
     </Card>
   );
 };
