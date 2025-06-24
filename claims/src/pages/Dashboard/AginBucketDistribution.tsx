@@ -72,13 +72,16 @@ const AgingBucketDistribution: React.FC = () => {
   };
 
   return (
-    <Card
-      elevation={1}
-      sx={{
-        bgcolor: 'rgba(255,255,255,0.9)',
-        backdropFilter: 'blur(4px)',
-      }}
-    >
+      <Card
+          elevation={3}
+           sx={{
+            bgcolor: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+            borderRadius: 3,
+            boxShadow: 2,
+            transition: 'transform 0.2s ease-in-out',
+            
+          }}
+        >
       <CardHeader
         title={
           <Stack direction="row" justifyContent="space-between" alignItems="center" width="100%">
@@ -95,84 +98,113 @@ const AgingBucketDistribution: React.FC = () => {
           </Stack>
         }
       />
-      <CardContent>
-        <Box sx={{ position: 'relative', height: 450 }}>
-          {/* Bar Chart */}
-          <BarChart
-            height={400}
-            margin={{ top: 30, bottom: 70, left: 60, right: 70 }}
-            xAxis={[
-              {
-                id: 'bucket',
-                data: buckets,
-                scaleType: 'band',
-              },
-            ]}
-            yAxis={[
-              {
-                id: 'claims-amount',
-                label: 'Claims & Amount',
-              },
-            ]}
-            series={[
-              {
-                id: 'claims',
-                label: 'Claims Count',
-                data: data.map((d) => d.claims),
-                color: '#3b82f6',
-              },
-              {
-                id: 'amount',
-                label: 'Amount (₹L)',
-                data: data.map((d) => d.amount),
-                color: '#10b981',
-              },
-            ]}
-            grid={{ horizontal: true }}
-            // tooltip={{}}
-            // legend={{}}
-          />
+    <CardContent>
+  {/* ✅ Custom Legend */}
+  <Box display="flex" gap={4} justifyContent="center" mt={1} mb={3} flexWrap="wrap">
+    <Box display="flex" alignItems="center" gap={1}>
+      <Box sx={{ width: 14, height: 14, bgcolor: '#3b82f6', borderRadius: 0.5 }} />
+      <Typography variant="body2">Claims Count</Typography>
+    </Box>
 
-          {/* Line Chart (Overlay) */}
-          <LineChart
-            height={400}
-            margin={{ top: 30, bottom: 70, left: 60, right: 70 }}
-            xAxis={[
-              {
-                id: 'bucket-line',
-                data: buckets,
-                scaleType: 'point',
-              },
-            ]}
-            yAxis={[
-              {
-                id: 'avg-age',
-                label: 'Avg Age (Days)',
-                position: 'right',
-              },
-            ]}
-            series={[
-              {
-                id: 'avgAge',
-                label: 'Average Age (Days)',
-                data: data.map((d) => d.avgAge),
-                color: '#ef4444',
-                curve: 'monotoneX',
+    <Box display="flex" alignItems="center" gap={1}>
+      <Box sx={{ width: 14, height: 14, bgcolor: '#10b981', borderRadius: 0.5 }} />
+      <Typography variant="body2">Amount (₹L)</Typography>
+    </Box>
 
-              },
-            ]}
+    <Box display="flex" alignItems="center" gap={1}>
+      <Box
+        sx={{
+          width: 14,
+          height: 14,
+          borderRadius: '50%',
+          border: '2px solid #ef4444',
+          bgcolor: 'transparent',
+        }}
+      />
+      <Typography variant="body2">Average Age (Days)</Typography>
+    </Box>
+  </Box>
 
-            // legend={{ hidden: true }}
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              pointerEvents: 'none',
-            }}
-          />
-        </Box>
-      </CardContent>
+  {/* ✅ Dual-Axis Chart */}
+<Box sx={{ position: 'relative', height: 420 }}>
+  {/* 👉 BarChart */}
+  <BarChart
+    height={420}
+    margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
+    xAxis={[
+      {
+        id: 'bucket',
+        data: buckets,
+        scaleType: 'band', // must match
+        tickLabelStyle: {
+          angle: -30,
+          textAnchor: 'end',
+          fontSize: 12,
+        },
+      },
+    ]}
+    yAxis={[
+      {
+        id: 'left-axis',
+        label: 'Claims / Amount',
+      },
+    ]}
+    series={[
+      {
+        id: 'claims',
+        // label: 'Claims Count',
+        data: data.map((d) => d.claims),
+        color: '#3b82f6',
+      },
+      {
+        id: 'amount',
+        // label: 'Amount (₹L)',
+        data: data.map((d) => +(d.amount / 100000).toFixed(2)),
+        color: '#10b981',
+      },
+    ]}
+    grid={{ horizontal: true }}
+  />
+
+  {/* 👉 LineChart overlaid, aligned using same xAxis ID */}
+  <LineChart
+    height={420}
+    margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
+    xAxis={[
+      {
+        id: 'bucket',
+        data: buckets,
+        scaleType: 'band', // match BarChart
+      },
+    ]}
+    yAxis={[
+      {
+        id: 'avg-age',
+        label: 'Avg Age (Days)',
+        position: 'right',
+      },
+    ]}
+    series={[
+      {
+        id: 'avgAge',
+        // label: 'Average Age (Days)',
+        data: data.map((d) => d.avgAge),
+        color: '#ef4444',
+        curve: 'monotoneX',
+      },
+    ]}
+    sx={{
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      pointerEvents: 'none',
+    }}
+  />
+</Box>
+
+</CardContent>
+
     </Card>
   );
 };

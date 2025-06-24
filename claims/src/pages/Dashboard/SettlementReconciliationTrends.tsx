@@ -8,10 +8,11 @@ import {
   ChartsGrid,
   AreaPlot,
 } from '@mui/x-charts';
-import { Card, CardContent, CardHeader, Typography, Box, Stack } from '@mui/material';
+import { Card, CardContent, CardHeader, Typography, Box, Stack, useTheme } from '@mui/material';
 import Dropdown from '../../components/reusable/Dropdown';
 
 const SettlementReconciliationTrends = () => {
+  const theme = useTheme();
   // Dropdown options and state
   const insuranceOptions = ['All', 'NTR vaidhya seva', 'Private Insurance'];
   const [selectedInsurance, setSelectedInsurance] = React.useState<string>(insuranceOptions[0]);
@@ -63,7 +64,7 @@ const SettlementReconciliationTrends = () => {
     <Card
       elevation={3}
       sx={{
-        bgcolor: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+        background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
         borderRadius: 3,
         boxShadow: 2,
         transition: 'transform 0.2s ease-in-out',
@@ -75,11 +76,11 @@ const SettlementReconciliationTrends = () => {
     >
       <CardHeader
         title={
-          <Stack direction="row" justifyContent="space-between" alignItems="center" width="100%">
-            <Typography variant="h6" fontWeight={500} color="text.primary">
+          <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+            <Typography variant="subtitle1" fontWeight={600} sx={{ color: theme.palette.text.primary, letterSpacing: 0.3 }}>
               Settlement vs Reconciliation Trends
             </Typography>
-            <Box sx={{ width: '40%' }}>
+            <Box sx={{ minWidth: 180 }}>
               <Dropdown
                 value={selectedInsurance}
                 options={insuranceOptions}

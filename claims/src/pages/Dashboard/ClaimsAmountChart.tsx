@@ -8,7 +8,7 @@ import {
   Stack,
 } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
-import Dropdown from '../../Components/reusable/Dropdown';
+import Dropdown from '../../components/reusable/Dropdown';
 
 const ClaimAmountChart: React.FC = () => {
   // Dropdown options and state

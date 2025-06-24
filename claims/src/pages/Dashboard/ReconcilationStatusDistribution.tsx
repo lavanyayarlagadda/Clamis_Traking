@@ -6,7 +6,8 @@ import {
   Typography,
   Box,
   LinearProgress,
-  Stack
+  Stack,
+  useTheme
 } from '@mui/material';
 import Dropdown from '../../components/reusable/Dropdown';
 
@@ -18,6 +19,7 @@ interface StatusData {
 }
 
 const ReconciliationStatusDistribution: React.FC = () => {
+  const theme = useTheme();
   // Dropdown options and state
   const insuranceOptions = ['All', 'NTR vaidhya seva', 'Private Insurance'];
   const [selectedInsurance, setSelectedInsurance] = React.useState<string>(insuranceOptions[0]);
@@ -70,22 +72,23 @@ const ReconciliationStatusDistribution: React.FC = () => {
     <Card
       elevation={3}
       sx={{
-        bgcolor: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+        background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
         borderRadius: 3,
         boxShadow: 2,
         transition: 'transform 0.2s ease-in-out',
         '&:hover': {
-          transform: 'translateY(-2px)',
+          transform: 'translateY(-4px)',
+          boxShadow: 4,
         },
       }}
     >
       <CardHeader
         title={
-          <Stack direction="row" justifyContent="space-between" alignItems="center" width="100%">
-            <Typography variant="h6" fontWeight={500} color="text.primary">
+          <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+            <Typography variant="subtitle1" fontWeight={600} sx={{ color: theme.palette.text.primary, letterSpacing: 0.3 }}>
               Reconciliation Status Distribution
             </Typography>
-            <Box sx={{ width: '40%' }}>
+            <Box sx={{ minWidth: 180 }}>
               <Dropdown
                 value={selectedInsurance}
                 options={insuranceOptions}
@@ -96,7 +99,7 @@ const ReconciliationStatusDistribution: React.FC = () => {
         }
         sx={{ px: 3, pt: 3, pb: 0 }}
       />
-      <CardContent sx={{ px: 3, pt: 2, pb: 3 }}>
+      <CardContent sx={{ px: 3, pt: 1, pb: 3 }}>
         {data.map((item, index) => (
           <Box key={index} mb={3}>
             <Box display="flex" justifyContent="space-between" alignItems="center">
