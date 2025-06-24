@@ -126,16 +126,18 @@ const Dashboard: React.FC = () => {
           </CardWrapper>
 
         </Box>
-
-
-        <Box
-          display="grid"
-          gridTemplateColumns={{ xs: "1fr", lg: "1fr 1fr" }}
-          gap={3}
+ <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '1fr 1fr' }} gap={3}
+          sx={{ alignItems: 'stretch', mt: 2 }}
         >
-          <ClaimsByStatus />
-          <InsurancePerformance />
+          <CardWrapper>
+            <ClaimsByStatus />
+          </CardWrapper>
+          <CardWrapper>
+           <InsurancePerformance />
+          </CardWrapper>
+
         </Box>
+
 
         <Box
           display="grid"

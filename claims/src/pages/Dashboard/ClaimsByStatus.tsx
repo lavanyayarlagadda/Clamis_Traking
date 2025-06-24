@@ -6,11 +6,13 @@ import {
   Typography,
   Box,
   Stack,
+  useTheme,
 } from '@mui/material';
 import { PieChart } from '@mui/x-charts/PieChart';
-import Dropdown from '../../components/reusable/Dropdown'
+import Dropdown from '../../Components/reusable/Dropdown'
 
 const ClaimsByStatus: React.FC = () => {
+    const theme = useTheme();
   // Dropdown options
   const insuranceOptions = ['All', 'NTR vaidhya seva', 'Private Insurance'];
   const [selectedInsurance, setSelectedInsurance] = React.useState<string>(insuranceOptions[0]);
@@ -58,19 +60,21 @@ const ClaimsByStatus: React.FC = () => {
 
   return (
     <Card
-      elevation={1}
+      elevation={3}
       sx={{
-        bgcolor: 'rgba(255,255,255,0.8)',
-        backdropFilter: 'blur(4px)',
+       background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+        borderRadius: 3,
+        boxShadow: 2,
+        transition: 'transform 0.2s ease-in-out',
       }}
     >
       <CardHeader
         title={
-          <Stack direction="row" justifyContent="space-between" alignItems="start">
-            <Typography variant="h6" fontWeight="medium" color="text.primary">
-              Claims by Statusss
+          <Stack direction="row" justifyContent="space-between"alignItems="center" spacing={2}>
+            <Typography variant="subtitle1" fontWeight={600} sx={{ color: theme.palette.text.primary, letterSpacing: 0.3 }}>
+              Claims by Status
             </Typography>
-            <Box sx={{width:"40%"}}>
+            <Box sx={{ minWidth: 180 }}>
             <Dropdown
               // label="Insurance Type"
               value={selectedInsurance}
@@ -80,8 +84,9 @@ const ClaimsByStatus: React.FC = () => {
             </Box>
           </Stack>
         }
+        sx={{ px: 3, pt: 3, pb: 0 }}
       />
-      <CardContent>
+      <CardContent sx={{ px: 3, pt: 1, pb: 3 }}>
         <Box height={300}>
           <PieChart
             series={[
@@ -99,7 +104,22 @@ const ClaimsByStatus: React.FC = () => {
                 position: { vertical: 'bottom', horizontal: 'center' },
               },
             }}
-            height={300}
+            height={250}
+             sx={{
+              '.MuiChartsAxis-tickLabel': {
+                fontSize: 12,
+                fill: '#4b5563',
+              },
+              '.MuiChartsLegend-series text': {
+                fontSize: 13,
+              },
+              '.MuiChartsAxis-line': {
+                stroke: '#e5e7eb',
+              },
+              '.MuiChartsGrid-line': {
+                stroke: '#f3f4f6',
+              },
+            }}
           />
         </Box>
       </CardContent>

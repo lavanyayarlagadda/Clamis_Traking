@@ -6,11 +6,13 @@ import {
   Typography,
   Box,
   Stack,
+  useTheme
 } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
-import Dropdown from '../../components/reusable/Dropdown';
+import Dropdown from '../../Components/reusable/Dropdown';
 
 const InsurancePerformance: React.FC = () => {
+  const theme = useTheme()
   // Dropdown options and state
   const insuranceOptions = ['All', 'NTR vaidhya seva', 'Private Insurance'];
   const [selectedInsurance, setSelectedInsurance] = React.useState<string>(insuranceOptions[0]);
@@ -59,19 +61,21 @@ const data = getData();
 
   return (
     <Card
-      elevation={1}
-      sx={{
-        bgcolor: 'rgba(255,255,255,0.8)',
-        backdropFilter: 'blur(4px)',
+      elevation={3}
+     sx={{
+       background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+        borderRadius: 3,
+        boxShadow: 2,
+        transition: 'transform 0.2s ease-in-out',
       }}
     >
       <CardHeader
         title={
-          <Stack direction="row" justifyContent="space-between" alignItems="center" width="100%">
-            <Typography variant="h6" fontWeight="medium" color="text.primary">
+          <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+            <Typography variant="subtitle1" fontWeight={600} sx={{ color: theme.palette.text.primary, letterSpacing: 0.3 }}>
               Insurance Company Performance
             </Typography>
-            <Box sx={{ width: '40%' }}>
+            <Box sx={{ minWidth: 180 }}>
               <Dropdown
                 value={selectedInsurance}
                 options={insuranceOptions}
@@ -80,8 +84,9 @@ const data = getData();
             </Box>
           </Stack>
         }
+          sx={{ px: 3, pt: 3, pb: 0 }}
       />
-      <CardContent>
+      <CardContent sx={{ px: 3, pt: 1, pb: 3 }}>
         <Box height={300}>
           <LineChart
             height={300}
@@ -115,13 +120,19 @@ const data = getData();
             ]}
             margin={{ top: 20, bottom: 60, left: 60, right: 20 }}
             sx={{
-              '.MuiChartsAxis-tickLabel': { 
-                fontSize: 12, 
-                transform: 'rotate(-45deg)',
-                transformOrigin: 'right',
-                textAnchor: 'end'
+              '.MuiChartsAxis-tickLabel': {
+                fontSize: 12,
+                fill: '#4b5563',
               },
-              '.MuiChartsLegend-root': { mt: 2 },
+              '.MuiChartsLegend-series text': {
+                fontSize: 13,
+              },
+              '.MuiChartsAxis-line': {
+                stroke: '#e5e7eb',
+              },
+              '.MuiChartsGrid-line': {
+                stroke: '#f3f4f6',
+              },
             }}
           />
         </Box>
