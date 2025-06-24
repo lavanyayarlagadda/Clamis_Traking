@@ -30,7 +30,7 @@ const InsurancePerformance: React.FC = () => {
   ];
 
  
-  // Get data based on selected time period
+
 
 
 const allData = allTimeData;
