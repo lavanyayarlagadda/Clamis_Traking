@@ -39,6 +39,24 @@ import SettlementReconciliationTrends from "./SettlementReconciliationTrends";
 import CalendarFilterDialog from "./CalendarFilter";
 import DashboardFilterPopover from "./CalendarFilter";
 
+const CardWrapper = ({ children }: { children: React.ReactNode }) => (
+  <Box
+    sx={{
+      height: '100%',
+      background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+      borderRadius: 3,
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+      transition: 'transform 0.2s ease-in-out',
+      '&:hover': {
+        transform: 'translateY(-4px)',
+        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
+      },
+    }}
+  >
+    {children}
+  </Box>
+);
+
 const Dashboard: React.FC = () => {
   const [openFilter, setOpenFilter] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -97,40 +115,15 @@ const Dashboard: React.FC = () => {
         <KPIMetrics />
 
         {/* Chart Sections */}
-       <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '1fr 1fr' }} gap={4}
-          sx={{alignItems: 'stretch', mt:2}}
+        <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '1fr 1fr' }} gap={3}
+          sx={{ alignItems: 'stretch', mt: 2 }}
         >
-          <Box
-            sx={{
-              height: '100%',
-              background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
-              borderRadius: 3,
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-              transition: 'transform 0.2s ease-in-out',
-              '&:hover': {
-                transform: 'translateY(-4px)',
-                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
-              },
-            }}
-          >
+          <CardWrapper>
             <MonthlyClaimsTrend />
-          </Box>
-
-          <Box
-            sx={{
-              height: '100%',
-              background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
-              borderRadius: 3,
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-              transition: 'transform 0.2s ease-in-out',
-              '&:hover': {
-                transform: 'translateY(-4px)',
-                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
-              },
-            }}
-          >
+          </CardWrapper>
+          <CardWrapper>
             <ClaimAmountChart />
-          </Box>
+          </CardWrapper>
 
         </Box>
 
