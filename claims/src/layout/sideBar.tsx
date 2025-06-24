@@ -54,9 +54,10 @@ const menuItems = [
     children: [
       { id: 'reconciled', label: 'Reconciled Claims', icon: Check, color: '#6366f1' },
       { id: 'unreconciled', label: 'Unreconciled Claims', icon: LockClock, color: '#ef4444' },
+       { id: 'allclaims', label: 'All Claims', icon: ReceiptLong, color: '#a855f7' },
     ],
   },
-  { id: 'allclaims', label: 'All Claims', icon: ReceiptLong, color: '#a855f7' },
+ 
   //   { id: 'workQueue', label: 'Work Queue', icon: Group, color: '#a855f7' },
 ];
 
