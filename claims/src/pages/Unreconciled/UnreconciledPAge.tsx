@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FilterList, Visibility } from "@mui/icons-material";
 import { unreconciledClaimsData, unreconciledClaimsOther } from "./data";
-import { DynamicTabs } from "../../Components/reusable/tabs";
+import { DynamicTabs } from "../../components/reusable/tabs";
 import {
   Chip,
   Typography,
@@ -13,10 +13,10 @@ import {
   Button,
 } from "@mui/material";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
-import DynamicTable from "../../Components/reusable/dynamicTable";
-import { DynamicClaimDialog } from "../../Components/reusable/dialog";
+import DynamicTable from "../../components/reusable/dynamicTable";
+import { DynamicClaimDialog } from "../../components/reusable/dialog";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
-import { FilterDrawer } from "../../Components/reusable/filter";
+import { FilterDrawer } from "../../components/reusable/filter";
 import ManualReconciliationDialog from "./Manual_reconciled_Dialog";
 
 export interface ClaimRow {

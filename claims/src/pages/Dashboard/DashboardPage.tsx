@@ -1,74 +1,115 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Grid, Card, CardContent, Typography, Box, Chip, Divider
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Typography,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  FormControl,
+  InputLabel,
 } from '@mui/material';
-import { PieChart, BarChart, LineChart } from '@mui/x-charts';
 
-const Dashboard = () => {
+
+
+// import { ClaimAmountChart } from '@/components/dashboard/ClaimAmountChart';
+// import { ClaimsByStatus } from '@/components/dashboard/ClaimsByStatus';
+// import { InsurancePerformance } from '@/components/dashboard/InsurancePerformance';
+// import { SettlementReconciliationTrends } from '@/components/dashboard/SettlementReconciliationTrends';
+// import { ReconciliationStatusDistribution } from '@/components/dashboard/ReconciliationStatusDistribution';
+// import { AgingBucketDistribution } from '@/components/dashboard/AgingBucketDistribution';
+import { CalendarToday, LocalActivity } from '@mui/icons-material';
+import KPIMetrics from './KPIMetrics';
+import MonthlyClaimsTrend from './MonthlyClaims';
+import ClaimAmountChart from './ClaimsAmountChart';
+import ClaimsByStatus from './ClaimsByStatus';
+import InsurancePerformance from './InsurancePerformance';
+import ReconciliationStatusDistribution from './ReconcilationStatusDistribution';
+import AgingBucketDistribution from './AginBucketDistribution';
+import SettlementReconciliationTrends from './SettlementReconciliationTrends';
+
+const Dashboard: React.FC = () => {
+  const [selectedPeriod, setSelectedPeriod] = useState<string>('month');
+
+  const handlePeriodChange = (event: SelectChangeEvent<string>) => {
+    setSelectedPeriod(event.target.value);
+  };
+
   return (
-    <Box p={3}>
-      <Typography variant="h5" mb={2}>Dashboard</Typography>
-      <Grid container spacing={3}>
-        {[
-          { label: 'Total Claims', value: '1,250' },
-          { label: 'Approved Claims', value: '850' },
-          { label: 'Rejected Claims', value: '150' },
-          { label: 'In Exception', value: '250' },
-        ].map((item, idx) => (
-          <Grid size={{xs:12,sm:6,md:3}} key={idx}>
-            <Card>
-              <CardContent>
-                <Typography variant="subtitle2" color="text.secondary">{item.label}</Typography>
-                <Typography variant="h6">{item.value}</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
+    <Box sx={{ minHeight: '100vh', background: 'linear-gradient(to bottom right, #eff6ff, #ffffff, #ecfdf5)', p: 3 }}>
+      <Box sx={{ maxWidth: '1200px', mx: 'auto', display: 'flex', flexDirection: 'column', gap: 4 }}>
+        {/* Header */}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            justifyContent: 'space-between',
+            alignItems: { xs: 'flex-start', sm: 'center' },
+            gap: 2,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ p: 1.5, backgroundColor: 'primary.main', borderRadius: 2 }}>
+              <LocalActivity  />
+            </Box>
+            <Box>
+              <Typography variant="h4" fontWeight="bold" color="text.primary">
+                Healthcare Claims Dashboard
+              </Typography>
+              <Typography color="text.secondary">
+                Monitor and analyze your healthcare claims performance
+              </Typography>
+            </Box>
+          </Box>
 
-        {/* Charts Section */}
-        <Grid size={{xs:12,md:6}}>
-          <Card>
-            <CardContent>
-              <Typography variant="subtitle1">Claims by Status</Typography>
-              <PieChart
-                series={[{ data: [
-                  { id: 0, value: 850, label: 'Approved' },
-                  { id: 1, value: 150, label: 'Rejected' },
-                  { id: 2, value: 250, label: 'In Exception' },
-                ] }]}
-                width={400}
-                height={200}
-              />
+          <Card elevation={1} sx={{ bgcolor: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(4px)' }}>
+            <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 1.5, p: 2 }}>
+              <CalendarToday  />
+              <FormControl variant="outlined" size="small">
+                <InputLabel id="period-select-label">Period</InputLabel>
+                <Select
+                  labelId="period-select-label"
+                  value={selectedPeriod}
+                  onChange={handlePeriodChange}
+                  label="Period"
+                  sx={{ width: 160 }}
+                >
+                  <MenuItem value="today">Today</MenuItem>
+                  <MenuItem value="week">This Week</MenuItem>
+                  <MenuItem value="month">This Month</MenuItem>
+                  <MenuItem value="year">This Year</MenuItem>
+                  <MenuItem value="custom">Custom Date</MenuItem>
+                </Select>
+              </FormControl>
             </CardContent>
           </Card>
-        </Grid>
+        </Box>
 
-        <Grid size={{xs:12,md:6}}>
-          <Card>
-            <CardContent>
-              <Typography variant="subtitle1">Top Performing Hospitals</Typography>
-              <BarChart
-                xAxis={[{ scaleType: 'band', data: ['Apollo', 'Fortis', 'Max'] }]}
-                series={[{ data: [400, 300, 200] }]}
-                width={400}
-                height={200}
-              />
-            </CardContent>
-          </Card>
-        </Grid>
+        {/* KPI Metrics */}
+        <KPIMetrics />
 
-        {/* Notifications */}
-        <Grid size={{xs:12}}>
-          <Card>
-            <CardContent>
-              <Typography variant="subtitle1">Recent Alerts</Typography>
-              <Divider sx={{ my: 1 }} />
-              <Chip label="Exception: Missing Docs" color="error" sx={{ mr: 1 }} />
-              <Chip label="New Claim Received" color="primary" />
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+        {/* Chart Sections */}
+        <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '1fr 1fr' }} gap={3}>
+          <MonthlyClaimsTrend />
+          <ClaimAmountChart />
+        </Box>
+
+         <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '1fr 1fr' }} gap={3}>
+          <ClaimsByStatus />
+          <InsurancePerformance />
+        </Box>
+*
+         <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '1fr 1fr' }} gap={3}>
+          <SettlementReconciliationTrends />
+          <ReconciliationStatusDistribution />
+        </Box>
+
+       <Box>
+          <AgingBucketDistribution />
+        </Box> 
+      </Box>
     </Box>
   );
 };

@@ -264,6 +264,7 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
                 );
               })}
             </Box>
+            {pageType !== "unreconciliation" && (
                <Box>
                 <FormControl fullWidth size="small">
                   <Typography
@@ -290,6 +291,7 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
                   </Select>
                 </FormControl>
               </Box>
+            )}
           </Box>
 
           {/* Extra Filters for "unreconciliation" */}
