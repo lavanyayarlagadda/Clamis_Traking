@@ -30,12 +30,9 @@ export default function ReconciledPage() {
     Rejected: "#EF4444", // red
   };
 
-  const columns = [
+  const baseColumns = [
     { key: "claimNumber", label: "Claim Number" },
-    { key: "insuranceCompany", label: "Insurance Company" },
     { key: "chequeNumber", label: "Cheque No." },
-    { key: "chequeReceivedDate", label: "Cheque Received Date" },
-    { key: "claimedDate", label: "Claimed Date" },
     {
       key: "claimedAmount",
       label: "Claimed Amount",
@@ -46,10 +43,17 @@ export default function ReconciledPage() {
       label: "Approved Amount",
       render: (row: any) => `₹${row.approvedAmount?.toLocaleString()}`,
     },
+
     {
       key: "settledAmount",
       label: "Settled Amount",
       render: (row: any) => `₹${row.settledAmount?.toLocaleString()}`,
+    },
+    {
+      key: "depositAmount",
+      label: "Deposit Amount",
+      render: (row: any) =>
+        row.depositAmount ? `₹${row.depositAmount?.toLocaleString()}` : "N/A",
     },
     {
       key: "status",
@@ -71,7 +75,35 @@ export default function ReconciledPage() {
         );
       },
     },
+
+    {
+      key: "claimAge",
+      label: "Claim Age",
+    },
+    { key: "insuranceCompany", label: "Insurance Company" },
+
+    { key: "chequeReceivedDate", label: "Cheque Received Date" },
+    { key: "claimedDate", label: "Claimed Date" },
+
+    {
+      key: "depositDate",
+      label: "Deposit Date",
+      render: (row: any) => row.depositDate ?? "N/A",
+    },
   ];
+
+  const extendedColumns =
+    activeTab === "ntr"
+      ? [
+          baseColumns[0],
+          {
+            key: "cardNumber",
+            label: "Card Number",
+            render: (row: any) => row.cardNumber ?? "N/A",
+          },
+          ...baseColumns.slice(1),
+        ]
+      : baseColumns.slice(0, 8); // For other schemes, take first 8 columns only
 
   const dummyDialogData = {
     claimNumber: "CLM-001245",
@@ -182,14 +214,13 @@ export default function ReconciledPage() {
           activeTab === "ntr" ? "NTR Vaidyaseva" : "Other Schemes"
         }`}
         countLabel={`${currentClaims.length} Claims`}
-        columns={columns}
+        columns={extendedColumns}
         data={currentClaims}
         actions={[
           {
             label: "View Timeline",
             icon: <Visibility fontSize="small" />,
             onClick: (row) => {
-              // setDialogData(row);
               setDialogOpen(true);
             },
           },
@@ -197,6 +228,7 @@ export default function ReconciledPage() {
         chipColor={"#48D56B"}
         Icon={CheckCircleIcon}
         iconColor={"#48D56B"}
+        minColumns={8}
       />
 
       {dummyDialogData && (

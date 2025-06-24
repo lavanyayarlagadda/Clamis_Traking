@@ -72,7 +72,6 @@ const columns = [
           selectedAssigneeId={selectedAssigneeId}
           onSelect={(assignee:Assignee) => {
             setSelectedAssigneeId(assignee.id);
-            // Optional: Call API or update parent state
           }}
         />
       );
