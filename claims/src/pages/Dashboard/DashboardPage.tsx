@@ -97,14 +97,43 @@ const Dashboard: React.FC = () => {
         <KPIMetrics />
 
         {/* Chart Sections */}
-        <Box
-          display="grid"
-          gridTemplateColumns={{ xs: "1fr", lg: "1fr 1fr" }}
-          gap={3}
+       <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '1fr 1fr' }} gap={4}
+          sx={{alignItems: 'stretch', mt:2}}
         >
-          <MonthlyClaimsTrend />
-          <ClaimAmountChart />
+          <Box
+            sx={{
+              height: '100%',
+              background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+              borderRadius: 3,
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+              transition: 'transform 0.2s ease-in-out',
+              '&:hover': {
+                transform: 'translateY(-4px)',
+                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
+              },
+            }}
+          >
+            <MonthlyClaimsTrend />
+          </Box>
+
+          <Box
+            sx={{
+              height: '100%',
+              background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+              borderRadius: 3,
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+              transition: 'transform 0.2s ease-in-out',
+              '&:hover': {
+                transform: 'translateY(-4px)',
+                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
+              },
+            }}
+          >
+            <ClaimAmountChart />
+          </Box>
+
         </Box>
+
 
         <Box
           display="grid"

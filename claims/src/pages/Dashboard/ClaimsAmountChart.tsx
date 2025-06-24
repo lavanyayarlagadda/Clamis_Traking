@@ -8,7 +8,7 @@ import {
   Stack,
 } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
-import Dropdown from '../../components/reusable/Dropdown';
+import Dropdown from '../../Components/reusable/Dropdown';
 
 const ClaimAmountChart: React.FC = () => {
   // Dropdown options and state
@@ -57,16 +57,22 @@ const ClaimAmountChart: React.FC = () => {
 
   return (
     <Card
-      elevation={1}
-      sx={{
-        bgcolor: 'rgba(255,255,255,0.8)',
-        backdropFilter: 'blur(4px)',
+      elevation={3}
+       sx={{
+        bgcolor: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+        borderRadius: 3,
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+        transition: 'transform 0.2s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-4px)',
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
+        },
       }}
     >
       <CardHeader
         title={
           <Stack direction="row" justifyContent="space-between" alignItems="center" width="100%">
-            <Typography variant="h6" fontWeight="medium" color="text.primary">
+            <Typography variant="h6" fontWeight={600} color="text.primary">
               Claim Amount vs Approved Amount
             </Typography>
             <Box sx={{ width: '40%' }}>
@@ -78,8 +84,9 @@ const ClaimAmountChart: React.FC = () => {
             </Box>
           </Stack>
         }
+         sx={{ px: 3, pt: 3, pb: 0 }}
       />
-      <CardContent>
+      <CardContent sx={{ px: 3, pt: 1, pb: 3 }}>
         <Box height={300}>
           <BarChart
             height={300}
@@ -106,9 +113,25 @@ const ClaimAmountChart: React.FC = () => {
             yAxis={[{ valueFormatter: formatCurrency }]}
             margin={{ top: 20, bottom: 40, left: 60, right: 20 }}
             grid={{ horizontal: true }}
+            // sx={{
+            //   '.MuiChartsLegend-root': { mt: 2 },
+            //   '.MuiChartsAxis-tickLabel': { fontSize: 12 },
+            // }}
             sx={{
-              '.MuiChartsLegend-root': { mt: 2 },
-              '.MuiChartsAxis-tickLabel': { fontSize: 12 },
+              '.MuiChartsLegend-root': {
+                mt: 2,
+                fontSize: 13,
+              },
+              '.MuiChartsAxis-tickLabel': {
+                fontSize: 12,
+                fill: '#4b5563',
+              },
+              '.MuiChartsAxis-line': {
+                stroke: '#e5e7eb',
+              },
+              '.MuiChartsGrid-line': {
+                stroke: '#f3f4f6',
+              },
             }}
           />
         </Box>

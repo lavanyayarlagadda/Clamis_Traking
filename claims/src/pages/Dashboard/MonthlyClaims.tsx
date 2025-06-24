@@ -6,16 +6,18 @@ import {
   Typography,
   Box,
   Stack,
+  useTheme,
+  Divider
 } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
-import Dropdown from '../../components/reusable/Dropdown';
+import Dropdown from '../../Components/reusable/Dropdown';
 
 const MonthlyClaimsTrend: React.FC = () => {
-  // Dropdown options
+  const theme = useTheme();
+
   const insuranceOptions = ['All', 'NTR vaidhya seva', 'Private Insurance'];
   const [selectedInsurance, setSelectedInsurance] = React.useState<string>(insuranceOptions[0]);
 
-  // Sample data - in a real app, this would come from an API based on selection
   const allData = {
     months: ['JAN', 'FEB', 'MAR', 'APR'],
     totalClaims: [1156, 1289, 1347, 1247],
@@ -34,7 +36,6 @@ const MonthlyClaimsTrend: React.FC = () => {
     reconciledClaims: [300, 300, 250, 300]
   };
 
-  // Get data based on selected insurance
   const getData = () => {
     switch (selectedInsurance) {
       case 'NTR vaidhya seva':
@@ -54,29 +55,51 @@ const MonthlyClaimsTrend: React.FC = () => {
 
   return (
     <Card
-      elevation={1}
+      elevation={3}
+      // sx={{
+      //   bgcolor: 'rgba(255, 255, 255, 0.9)',
+      //   backdropFilter: 'blur(4px)',
+      //   borderRadius: 3,
+      //   transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+      //   '&:hover': {
+      //     transform: 'translateY(-2px)',
+      //     boxShadow: '0px 6px 20px rgba(0, 0, 0, 0.05)',
+      //   },
+      // }}
       sx={{
-        bgcolor: 'rgba(255,255,255,0.8)',
-        backdropFilter: 'blur(4px)',
+        bgcolor: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+        borderRadius: 3,
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+        transition: 'transform 0.2s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-4px)',
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
+        },
       }}
     >
       <CardHeader
         title={
-          <Stack direction="row" justifyContent="space-between" alignItems="center" width="100%">
-            <Typography variant="h6" fontWeight="medium" color="text.primary">
+          <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+            <Typography variant="h6" fontWeight={600} color="text.primary">
               Monthly Claims Trend
             </Typography>
-            <Box sx={{ width: '40%' }}>
+            <Box sx={{ minWidth: 180 }}>
               <Dropdown
                 value={selectedInsurance}
                 options={insuranceOptions}
                 onChange={handleInsuranceChange}
+              // label="Insurance Type"
               />
             </Box>
           </Stack>
         }
+         sx={{ px: 3, pt: 3, pb: 0 }}
       />
-      <CardContent>
+
+      <CardContent
+        // sx={{ pt: 1 }}
+        sx={{ px: 3, pt: 1, pb: 3 }}
+      >
         <Box height={300}>
           <LineChart
             xAxis={[{ id: 'months', data: months, scaleType: 'point', label: 'Month' }]}
@@ -97,9 +120,25 @@ const MonthlyClaimsTrend: React.FC = () => {
             height={300}
             margin={{ top: 20, bottom: 40, left: 50, right: 20 }}
             grid={{ horizontal: true, vertical: true }}
+            // sx={{
+            //   '.MuiChartsAxis-tickLabel': { fontSize: 12 },
+            //   '.MuiChartsLegend-root': { mt: 2 },
+            //   '.MuiChartsAxis-label': { fontWeight: 500 },
+            // }}
             sx={{
-              '.MuiChartsAxis-tickLabel': { fontSize: 12 },
-              '.MuiChartsLegend-root': { mt: 2 },
+              '.MuiChartsAxis-tickLabel': {
+                fontSize: 12,
+                fill: '#4b5563',
+              },
+              '.MuiChartsLegend-series text': {
+                fontSize: 13,
+              },
+              '.MuiChartsAxis-line': {
+                stroke: '#e5e7eb',
+              },
+              '.MuiChartsGrid-line': {
+                stroke: '#f3f4f6',
+              },
             }}
           />
         </Box>
