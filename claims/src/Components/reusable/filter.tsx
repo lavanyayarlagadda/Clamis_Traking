@@ -79,12 +79,14 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
       <Box
-        sx={{
-          width: 430,
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-        }}
+sx={{
+  width: '100%', // Full width of container
+  maxWidth:{xs:500,sm:600}, // Optional cap to prevent stretching on large screens
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%',
+}}
+
       >
         {/* HEADER */}
         <Box
@@ -115,7 +117,7 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
                 sx={{
                   display: "flex",
                   gap: "8px",
-                  flexDirection: { md: "row", sm: "column" },
+                  flexDirection: { md: "row", sm: "row",xs:'column' },
                 }}
               >
                 <Box
@@ -163,7 +165,7 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
                   />
                 </Box>
 
-                <ArrowForward sx={{ alignSelf: "center", marginTop: 4 }} />
+                <ArrowForward sx={{ alignSelf: "center", marginTop: {sm:4} }} />
 
                 <Box
                   display="flex"
@@ -359,30 +361,42 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
 
         {/* FOOTER */}
         <Box
-          sx={{
-            p: 2,
-            borderTop: "1px solid #e0e0e0",
-            display: "flex",
-            justifyContent: "space-between",
-            bgcolor: "#f9fafc",
-          }}
-        >
-          <Button
-            onClick={handleClear}
-            variant="outlined"
-            color="error"
-            sx={{ borderRadius: 2, px: 3 }}
-          >
-            Clear
-          </Button>
-          <Button
-            onClick={onClose}
-            variant="contained"
-            sx={{ borderRadius: 2, px: 3 }}
-          >
-            Apply
-          </Button>
-        </Box>
+  sx={{
+    p: 2,
+    borderTop: '1px solid #e0e0e0',
+    display: 'flex',
+    flexDirection: {  sm: 'row', md: 'row' }, 
+    justifyContent: 'space-between',
+    alignItems: 'stretch',
+    gap: 2, // space between buttons
+    bgcolor: '#f9fafc',
+  }}
+>
+  <Button
+    onClick={handleClear}
+    variant="outlined"
+    color="error"
+    sx={{
+      borderRadius: 2,
+      px: 3,
+      width: { xs: '100%', md: 'auto' }, // full width on mobile
+    }}
+  >
+    Clear
+  </Button>
+  <Button
+    onClick={onClose}
+    variant="contained"
+    sx={{
+      borderRadius: 2,
+      px: 3,
+      width: { xs: '100%', md: 'auto' }, // full width on mobile
+    }}
+  >
+    Apply
+  </Button>
+</Box>
+
       </Box>
     </Drawer>
   );
