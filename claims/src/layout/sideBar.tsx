@@ -21,7 +21,9 @@ import {
   Group,
   HealthAndSafety,
   InsertDriveFile,
+  Description
 } from '@mui/icons-material';
+
 import { Link, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
@@ -40,6 +42,7 @@ const menuItems = [
   { id: 'reports', label: 'Reports & Analytics', icon: InsertDriveFile, color: '#22c55e' },
   { id: 'reconciled', label: 'Reconciled Claims', icon: Check, color: '#6366f1' },
   { id: 'unreconciled', label: 'Unreconciled Claims', icon: LockClock, color: '#ef4444' },
+  { id: 'claims', label: 'Claims', icon: Description, color: '#ef4444' },
   { id: 'workQueue', label: 'Work Queue', icon: Group, color: '#a855f7' },
 ];
 

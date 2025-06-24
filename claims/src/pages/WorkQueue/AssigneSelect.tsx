@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Popover,
   List,
@@ -7,9 +7,12 @@ import {
   Avatar,
   Typography,
   Box,
-  Tooltip
+  Tooltip,
+  TextField,
+  InputAdornment
 } from '@mui/material';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import SearchIcon from '@mui/icons-material/Search';
 
 export interface Assignee {
   id: string;
@@ -54,6 +57,7 @@ const AssigneePopover: React.FC<AssigneePopoverProps> = ({
   onSelect
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const selected = assignees.find(a => a.id === selectedAssigneeId);
 
@@ -63,12 +67,20 @@ const AssigneePopover: React.FC<AssigneePopoverProps> = ({
 
   const handleClose = () => {
     setAnchorEl(null);
+    setSearchTerm('');
   };
 
   const handleSelect = (assignee: Assignee) => {
     onSelect(assignee);
     handleClose();
   };
+
+  const filteredAssignees = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    return term
+      ? assignees.filter(a => a.name.toLowerCase().includes(term))
+      : assignees;
+  }, [searchTerm, assignees]);
 
   const open = Boolean(anchorEl);
   const id = open ? 'assignee-popover' : undefined;
@@ -120,10 +132,28 @@ const AssigneePopover: React.FC<AssigneePopoverProps> = ({
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        PaperProps={{ sx: { width: 220 } }}
+        PaperProps={{ sx: { width: 250, maxHeight: 300 } }}
       >
-        <List dense>
-          {assignees.map((assignee) => (
+        <Box sx={{ p: 1 }}>
+          <TextField
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            placeholder="Search assignees..."
+            size="small"
+            fullWidth
+            variant="outlined"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" />
+                </InputAdornment>
+              )
+            }}
+          />
+        </Box>
+
+        <List dense sx={{ maxHeight: 230, overflowY: 'auto' }}>
+          {filteredAssignees.map((assignee) => (
             <Tooltip title={assignee.name} key={assignee.id} arrow>
               <ListItemButton
                 selected={assignee.id === selectedAssigneeId}
@@ -157,6 +187,12 @@ const AssigneePopover: React.FC<AssigneePopoverProps> = ({
               </ListItemButton>
             </Tooltip>
           ))}
+
+          {filteredAssignees.length === 0 && (
+            <Typography variant="body2" color="text.secondary" sx={{ p: 2 }}>
+              No users found
+            </Typography>
+          )}
         </List>
       </Popover>
     </>
