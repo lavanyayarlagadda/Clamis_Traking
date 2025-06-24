@@ -68,16 +68,21 @@ const ReconciliationStatusDistribution: React.FC = () => {
 
   return (
     <Card
-      elevation={1}
+      elevation={3}
       sx={{
-        bgcolor: 'rgba(255,255,255,0.8)',
-        backdropFilter: 'blur(4px)',
+        bgcolor: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+        borderRadius: 3,
+        boxShadow: 2,
+        transition: 'transform 0.2s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-2px)',
+        },
       }}
     >
       <CardHeader
         title={
           <Stack direction="row" justifyContent="space-between" alignItems="center" width="100%">
-            <Typography variant="h6" fontWeight="medium" color="text.primary">
+            <Typography variant="h6" fontWeight={500} color="text.primary">
               Reconciliation Status Distribution
             </Typography>
             <Box sx={{ width: '40%' }}>
@@ -89,8 +94,9 @@ const ReconciliationStatusDistribution: React.FC = () => {
             </Box>
           </Stack>
         }
+        sx={{ px: 3, pt: 3, pb: 0 }}
       />
-      <CardContent>
+      <CardContent sx={{ px: 3, pt: 2, pb: 3 }}>
         {data.map((item, index) => (
           <Box key={index} mb={3}>
             <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -117,6 +123,8 @@ const ReconciliationStatusDistribution: React.FC = () => {
                 backgroundColor: '#e5e7eb',
                 '& .MuiLinearProgress-bar': {
                   backgroundColor: item.color,
+                  borderRadius: 5,
+                  transition: 'width 0.5s ease-in-out',
                 },
               }}
             />

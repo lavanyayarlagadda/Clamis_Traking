@@ -61,8 +61,17 @@ const SettlementReconciliationTrends = () => {
 
   return (
     <Card
-      elevation={1}
-      sx={{ bgcolor: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(4px)' }}
+      elevation={3}
+      sx={{
+        bgcolor: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+        borderRadius: 3,
+        boxShadow: 2,
+        transition: 'transform 0.2s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-4px)',
+          boxShadow: 4,
+        },
+      }}
     >
       <CardHeader
         title={
@@ -79,8 +88,9 @@ const SettlementReconciliationTrends = () => {
             </Box>
           </Stack>
         }
+        sx={{ px: 3, pt: 3, pb: 0 }}
       />
-      <CardContent>
+      <CardContent sx={{ px: 3, pt: 1, pb: 3 }}>
         <ChartContainer
           series={[
             {
@@ -89,7 +99,7 @@ const SettlementReconciliationTrends = () => {
               label: 'Settled',
               dataKey: 'settled',
               color: '#3b82f6',
-              area: true, // This makes it an area chart
+              area: true,
             },
             {
               type: 'line',
@@ -97,7 +107,7 @@ const SettlementReconciliationTrends = () => {
               label: 'Reconciled',
               dataKey: 'reconciled',
               color: '#10b981',
-              area: true, // This makes it an area chart
+              area: true,
             },
           ]}
           xAxis={[{ scaleType: 'point', dataKey: 'month' }]}
@@ -105,8 +115,19 @@ const SettlementReconciliationTrends = () => {
           dataset={data}
           height={320}
           sx={{
+            '.MuiChartsLegend-root': {
+              mt: 2,
+              fontSize: 13,
+            },
             '.MuiChartsAxis-tickLabel': {
               fontSize: 12,
+              fill: '#4b5563',
+            },
+            '.MuiChartsAxis-line': {
+              stroke: '#e5e7eb',
+            },
+            '.MuiChartsGrid-line': {
+              stroke: '#f3f4f6',
             },
           }}
         >
@@ -115,7 +136,7 @@ const SettlementReconciliationTrends = () => {
           <ChartsYAxis />
           <ChartsTooltip />
           <ChartsLegend />
-          <AreaPlot /> {/* This renders the area under the lines */}
+          <AreaPlot />
         </ChartContainer>
       </CardContent>
     </Card>
