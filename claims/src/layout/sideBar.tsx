@@ -266,7 +266,7 @@ const DrawerContent = ({
               color: selected ? '#fff' : '#111827',
               fontWeight: selected ? 600 : 500,
               '&:hover': {
-                background: '#f3f4f6',
+                background: 'linear-gradient(to right, #6366f1, #3b82f6)',
               },
             }}
           >

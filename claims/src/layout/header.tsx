@@ -74,47 +74,67 @@ const Header: React.FC<HeaderProps> = ({ isSidebarOpen, currentTab, onSidebarTog
         </Box>
 
         {/* Right Section: Search, Bell, Avatar */}
-        <Box display="flex" alignItems="center" gap={2}>
-          <Box sx={{ position: 'relative' }}>
-            <Search
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '10px',
-                transform: 'translateY(-50%)',
-                width: '16px',
-                height: '16px',
-                color: '#9ca3af',
-              }}
-            />
-            <InputBase
-              placeholder="Search claims, hospitals..."
-              sx={{
-                pl: 4,
-                pr: 2,
-                py: 1,
-                border: '1px solid #d1d5db',
-                borderRadius: '8px',
-                fontSize: '14px',
-                width: { xs: '100px', sm: '150px', md: '220px' },
-              }}
-            />
-          </Box>
+        <Box
+  display="flex"
+  alignItems="center"
+  gap={1}
+  sx={{
+    flexShrink: 0,
+    minWidth: 0,
+    overflow: 'hidden',
+  }}
+>
+  <Box
+    sx={{
+      position: 'relative',
+      flex: 1,
+      minWidth: 0,
+      maxWidth: { xs: '110px', sm: '160px', md: '220px' },
+       display: { xs: 'none', sm: 'block',md:'block' }, 
+    }}
+  >
+    <Search
+      style={{
+        position: 'absolute',
+        top: '50%',
+        left: '10px',
+        transform: 'translateY(-50%)',
+        width: '16px',
+        height: '16px',
+        color: '#9ca3af',
+      }}
+    />
+    <InputBase
+      placeholder="Search"
+      sx={{
+        pl: 4,
+        pr: 1,
+        py: 0.5,
+        border: '1px solid #d1d5db',
+        borderRadius: '8px',
+        fontSize: '13px',
+        width: '100%',
+        fontWeight: 400,
+        bgcolor: '#fff',
+      }}
+    />
+  </Box>
 
-          <IconButton>
-            <Badge variant="dot" color="error">
-              <CircleNotifications />
-            </Badge>
-          </IconButton>
+  <IconButton sx={{ p: 0.75 }}>
+    <Badge variant="dot" color="error">
+      <CircleNotifications sx={{ fontSize: 20 }} />
+    </Badge>
+  </IconButton>
 
-          <Avatar
-            sx={{
-              width: 32,
-              height: 32,
-              background: 'linear-gradient(to right, #3b82f6, #10b981)',
-            }}
-          />
-        </Box>
+  <Avatar
+    sx={{
+      width: 28,
+      height: 28,
+      background: 'linear-gradient(to right, #3b82f6, #10b981)',
+    }}
+  />
+</Box>
+
       </Toolbar>
     </AppBar>
   );

@@ -42,14 +42,14 @@ import DashboardFilterPopover from "./CalendarFilter";
 const CardWrapper = ({ children }: { children: React.ReactNode }) => (
   <Box
     sx={{
-      height: '100%',
-      background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+      height: "100%",
+      background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",
       borderRadius: 3,
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-      transition: 'transform 0.2s ease-in-out',
-      '&:hover': {
-        transform: 'translateY(-4px)',
-        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
+      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
+      transition: "transform 0.2s ease-in-out",
+      "&:hover": {
+        transform: "translateY(-4px)",
+        boxShadow: "0 8px 24px rgba(0, 0, 0, 0.08)",
       },
     }}
   >
@@ -114,29 +114,25 @@ const Dashboard: React.FC = () => {
         <KPIMetrics />
 
         {/* Chart Sections */}
-        <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '1fr 1fr' }} gap={3}
-          sx={{ alignItems: 'stretch' }}
+        <Box
+          display="grid"
+          gridTemplateColumns={{ xs: "1fr", lg: "1fr 1fr" }}
+          gap={3}
         >
-          <CardWrapper>
-            <MonthlyClaimsTrend />
-          </CardWrapper>
-          <CardWrapper>
-            <ClaimAmountChart />
-          </CardWrapper>
+          <MonthlyClaimsTrend />
 
-        </Box>
- <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '1fr 1fr' }} gap={3}
-          sx={{ alignItems: 'stretch' }}
-        >
-          <CardWrapper>
-            <ClaimsByStatus />
-          </CardWrapper>
-          <CardWrapper>
-           <InsurancePerformance />
-          </CardWrapper>
-
+          <ClaimAmountChart />
         </Box>
 
+        <Box
+          display="grid"
+          gridTemplateColumns={{ xs: "1fr", lg: "1fr 1fr" }}
+          gap={3}
+        >
+          <ClaimsByStatus />
+
+          <InsurancePerformance />
+        </Box>
 
         <Box
           display="grid"
