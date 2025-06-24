@@ -71,13 +71,12 @@ export default function UnReconciledPage() {
     insuranceCompanies: [],
   });
 
-  const statusColorMap: Record<string, string> = {
-    "To Do": "#9CA3AF", // gray
-    "In Progress": "#3B82F6", // blue
-    Exception: "#F59E0B", // orange
-    Rejected: "#EF4444", // red
-    Settled: "#10B981", // green (for reconciled)
-  };
+const statusColorMap: Record<string, string> = {
+  "Approved": "#3B82F6", // blue - for approved claims
+  "Settled": "#10B981", // green - for fully settled claims
+  "Enhancement Approved": "#8B5CF6", // purple/violet - for special approval cases
+  "Deposit Not Found": "#F59E0B", // orange/yellow - requires attention
+};
 
 
   const columns = [
