@@ -345,7 +345,7 @@ export default function UnReconciledPage() {
                 }`,
               "Approved Amount": `₹${dialogData.approvedAmount?.toLocaleString() || 0
                 }`,
-              Difference: `₹${dialogData.differenceAmount?.toLocaleString() || 0
+             " Variance": `₹${dialogData.differenceAmount?.toLocaleString() || 0
                 }`,
             },
             timeline: getTimeline(dialogData),
