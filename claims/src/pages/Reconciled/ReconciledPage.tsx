@@ -30,80 +30,75 @@ export default function ReconciledPage() {
     Rejected: "#EF4444", // red
   };
 
-  const baseColumns = [
-    { key: "claimNumber", label: "Claim Number" },
-    { key: "chequeNumber", label: "Cheque No." },
-    {
-      key: "claimedAmount",
-      label: "Claimed Amount",
-      render: (row: any) => `₹${row.claimedAmount?.toLocaleString()}`,
+const columns = [
+  { key: "claimNumber", label: "Claim Number" },
+  ...(activeTab === "ntr"
+    ? [
+        {
+          key: "cardNumber",
+          label: "Card Number",
+          render: (row: any) => row.cardNumber ?? "N/A",
+        },
+      ]
+    : []),
+  { key: "chequeNumber", label: "Cheque No." },
+  {
+    key: "claimedAmount",
+    label: "Claimed Amount",
+    render: (row: any) => `₹${row.claimedAmount?.toLocaleString()}`,
+  },
+  {
+    key: "approvedAmount",
+    label: "Approved Amount",
+    render: (row: any) => `₹${row.approvedAmount?.toLocaleString()}`,
+  },
+  {
+    key: "settledAmount",
+    label: "Settled Amount",
+    render: (row: any) => `₹${row.settledAmount?.toLocaleString()}`,
+  },
+  {
+    key: "depositAmount",
+    label: "Deposit Amount",
+    render: (row: any) =>
+      row.depositAmount ? `₹${row.depositAmount?.toLocaleString()}` : "N/A",
+  },
+  {
+    key: "status",
+    label: "Status",
+    render: (row: any) => {
+      const backgroundColor =
+        statusColorMap[row.status as keyof typeof statusColorMap] ||
+        "#E5E7EB";
+      return (
+        <Chip
+          label={row.status}
+          size="small"
+          sx={{
+            backgroundColor,
+            color: "#fff",
+            fontWeight: 500,
+          }}
+        />
+      );
     },
-    {
-      key: "approvedAmount",
-      label: "Approved Amount",
-      render: (row: any) => `₹${row.approvedAmount?.toLocaleString()}`,
-    },
+  },
+  {
+    key: "claimAge",
+    label: "Claim Age",
+  },
+  { key: "insuranceCompany", label: "Insurance Company" },
+  { key: "chequeReceivedDate", label: "Cheque Received Date" },
+  { key: "claimedDate", label: "Claimed Date" },
+  {
+    key: "depositDate",
+    label: "Deposit Date",
+    render: (row: any) => row.depositDate ?? "N/A",
+  },
+];
 
-    {
-      key: "settledAmount",
-      label: "Settled Amount",
-      render: (row: any) => `₹${row.settledAmount?.toLocaleString()}`,
-    },
-    {
-      key: "depositAmount",
-      label: "Deposit Amount",
-      render: (row: any) =>
-        row.depositAmount ? `₹${row.depositAmount?.toLocaleString()}` : "N/A",
-    },
-    {
-      key: "status",
-      label: "Status",
-      render: (row: any) => {
-        const backgroundColor =
-          statusColorMap[row.status as keyof typeof statusColorMap] ||
-          "#E5E7EB";
-        return (
-          <Chip
-            label={row.status}
-            size="small"
-            sx={{
-              backgroundColor,
-              color: "#fff",
-              fontWeight: 500,
-            }}
-          />
-        );
-      },
-    },
 
-    {
-      key: "claimAge",
-      label: "Claim Age",
-    },
-    { key: "insuranceCompany", label: "Insurance Company" },
 
-    { key: "chequeReceivedDate", label: "Cheque Received Date" },
-    { key: "claimedDate", label: "Claimed Date" },
-
-    {
-      key: "depositDate",
-      label: "Deposit Date",
-      render: (row: any) => row.depositDate ?? "N/A",
-    },
-  ];
-
-  const extendedColumns =
-    activeTab === "ntr"
-      ? [
-          baseColumns[0],
-          {
-            key: "cardNumber",
-            label: "Card Number",
-            render: (row: any) => row.cardNumber ?? "N/A",
-          },
-          ...baseColumns.slice(1),
-        ]
-      : baseColumns.slice(0, 8); // For other schemes, take first 8 columns only
 
   const dummyDialogData = {
     claimNumber: "CLM-001245",
@@ -153,7 +148,7 @@ export default function ReconciledPage() {
   const currentClaims =
     activeTab === "ntr" ? reconciledClaimsNTR : reconciledClaimsOther;
 
-  console.log(activeTab, "ACTIVETAB");
+  console.log(columns, "ACTIVETAB");
   return (
     <>
       <Box
@@ -214,7 +209,7 @@ export default function ReconciledPage() {
           activeTab === "ntr" ? "NTR Vaidyaseva" : "Other Schemes"
         }`}
         countLabel={`${currentClaims.length} Claims`}
-        columns={extendedColumns}
+        columns={columns}
         data={currentClaims}
         actions={[
           {

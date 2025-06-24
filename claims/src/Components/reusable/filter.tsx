@@ -264,6 +264,32 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
                 );
               })}
             </Box>
+               <Box>
+                <FormControl fullWidth size="small">
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight="bold"
+                    mb={1}
+                    id="claim-age-label"
+                  >
+                    Claim Age (days)
+                  </Typography>
+                  <Select
+                    labelId="claim-age-label"
+                    value={filters.claimAge || ""}
+                    onChange={(e) =>
+                      onChange({ ...filters, claimAge: e.target.value })
+                    }
+                  >
+                    <MenuItem value="">None</MenuItem>
+                    <MenuItem value={0-7}>0-7 days</MenuItem>
+                    <MenuItem value={7-15}>7-15 days</MenuItem>
+                    <MenuItem value={15-30}>15-30 days</MenuItem>
+                    <MenuItem value={30-60}>30-60 days</MenuItem>
+                    <MenuItem value={60-90}>60-90 days</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
           </Box>
 
           {/* Extra Filters for "unreconciliation" */}
@@ -317,11 +343,11 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
                     }
                   >
                     <MenuItem value="">None</MenuItem>
-                    <MenuItem value={7}>7 days</MenuItem>
-                    <MenuItem value={15}>15 days</MenuItem>
-                    <MenuItem value={30}>30 days</MenuItem>
-                    <MenuItem value={60}>60 days</MenuItem>
-                    <MenuItem value={90}>90 days</MenuItem>
+                    <MenuItem value={0-7}>0-7 days</MenuItem>
+                    <MenuItem value={7-15}>7-15 days</MenuItem>
+                    <MenuItem value={15-30}>15-30 days</MenuItem>
+                    <MenuItem value={30-60}>30-60 days</MenuItem>
+                    <MenuItem value={60-90}>60-90 days</MenuItem>
                   </Select>
                 </FormControl>
               </Box>

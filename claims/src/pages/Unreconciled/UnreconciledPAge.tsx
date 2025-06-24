@@ -79,43 +79,62 @@ export default function UnReconciledPage() {
     Settled: "#10B981", // green (for reconciled)
   };
 
-  const columns = [
-    {
-      key: "claimNumber",
-      label: "Claim Number",
-      render: (row: any) => (
-        <Typography
-          sx={{ color: "primary.main", cursor: "pointer" }}
-          onClick={() => {
-            setDialogData(row);
-            setDialogMode("view");
-            setDialogOpen(true);
+
+const columns = [
+  { key: "claimNumber", label: "Claim Number" },
+  ...(activeTab === "ntr"
+    ? [
+        {
+          key: "cardNumber",
+          label: "Card Number",
+          render: (row: any) => row.cardNumber ?? "N/A",
+        },
+      ]
+    : []),
+  { key: "chequeNumber", label: "Cheque No." },
+  {
+    key: "claimedAmount",
+    label: "Claimed Amount",
+    render: (row: any) => `₹${row.claimedAmount?.toLocaleString()}`,
+  },
+  {
+    key: "approvedAmount",
+    label: "Approved Amount",
+    render: (row: any) => `₹${row.approvedAmount?.toLocaleString()}`,
+  },
+  {
+    key: "settledAmount",
+    label: "Settled Amount",
+    render: (row: any) => `₹${row.settledAmount?.toLocaleString()}`,
+  },
+
+  {
+    key: "depositAmount",
+    label: "Deposit Amount",
+    render: (row: any) =>
+      row.depositAmount ? `₹${row.depositAmount?.toLocaleString()}` : "N/A",
+  },
+  {
+    key: "status",
+    label: "Status",
+    render: (row: any) => {
+      const backgroundColor =
+        statusColorMap[row.status as keyof typeof statusColorMap] ||
+        "#E5E7EB";
+      return (
+        <Chip
+          label={row.status}
+          size="small"
+          sx={{
+            backgroundColor,
+            color: "#fff",
+            fontWeight: 500,
           }}
-        >
-          {row.claimNumber}
-        </Typography>
-      ),
+        />
+      );
     },
-    { key: "insuranceCompany", label: "Insurance Company" },
-    { key: "chequeNumber", label: "Cheque No." },
-    { key: "chequeReceivedDate", label: "Cheque Received Date" },
-    { key: "claimedDate", label: "Claimed Date" },
-    {
-      key: "claimedAmount",
-      label: "Claimed Amount",
-      render: (row: any) => `₹${row.claimedAmount?.toLocaleString()}`,
-    },
-    {
-      key: "approvedAmount",
-      label: "Approved Amount",
-      render: (row: any) => `₹${row.approvedAmount?.toLocaleString()}`,
-    },
-    {
-      key: "settledAmount",
-      label: "Settled Amount",
-      render: (row: any) => `₹${row.settledAmount?.toLocaleString()}`,
-    },
-    {
+  },
+        {
       key: "differenceAmount",
       label: "Difference Amount",
       render: (row: any) => {
@@ -124,27 +143,19 @@ export default function UnReconciledPage() {
         return diff === 0 ? "₹0" : display;
       },
     },
-    {
-      key: "status",
-      label: "Status",
-      render: (row: any) => {
-        const backgroundColor =
-          statusColorMap[row.status as keyof typeof statusColorMap] ||
-          "#E5E7EB";
-        return (
-          <Chip
-            label={row.status}
-            size="small"
-            sx={{
-              backgroundColor,
-              color: "#fff",
-              fontWeight: 500,
-            }}
-          />
-        );
-      },
-    },
-  ];
+  {
+    key: "claimAge",
+    label: "Claim Age",
+  },
+  { key: "insuranceCompany", label: "Insurance Company" },
+  { key: "chequeReceivedDate", label: "Cheque Received Date" },
+  { key: "claimedDate", label: "Claimed Date" },
+  {
+    key: "depositDate",
+    label: "Deposit Date",
+    render: (row: any) => row.depositDate ?? "N/A",
+  },
+];
 
   const currentClaims =
     activeTab === "ntr" ? unreconciledClaimsData : unreconciledClaimsOther;
@@ -284,6 +295,7 @@ export default function UnReconciledPage() {
             },
           },
         ]}
+         minColumns={8}
       />
       {open && (
         <ManualReconciliationDialog
