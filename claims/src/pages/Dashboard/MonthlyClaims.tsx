@@ -7,57 +7,120 @@ import {
   Box,
   Stack,
   useTheme,
-  Divider
 } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
-import Dropdown from '../../components/reusable/Dropdown';
+import MultiSelect from '../../components/reusable/MultiSelect';
+
+const insuranceCompanies = [
+  'NTR Vaidyaseva',
+  'ICICI Lombard',
+  'Star Health',
+  'HDFC ERGO',
+  'Bajaj Allianz'
+];
+
+interface MonthlyData {
+  months: string[];
+  totalClaims: number[];
+  reconciledClaims: number[];
+}
 
 const MonthlyClaimsTrend: React.FC = () => {
   const theme = useTheme();
+  const [selectedCompanies, setSelectedCompanies] = React.useState<string[]>([
+    'NTR Vaidyaseva'
+  ]);
 
-  const insuranceOptions = ['All', 'NTR vaidhya seva', 'Private Insurance'];
-  const [selectedInsurance, setSelectedInsurance] = React.useState<string>(insuranceOptions[0]);
-
-  const allData = {
-    months: ['JAN', 'FEB', 'MAR', 'APR'],
-    totalClaims: [1156, 1289, 1347, 1247],
-    reconciledClaims: [1000, 1100, 1000, 1000]
-  };
-
-  const ntrData = {
-    months: ['JAN', 'FEB', 'MAR', 'APR'],
-    totalClaims: [800, 900, 950, 850],
-    reconciledClaims: [700, 800, 750, 700]
-  };
-
-  const privateData = {
-    months: ['JAN', 'FEB', 'MAR', 'APR'],
-    totalClaims: [356, 389, 397, 397],
-    reconciledClaims: [300, 300, 250, 300]
-  };
-
-  const getData = () => {
-    switch (selectedInsurance) {
-      case 'NTR vaidhya seva':
-        return ntrData;
-      case 'Private Insurance':
-        return privateData;
-      default:
-        return allData;
+  // Sample data for each insurance company
+  const companyData: Record<string, MonthlyData> = {
+    'NTR Vaidyaseva': {
+      months: ['JAN', 'FEB', 'MAR', 'APR'],
+      totalClaims: [800, 900, 950, 850],
+      reconciledClaims: [700, 800, 750, 700]
+    },
+    'ICICI Lombard': {
+      months: ['JAN', 'FEB', 'MAR', 'APR'],
+      totalClaims: [356, 389, 397, 397],
+      reconciledClaims: [300, 300, 250, 300]
+    },
+    'Star Health': {
+      months: ['JAN', 'FEB', 'MAR', 'APR'],
+      totalClaims: [280, 310, 320, 300],
+      reconciledClaims: [250, 280, 290, 270]
+    },
+    'HDFC ERGO': {
+      months: ['JAN', 'FEB', 'MAR', 'APR'],
+      totalClaims: [200, 220, 230, 210],
+      reconciledClaims: [180, 200, 210, 190]
+    },
+    'Bajaj Allianz': {
+      months: ['JAN', 'FEB', 'MAR', 'APR'],
+      totalClaims: [150, 170, 180, 160],
+      reconciledClaims: [130, 150, 160, 140]
     }
   };
 
-  const { months, totalClaims, reconciledClaims } = getData();
+  // Combine data for selected companies
+  const getCombinedData = () => {
+    const isAllSelected = selectedCompanies.includes('ALL');
+    const companiesToProcess = isAllSelected ? insuranceCompanies : selectedCompanies;
 
-  const handleInsuranceChange = (value: string) => {
-    setSelectedInsurance(value);
+    if (companiesToProcess.length === 0) {
+      return {
+        months: companyData['NTR Vaidyaseva'].months, // Default months
+        totalClaims: [],
+        reconciledClaims: []
+      };
+    }
+
+    const months = companyData[companiesToProcess[0]].months;
+    
+    const combinedData = {
+      months,
+      totalClaims: Array(months.length).fill(0),
+      reconciledClaims: Array(months.length).fill(0)
+    };
+
+    companiesToProcess.forEach(company => {
+      const data = companyData[company];
+      for (let i = 0; i < months.length; i++) {
+        combinedData.totalClaims[i] += data.totalClaims[i];
+        combinedData.reconciledClaims[i] += data.reconciledClaims[i];
+      }
+    });
+
+    return combinedData;
+  };
+
+  const { months, totalClaims, reconciledClaims } = getCombinedData();
+
+  const handleCompanyChange = (selected: string[]) => {
+    // Prevent empty selection
+    if (selected.length === 0) {
+      setSelectedCompanies(['NTR Vaidyaseva']);
+      return;
+    }
+    
+    // If ALL is selected, replace current selection with ALL
+    if (selected.includes('ALL')) {
+      setSelectedCompanies(['ALL']);
+      return;
+    }
+    
+    // If ALL was previously selected and now something else is selected
+    if (selectedCompanies.includes('ALL') && !selected.includes('ALL')) {
+      setSelectedCompanies(selected);
+      return;
+    }
+    
+    setSelectedCompanies(selected);
   };
 
   return (
     <Card
       elevation={3}
       sx={{
-       background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+        background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
         borderRadius: 3,
         boxShadow: 2,
         transition: 'transform 0.2s ease-in-out',
@@ -69,23 +132,22 @@ const MonthlyClaimsTrend: React.FC = () => {
             <Typography variant="subtitle1" fontWeight={600} sx={{ color: theme.palette.text.primary, letterSpacing: 0.3 }}>
               Monthly Claims Trend
             </Typography>
-            <Box sx={{ minWidth: 180 }}>
-              <Dropdown
-                value={selectedInsurance}
-                options={insuranceOptions}
-                onChange={handleInsuranceChange}
-              // label="Insurance Type"
+            <Box sx={{ minWidth: 250 }}>
+              <MultiSelect
+                options={insuranceCompanies}
+                selected={selectedCompanies}
+                onChange={handleCompanyChange}
+                width={250}
+                includeAllOption={true}
+                placeholder="Select insurance companies"
               />
             </Box>
           </Stack>
         }
-         sx={{ px: 3, pt: 3, pb: 0 }}
+        sx={{ px: 3, pt: 3, pb: 0 }}
       />
 
-      <CardContent
-        // sx={{ pt: 1 }}
-        sx={{ px: 3, pt: 1, pb: 3 }}
-      >
+      <CardContent sx={{ px: 3, pt: 1, pb: 3 }}>
         <Box height={300}>
           <LineChart
             xAxis={[{ id: 'months', data: months, scaleType: 'point', label: 'Month' }]}
@@ -105,7 +167,6 @@ const MonthlyClaimsTrend: React.FC = () => {
             ]}
             height={300}
             margin={{ top: 20, bottom: 40, left: 50, right: 20 }}
-            grid={{ horizontal: true, vertical: true }}
             sx={{
               '.MuiChartsAxis-tickLabel': {
                 fontSize: 12,

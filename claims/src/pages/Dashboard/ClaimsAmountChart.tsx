@@ -8,61 +8,127 @@ import {
   Stack,
 } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
-import Dropdown from '../../components/reusable/Dropdown';
+import MultiSelect from '../../components/reusable/MultiSelect';
+
+const insuranceCompanies = [
+  'NTR Vaidyaseva',
+  'ICICI Lombard',
+  'Star Health',
+  'HDFC ERGO',
+  'Bajaj Allianz'
+];
+
+interface MonthlyAmounts {
+  months: string[];
+  claimAmount: number[];
+  approvedAmount: number[];
+  settledAmount: number[];
+}
 
 const ClaimAmountChart: React.FC = () => {
-  // Dropdown options and state
-  const insuranceOptions = ['All', 'NTR vaidhya seva', 'Private Insurance'];
-  const [selectedInsurance, setSelectedInsurance] = React.useState<string>(insuranceOptions[0]);
+  const [selectedCompanies, setSelectedCompanies] = React.useState<string[]>([
+    'NTR Vaidyaseva',
+    'ICICI Lombard'
+  ]);
 
-  // Format currency for y-axis
-  const formatCurrency = (value: number) => `₹${(value / 100000).toFixed(1)}L`;
-
-  // Sample data with settled amounts added
-  const allData = {
-    months: ['JAN', 'FEB', 'MAR', 'APR'],
-    claimAmount: [4234567, 4876543, 5214789, 4567890],
-    approvedAmount: [3890234, 4456789, 4789456, 4123567],
-    settledAmount: [3750000, 4300000, 4650000, 4000000] // Added settled amounts
-  };
-
-  const ntrData = {
-    months: ['JAN', 'FEB', 'MAR', 'APR'],
-    claimAmount: [3234567, 3876543, 4214789, 3567890],
-    approvedAmount: [2890234, 3456789, 3789456, 3123567],
-    settledAmount: [2750000, 3300000, 3650000, 3000000] // Added settled amounts
-  };
-
-  const privateData = {
-    months: ['JAN', 'FEB', 'MAR', 'APR'],
-    claimAmount: [1000000, 1000000, 1000000, 1000000],
-    approvedAmount: [900000, 900000, 900000, 900000],
-    settledAmount: [850000, 850000, 850000, 850000] // Added settled amounts
-  };
-
-  // Get data based on selected insurance
-  const getData = () => {
-    switch (selectedInsurance) {
-      case 'NTR vaidhya seva':
-        return ntrData;
-      case 'Private Insurance':
-        return privateData;
-      default:
-        return allData;
+  // Sample data for each insurance company
+  const companyData: Record<string, MonthlyAmounts> = {
+    'NTR Vaidyaseva': {
+      months: ['JAN', 'FEB', 'MAR', 'APR'],
+      claimAmount: [3234567, 3876543, 4214789, 3567890],
+      approvedAmount: [2890234, 3456789, 3789456, 3123567],
+      settledAmount: [2750000, 3300000, 3650000, 3000000]
+    },
+    'ICICI Lombard': {
+      months: ['JAN', 'FEB', 'MAR', 'APR'],
+      claimAmount: [1000000, 1100000, 1200000, 1000000],
+      approvedAmount: [900000, 950000, 1050000, 900000],
+      settledAmount: [850000, 900000, 1000000, 850000]
+    },
+    'Star Health': {
+      months: ['JAN', 'FEB', 'MAR', 'APR'],
+      claimAmount: [800000, 850000, 900000, 800000],
+      approvedAmount: [750000, 800000, 850000, 750000],
+      settledAmount: [700000, 750000, 800000, 700000]
+    },
+    'HDFC ERGO': {
+      months: ['JAN', 'FEB', 'MAR', 'APR'],
+      claimAmount: [600000, 650000, 700000, 600000],
+      approvedAmount: [550000, 600000, 650000, 550000],
+      settledAmount: [500000, 550000, 600000, 500000]
+    },
+    'Bajaj Allianz': {
+      months: ['JAN', 'FEB', 'MAR', 'APR'],
+      claimAmount: [500000, 550000, 600000, 500000],
+      approvedAmount: [450000, 500000, 550000, 450000],
+      settledAmount: [400000, 450000, 500000, 400000]
     }
   };
 
-  const { months, claimAmount, approvedAmount, settledAmount } = getData();
+  // Combine data for selected companies
+  const getCombinedData = () => {
+    const isAllSelected = selectedCompanies.includes('ALL');
+    const companiesToProcess = isAllSelected ? insuranceCompanies : selectedCompanies;
 
-  const handleInsuranceChange = (value: string) => {
-    setSelectedInsurance(value);
+    if (companiesToProcess.length === 0) {
+      return {
+        months: companyData['NTR Vaidyaseva'].months,
+        claimAmount: [],
+        approvedAmount: [],
+        settledAmount: []
+      };
+    }
+
+    const months = companyData[companiesToProcess[0]].months;
+    
+    const combinedData: MonthlyAmounts = {
+      months,
+      claimAmount: Array(months.length).fill(0),
+      approvedAmount: Array(months.length).fill(0),
+      settledAmount: Array(months.length).fill(0)
+    };
+
+    companiesToProcess.forEach(company => {
+      const data = companyData[company];
+      for (let i = 0; i < months.length; i++) {
+        combinedData.claimAmount[i] += data.claimAmount[i];
+        combinedData.approvedAmount[i] += data.approvedAmount[i];
+        combinedData.settledAmount[i] += data.settledAmount[i];
+      }
+    });
+
+    return combinedData;
   };
+
+  const { months, claimAmount, approvedAmount, settledAmount } = getCombinedData();
+
+  const handleCompanyChange = (selected: string[]) => {
+    if (selected.length === 0) {
+      setSelectedCompanies(['NTR Vaidyaseva']);
+      return;
+    }
+    
+    if (selected.includes('ALL')) {
+      setSelectedCompanies(['ALL']);
+      return;
+    }
+    
+    if (selectedCompanies.includes('ALL') && !selected.includes('ALL')) {
+      setSelectedCompanies(selected);
+      return;
+    }
+    
+    setSelectedCompanies(selected);
+  };
+
+  // Format currency for y-axis
+  const formatCurrency = (value: number) => `₹${(value / 100000).toFixed(1)}L`;
 
   return (
     <Card
       elevation={3}
       sx={{
-        bgcolor: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+        background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
         borderRadius: 3,
         boxShadow: 2,
         transition: 'transform 0.2s ease-in-out',
@@ -75,10 +141,13 @@ const ClaimAmountChart: React.FC = () => {
               Claim vs Approved vs Settled Amount
             </Typography>
             <Box sx={{ width: '40%' }}>
-              <Dropdown
-                value={selectedInsurance}
-                options={insuranceOptions}
-                onChange={handleInsuranceChange}
+              <MultiSelect
+                options={insuranceCompanies}
+                selected={selectedCompanies}
+                onChange={handleCompanyChange}
+                includeAllOption={true}
+                placeholder="Select companies"
+                width="100%"
               />
             </Box>
           </Stack>

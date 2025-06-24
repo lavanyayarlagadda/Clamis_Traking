@@ -1,3 +1,5 @@
+// components/dashboard/InsurancePerformance.tsx
+
 import React from 'react';
 import {
   Card,
@@ -7,21 +9,27 @@ import {
   Box,
   Stack,
   useTheme,
-  Tooltip
+  Tooltip,
 } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
-import Dropdown from '../../components/reusable/Dropdown';
+import MultiSelect from '../../components/reusable/MultiSelect';
+
+const insuranceCompanies = [
+  'NTR Vaidyaseva',
+  'ICICI Lombard',
+  'Star Health',
+  'HDFC ERGO',
+  'Bajaj Allianz',
+];
 
 const InsurancePerformance: React.FC = () => {
-  const theme = useTheme()
-  // Dropdown options and state
-  const insuranceOptions = ['All', 'NTR vaidhya seva', 'Private Insurance'];
-  const [selectedInsurance, setSelectedInsurance] = React.useState<string>(insuranceOptions[0]);
+  const theme = useTheme();
+  const [selectedCompanies, setSelectedCompanies] = React.useState<string[]>([
+    'NTR Vaidyaseva',
+  ]);
 
-  // Format currency for y-axis
   const formatCurrency = (value: number) => `₹${(value / 100000).toFixed(1)}L`;
 
-  // Sample data for different insurance companies
   const allTimeData = [
     { name: 'NTR Vaidyaseva', amount: 1245678, percentage: 28, claims: 450 },
     { name: 'ICICI Lombard', amount: 1245678, percentage: 28, claims: 425 },
@@ -31,43 +39,45 @@ const InsurancePerformance: React.FC = () => {
     { name: 'Others', amount: 576892, percentage: 13, claims: 180 },
   ];
 
-  // Get top 5 companies by amount
-  const getTop5Companies = (data: typeof allTimeData) => {
-    return [...data]
-      .sort((a, b) => b.amount - a.amount)
-      .slice(0, 5);
-  };
-
-  const allData = getTop5Companies(allTimeData);
-  const ntrData = allTimeData.filter((d) => d.name === 'NTR Vaidyaseva');
-  const privateData = getTop5Companies(
-    allTimeData.filter((d) =>
-      ['ICICI Lombard', 'Star Health', 'HDFC ERGO', 'Bajaj Allianz'].includes(d.name)
-    )
-  );
-
   const getData = () => {
-    switch (selectedInsurance) {
-      case 'NTR vaidhya seva':
-        return ntrData;
-      case 'Private Insurance':
-        return privateData;
-      default:
-        return allData;
-    }
+    const isAllSelected = selectedCompanies.includes('ALL');
+    const companiesToShow = isAllSelected
+      ? insuranceCompanies
+      : selectedCompanies;
+
+    const filtered = allTimeData.filter((d) =>
+      companiesToShow.includes(d.name)
+    );
+
+    return [...filtered]
+      .sort((a, b) => b.amount - a.amount)
+      .slice(0, 5); // Top 5
   };
 
   const data = getData();
 
+  const handleCompanyChange = (selected: string[]) => {
+    if (selected.length === 0) {
+      setSelectedCompanies(['NTR Vaidyaseva']);
+      return;
+    }
 
-  const handleTimeChange = (value: string) => {
-    setSelectedInsurance(value);
+    if (selected.includes('ALL')) {
+      setSelectedCompanies(['ALL']);
+      return;
+    }
+
+    if (selectedCompanies.includes('ALL') && !selected.includes('ALL')) {
+      setSelectedCompanies(selected);
+      return;
+    }
+
+    setSelectedCompanies(selected);
   };
 
-  // Truncate and tooltip map
   const truncatedLabels = data.map((item) => ({
     full: item.name,
-    short: item.name.length > 10 ? item.name.slice(0, 10) + '…' : item.name
+    short: item.name.length > 10 ? item.name.slice(0, 10) + '…' : item.name,
   }));
 
   return (
@@ -82,22 +92,34 @@ const InsurancePerformance: React.FC = () => {
     >
       <CardHeader
         title={
-          <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-            <Typography variant="subtitle1" fontWeight={600} sx={{ color: theme.palette.text.primary, letterSpacing: 0.3 }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+          >
+            <Typography
+              variant="subtitle1"
+              fontWeight={600}
+              sx={{ color: theme.palette.text.primary, letterSpacing: 0.3 }}
+            >
               Top 5 Insurance Companies Performance
             </Typography>
-            <Box sx={{ minWidth: 180 }}>
-              <Dropdown
-                value={selectedInsurance}
-                options={insuranceOptions}
-                onChange={handleTimeChange}
+            <Box sx={{ minWidth: 250 }}>
+              <MultiSelect
+                options={insuranceCompanies}
+                selected={selectedCompanies}
+                onChange={handleCompanyChange}
+                width={250}
+                includeAllOption
+                placeholder="Select insurance companies"
               />
             </Box>
           </Stack>
         }
         sx={{ px: 3, pt: 3, pb: 0 }}
       />
-  
+
       <CardContent sx={{ px: 3, pt: 1, pb: 3 }}>
         <Box height={300}>
           <LineChart
@@ -105,25 +127,23 @@ const InsurancePerformance: React.FC = () => {
             xAxis={[
               {
                 id: 'company',
-                data: truncatedLabels.map(label => label.short),
+                data: truncatedLabels.map((label) => label.short),
                 scaleType: 'point',
                 label: 'Insurance Company',
                 valueFormatter: (value) =>
-                  value.length > 12
-                    ? `${value.slice(0, 10)}…`
-                    : value,
+                  value.length > 12 ? `${value.slice(0, 10)}…` : value,
               },
             ]}
             series={[
               {
                 id: 'amount',
-                data: data.map(d => d.amount),
+                data: data.map((d) => d.amount),
                 label: 'Settlement Amount',
                 color: '#3b82f6',
               },
               {
                 id: 'claims',
-                data: data.map(d => d.claims),
+                data: data.map((d) => d.claims),
                 label: 'Claims Count',
                 color: '#10b981',
               },

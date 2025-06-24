@@ -7,9 +7,9 @@ import {
   Box,
   LinearProgress,
   Stack,
-  useTheme
+  useTheme,
 } from '@mui/material';
-import Dropdown from '../../components/reusable/Dropdown';
+import MultiSelect from '../../components/reusable/MultiSelect';
 
 interface StatusData {
   name: string;
@@ -18,54 +18,100 @@ interface StatusData {
   color: string;
 }
 
+const insuranceCompanies = [
+  'NTR Vaidyaseva',
+  'ICICI Lombard',
+  'Star Health',
+  'HDFC ERGO',
+  'Bajaj Allianz',
+];
+
 const ReconciliationStatusDistribution: React.FC = () => {
   const theme = useTheme();
-  // Dropdown options and state
-  const insuranceOptions = ['All', 'NTR vaidhya seva', 'Private Insurance'];
-  const [selectedInsurance, setSelectedInsurance] = React.useState<string>(insuranceOptions[0]);
 
-  // Sample data for different insurance types
-  const allData: StatusData[] = [
-    { name: 'Fully Reconciled', value: 72, amount: 2867890, color: '#22c55e' },
-    { name: 'Pending Reconciled', value: 15, amount: 598234, color: '#eab308' },
-    { name: 'Unreconciled', value: 8, amount: 323456, color: '#ef4444' },
-    { name: 'Others', value: 5, amount: 156789, color: '#a855f7' }
-  ];
-
-  const ntrData: StatusData[] = [
-    { name: 'Fully Reconciled', value: 68, amount: 1867890, color: '#22c55e' },
-    { name: 'Pending Reconciled', value: 18, amount: 498234, color: '#eab308' },
-    { name: 'Unreconciled', value: 10, amount: 273456, color: '#ef4444' },
-    { name: 'Others', value: 4, amount: 106789, color: '#a855f7' }
-  ];
-
-  const privateData: StatusData[] = [
-    { name: 'Fully Reconciled', value: 75, amount: 1000000, color: '#22c55e' },
-    { name: 'Pending Reconciled', value: 12, amount: 100000, color: '#eab308' },
-    { name: 'Unreconciled', value: 5, amount: 50000, color: '#ef4444' },
-    { name: 'Others', value: 8, amount: 50000, color: '#a855f7' }
-  ];
-
-  // Get data based on selected insurance
-  const getData = () => {
-    switch (selectedInsurance) {
-      case 'NTR vaidhya seva':
-        return ntrData;
-      case 'Private Insurance':
-        return privateData;
-      default:
-        return allData;
-    }
-  };
-
-  const data = getData();
+  const [selectedCompanies, setSelectedCompanies] = React.useState<string[]>([
+    'NTR Vaidyaseva',
+  ]);
 
   const formatCurrency = (value: number): string => {
     return `₹${(value / 100000).toFixed(1)}L`;
   };
 
-  const handleInsuranceChange = (value: string) => {
-    setSelectedInsurance(value);
+  const companyData: Record<string, StatusData[]> = {
+    'NTR Vaidyaseva': [
+      { name: 'Fully Reconciled', value: 68, amount: 1867890, color: '#22c55e' },
+      { name: 'Pending Reconciled', value: 18, amount: 498234, color: '#eab308' },
+      { name: 'Unreconciled', value: 10, amount: 273456, color: '#ef4444' },
+      { name: 'Others', value: 4, amount: 106789, color: '#a855f7' },
+    ],
+    'ICICI Lombard': [
+      { name: 'Fully Reconciled', value: 70, amount: 800000, color: '#22c55e' },
+      { name: 'Pending Reconciled', value: 14, amount: 160000, color: '#eab308' },
+      { name: 'Unreconciled', value: 10, amount: 114000, color: '#ef4444' },
+      { name: 'Others', value: 6, amount: 68000, color: '#a855f7' },
+    ],
+    'Star Health': [
+      { name: 'Fully Reconciled', value: 72, amount: 900000, color: '#22c55e' },
+      { name: 'Pending Reconciled', value: 13, amount: 162000, color: '#eab308' },
+      { name: 'Unreconciled', value: 8, amount: 98000, color: '#ef4444' },
+      { name: 'Others', value: 7, amount: 87000, color: '#a855f7' },
+    ],
+    'HDFC ERGO': [
+      { name: 'Fully Reconciled', value: 65, amount: 700000, color: '#22c55e' },
+      { name: 'Pending Reconciled', value: 20, amount: 215000, color: '#eab308' },
+      { name: 'Unreconciled', value: 10, amount: 107000, color: '#ef4444' },
+      { name: 'Others', value: 5, amount: 54000, color: '#a855f7' },
+    ],
+    'Bajaj Allianz': [
+      { name: 'Fully Reconciled', value: 69, amount: 600000, color: '#22c55e' },
+      { name: 'Pending Reconciled', value: 15, amount: 130000, color: '#eab308' },
+      { name: 'Unreconciled', value: 10, amount: 85000, color: '#ef4444' },
+      { name: 'Others', value: 6, amount: 73000, color: '#a855f7' },
+    ],
+  };
+
+  const getCombinedData = (): StatusData[] => {
+    const isAllSelected = selectedCompanies.includes('ALL');
+    const companies = isAllSelected ? insuranceCompanies : selectedCompanies;
+
+    const template = companyData[companies[0]].map((item) => ({
+      ...item,
+      value: 0,
+      amount: 0,
+    }));
+
+    companies.forEach((company) => {
+      const entries = companyData[company];
+      entries.forEach((entry, i) => {
+        template[i].value += entry.value;
+        template[i].amount += entry.amount;
+      });
+    });
+
+    // Average percentages across companies
+    const totalCompanies = companies.length;
+    return template.map((item) => ({
+      ...item,
+      value: Math.round(item.value / totalCompanies),
+    }));
+  };
+
+  const data = getCombinedData();
+
+  const handleCompanyChange = (selected: string[]) => {
+    if (selected.length === 0) {
+      setSelectedCompanies(['NTR Vaidyaseva']);
+      return;
+    }
+    if (selected.includes('ALL')) {
+      setSelectedCompanies(['ALL']);
+      return;
+    }
+    if (selectedCompanies.includes('ALL') && !selected.includes('ALL')) {
+      setSelectedCompanies(selected);
+      return;
+    }
+    setSelectedCompanies(selected);
   };
 
   return (
@@ -85,14 +131,21 @@ const ReconciliationStatusDistribution: React.FC = () => {
       <CardHeader
         title={
           <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-            <Typography variant="subtitle1" fontWeight={600} sx={{ color: theme.palette.text.primary, letterSpacing: 0.3 }}>
+            <Typography
+              variant="subtitle1"
+              fontWeight={600}
+              sx={{ color: theme.palette.text.primary, letterSpacing: 0.3 }}
+            >
               Reconciliation Status Distribution
             </Typography>
-            <Box sx={{ minWidth: 180 }}>
-              <Dropdown
-                value={selectedInsurance}
-                options={insuranceOptions}
-                onChange={handleInsuranceChange}
+            <Box sx={{ minWidth: 250 }}>
+              <MultiSelect
+                options={insuranceCompanies}
+                selected={selectedCompanies}
+                onChange={handleCompanyChange}
+                width={250}
+                includeAllOption
+                placeholder="Select insurance companies"
               />
             </Box>
           </Stack>

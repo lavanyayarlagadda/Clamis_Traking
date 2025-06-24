@@ -1,3 +1,5 @@
+// components/dashboard/SettlementReconciliationTrends.tsx
+
 import React from 'react';
 import {
   ChartContainer,
@@ -8,56 +10,109 @@ import {
   ChartsGrid,
   AreaPlot,
 } from '@mui/x-charts';
-import { Card, CardContent, CardHeader, Typography, Box, Stack, useTheme } from '@mui/material';
-import Dropdown from '../../components/reusable/Dropdown';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Typography,
+  Box,
+  Stack,
+  useTheme,
+} from '@mui/material';
+import MultiSelect from '../../components/reusable/MultiSelect';
 
-const SettlementReconciliationTrends = () => {
+const insuranceCompanies = [
+  'NTR Vaidyaseva',
+  'ICICI Lombard',
+  'Star Health',
+  'HDFC ERGO',
+  'Bajaj Allianz',
+];
+
+const SettlementReconciliationTrends: React.FC = () => {
   const theme = useTheme();
-  // Dropdown options and state
-  const insuranceOptions = ['All', 'NTR vaidhya seva', 'Private Insurance'];
-  const [selectedInsurance, setSelectedInsurance] = React.useState<string>(insuranceOptions[0]);
 
-  // Format currency for y-axis
+  const [selectedCompanies, setSelectedCompanies] = React.useState<string[]>([
+    'NTR Vaidyaseva',
+  ]);
+
   const formatCurrency = (value: number) => `₹${(value / 100000).toFixed(1)}L`;
 
-  // Sample data for different insurance types
-  const allData = [
-    { month: 'Jan', settled: 3845678, reconciled: 3523456 },
-    { month: 'Feb', settled: 4123456, reconciled: 3867890 },
-    { month: 'Mar', settled: 4467891, reconciled: 4123678 },
-    { month: 'Apr', settled: 3987456, reconciled: 3645234 },
-  ];
-
-  const ntrData = [
-    { month: 'Jan', settled: 2845678, reconciled: 2523456 },
-    { month: 'Feb', settled: 3123456, reconciled: 2867890 },
-    { month: 'Mar', settled: 3467891, reconciled: 3123678 },
-    { month: 'Apr', settled: 2987456, reconciled: 2645234 },
-  ];
-
-  const privateData = [
-    { month: 'Jan', settled: 1000000, reconciled: 1000000 },
-    { month: 'Feb', settled: 1000000, reconciled: 1000000 },
-    { month: 'Mar', settled: 1000000, reconciled: 1000000 },
-    { month: 'Apr', settled: 1000000, reconciled: 1000000 },
-  ];
-
-  // Get data based on selected insurance
-  const getData = () => {
-    switch (selectedInsurance) {
-      case 'NTR vaidhya seva':
-        return ntrData;
-      case 'Private Insurance':
-        return privateData;
-      default:
-        return allData;
-    }
+  // Sample company-wise data
+  const companyData: Record<
+    string,
+    { month: string; settled: number; reconciled: number }[]
+  > = {
+    'NTR Vaidyaseva': [
+      { month: 'Jan', settled: 2845678, reconciled: 2523456 },
+      { month: 'Feb', settled: 3123456, reconciled: 2867890 },
+      { month: 'Mar', settled: 3467891, reconciled: 3123678 },
+      { month: 'Apr', settled: 2987456, reconciled: 2645234 },
+    ],
+    'ICICI Lombard': [
+      { month: 'Jan', settled: 500000, reconciled: 450000 },
+      { month: 'Feb', settled: 550000, reconciled: 500000 },
+      { month: 'Mar', settled: 600000, reconciled: 550000 },
+      { month: 'Apr', settled: 480000, reconciled: 430000 },
+    ],
+    'Star Health': [
+      { month: 'Jan', settled: 250000, reconciled: 200000 },
+      { month: 'Feb', settled: 270000, reconciled: 230000 },
+      { month: 'Mar', settled: 300000, reconciled: 250000 },
+      { month: 'Apr', settled: 260000, reconciled: 220000 },
+    ],
+    'HDFC ERGO': [
+      { month: 'Jan', settled: 200000, reconciled: 180000 },
+      { month: 'Feb', settled: 210000, reconciled: 190000 },
+      { month: 'Mar', settled: 220000, reconciled: 200000 },
+      { month: 'Apr', settled: 190000, reconciled: 170000 },
+    ],
+    'Bajaj Allianz': [
+      { month: 'Jan', settled: 180000, reconciled: 160000 },
+      { month: 'Feb', settled: 190000, reconciled: 170000 },
+      { month: 'Mar', settled: 200000, reconciled: 180000 },
+      { month: 'Apr', settled: 170000, reconciled: 150000 },
+    ],
   };
 
-  const data = getData();
+  const getCombinedData = () => {
+    const isAllSelected = selectedCompanies.includes('ALL');
+    const companiesToUse = isAllSelected ? insuranceCompanies : selectedCompanies;
 
-  const handleInsuranceChange = (value: string) => {
-    setSelectedInsurance(value);
+    const months = ['Jan', 'Feb', 'Mar', 'Apr'];
+    const combined = months.map((month, i) => ({
+      month,
+      settled: 0,
+      reconciled: 0,
+    }));
+
+    companiesToUse.forEach((company) => {
+      const data = companyData[company];
+      data.forEach((entry, i) => {
+        combined[i].settled += entry.settled;
+        combined[i].reconciled += entry.reconciled;
+      });
+    });
+
+    return combined;
+  };
+
+  const data = getCombinedData();
+
+  const handleCompanyChange = (selected: string[]) => {
+    if (selected.length === 0) {
+      setSelectedCompanies(['NTR Vaidyaseva']);
+      return;
+    }
+    if (selected.includes('ALL')) {
+      setSelectedCompanies(['ALL']);
+      return;
+    }
+    if (selectedCompanies.includes('ALL') && !selected.includes('ALL')) {
+      setSelectedCompanies(selected);
+      return;
+    }
+    setSelectedCompanies(selected);
   };
 
   return (
@@ -76,15 +131,27 @@ const SettlementReconciliationTrends = () => {
     >
       <CardHeader
         title={
-          <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-            <Typography variant="subtitle1" fontWeight={600} sx={{ color: theme.palette.text.primary, letterSpacing: 0.3 }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={2}
+          >
+            <Typography
+              variant="subtitle1"
+              fontWeight={600}
+              sx={{ color: theme.palette.text.primary, letterSpacing: 0.3 }}
+            >
               Settlement vs Reconciliation Trends
             </Typography>
-            <Box sx={{ minWidth: 180 }}>
-              <Dropdown
-                value={selectedInsurance}
-                options={insuranceOptions}
-                onChange={handleInsuranceChange}
+            <Box sx={{ minWidth: 250 }}>
+              <MultiSelect
+                options={insuranceCompanies}
+                selected={selectedCompanies}
+                onChange={handleCompanyChange}
+                width={250}
+                includeAllOption
+                placeholder="Select insurance companies"
               />
             </Box>
           </Stack>
