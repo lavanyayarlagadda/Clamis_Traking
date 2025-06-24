@@ -12,8 +12,8 @@ import Dropdown from '../../components/reusable/Dropdown';
 
 const InsurancePerformance: React.FC = () => {
   // Dropdown options and state
-  const timeOptions = ['All Time', 'Last Quarter', 'Last Month'];
-  const [selectedTime, setSelectedTime] = React.useState<string>(timeOptions[0]);
+  const insuranceOptions = ['All', 'NTR vaidhya seva', 'Private Insurance'];
+  const [selectedInsurance, setSelectedInsurance] = React.useState<string>(insuranceOptions[0]);
 
   // Format currency for y-axis
   const formatCurrency = (value: number) => `₹${(value / 100000).toFixed(1)}L`;
@@ -26,42 +26,35 @@ const InsurancePerformance: React.FC = () => {
     { name: 'HDFC ERGO', amount: 876543, percentage: 19, claims: 320 },
     { name: 'Bajaj Allianz', amount: 745321, percentage: 17, claims: 275 },
     { name: 'Others', amount: 576892, percentage: 13, claims: 180 },
+      { name: 'NTR Vaidyaseva', amount: 954789, percentage: 58, claims: 200 },
   ];
 
-  const lastQuarterData = [
-    { name: 'NTR Vaidyaseva', amount: 456789, percentage: 30, claims: 150 },
-    { name: 'ICICI Lombard', amount: 423456, percentage: 28, claims: 140 },
-    { name: 'Star Health', amount: 345678, percentage: 23, claims: 120 },
-    { name: 'HDFC ERGO', amount: 276543, percentage: 18, claims: 100 },
-    { name: 'Bajaj Allianz', amount: 245321, percentage: 16, claims: 90 },
-    { name: 'Others', amount: 176892, percentage: 12, claims: 60 },
-  ];
-
-  const lastMonthData = [
-    { name: 'NTR Vaidyaseva', amount: 145678, percentage: 32, claims: 45 },
-    { name: 'ICICI Lombard', amount: 134567, percentage: 30, claims: 42 },
-    { name: 'Star Health', amount: 102345, percentage: 23, claims: 38 },
-    { name: 'HDFC ERGO', amount: 87654, percentage: 19, claims: 32 },
-    { name: 'Bajaj Allianz', amount: 74532, percentage: 16, claims: 27 },
-    { name: 'Others', amount: 57689, percentage: 13, claims: 18 },
-  ];
-
+ 
   // Get data based on selected time period
-  const getData = () => {
-    switch (selectedTime) {
-      case 'Last Quarter':
-        return lastQuarterData;
-      case 'Last Month':
-        return lastMonthData;
-      default:
-        return allTimeData;
-    }
-  };
 
-  const data = getData();
+
+const allData = allTimeData;
+const ntrData = allTimeData.filter((d) => d.name === 'NTR Vaidyaseva');
+const privateData = allTimeData.filter((d) =>
+  ['ICICI Lombard', 'Star Health', 'HDFC ERGO', 'Bajaj Allianz'].includes(d.name)
+);
+
+const getData = () => {
+  switch (selectedInsurance) {
+    case 'NTR vaidhya seva':
+      return ntrData;
+    case 'Private Insurance':
+      return privateData;
+    default:
+      return allData;
+  }
+};
+
+const data = getData();
+
 
   const handleTimeChange = (value: string) => {
-    setSelectedTime(value);
+    setSelectedInsurance(value);
   };
 
   return (
@@ -80,8 +73,8 @@ const InsurancePerformance: React.FC = () => {
             </Typography>
             <Box sx={{ width: '40%' }}>
               <Dropdown
-                value={selectedTime}
-                options={timeOptions}
+                value={selectedInsurance}
+                options={insuranceOptions}
                 onChange={handleTimeChange}
               />
             </Box>
