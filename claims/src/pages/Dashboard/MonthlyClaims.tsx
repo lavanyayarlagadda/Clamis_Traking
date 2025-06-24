@@ -10,7 +10,7 @@ import {
   Divider
 } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
-import Dropdown from '../../components/reusable/Dropdown';
+import Dropdown from '../../Components/reusable/Dropdown';
 
 const MonthlyClaimsTrend: React.FC = () => {
   const theme = useTheme();
@@ -66,7 +66,7 @@ const MonthlyClaimsTrend: React.FC = () => {
       <CardHeader
         title={
           <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-            <Typography variant="h6" fontWeight={500} sx={{ color: theme.palette.text.primary, letterSpacing: 0.3 }}>
+            <Typography variant="subtitle1" fontWeight={600} sx={{ color: theme.palette.text.primary, letterSpacing: 0.3 }}>
               Monthly Claims Trend
             </Typography>
             <Box sx={{ minWidth: 180 }}>
