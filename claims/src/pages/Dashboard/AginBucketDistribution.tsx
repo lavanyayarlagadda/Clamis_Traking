@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Card,
   CardContent,
@@ -6,88 +6,100 @@ import {
   Typography,
   Box,
   Stack,
-} from '@mui/material';
-import {
-  BarChart,
-  LineChart,
-} from '@mui/x-charts';
-import MultiSelect from '../../components/reusable/MultiSelect'; // assuming this is your reusable component
+  Tooltip,
+} from "@mui/material";
+import { BarChart, LineChart } from "@mui/x-charts";
+import MultiSelect from "../../components/reusable/MultiSelect";
 
 const insuranceCompanies = [
-  'NTR Vaidyaseva',
-  'ICICI Lombard',
-  'Star Health',
-  'HDFC ERGO',
-  'Bajaj Allianz',
+  "NTR Vaidyaseva",
+  "ICICI Lombard",
+  "Star Health",
+  "HDFC ERGO",
+  "Bajaj Allianz",
 ];
 
 const AgingBucketDistribution: React.FC = () => {
   const [selectedCompanies, setSelectedCompanies] = React.useState<string[]>([
-    'NTR Vaidyaseva',
+    "ALL",
   ]);
+  const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
+  const [tooltipData, setTooltipData] = React.useState<{
+    bucket: string;
+    claims: number;
+    amount: number;
+    x: number;
+    y: number;
+  } | null>(null);
 
-  // Aging buckets
-  const buckets = ['0-7 days', '8-15 days', '16-30 days', '31-60 days', '61-90 days', '>90 days'];
+  const buckets = [
+    "0-7 days",
+    "8-15 days",
+    "16-30 days",
+    "31-60 days",
+    "61-90 days",
+    ">90 days",
+  ];
 
-  // Sample aging bucket data for each insurance company
-  const companyData: Record<string, { bucket: string; claims: number; amount: number; avgAge: number }[]> = {
-    'NTR Vaidyaseva': [
-      { bucket: '0-7 days', claims: 356, amount: 1367890, avgAge: 3.8 },
-      { bucket: '8-15 days', claims: 184, amount: 745678, avgAge: 11.5 },
-      { bucket: '16-30 days', claims: 106, amount: 523456, avgAge: 24.1 },
-      { bucket: '31-60 days', claims: 59, amount: 256789, avgAge: 46.2 },
-      { bucket: '61-90 days', claims: 35, amount: 128234, avgAge: 76.0 },
-      { bucket: '>90 days', claims: 13, amount: 61234, avgAge: 125.3 },
+  const companyData: Record<
+    string,
+    { bucket: string; claims: number; amount: number }[]
+  > = {
+    "NTR Vaidyaseva": [
+      { bucket: "0-7 days", claims: 356, amount: 1367890 },
+      { bucket: "8-15 days", claims: 184, amount: 745678 },
+      { bucket: "16-30 days", claims: 106, amount: 523456 },
+      { bucket: "31-60 days", claims: 59, amount: 256789 },
+      { bucket: "61-90 days", claims: 35, amount: 128234 },
+      { bucket: ">90 days", claims: 13, amount: 61234 },
     ],
-    'ICICI Lombard': [
-      { bucket: '0-7 days', claims: 80, amount: 400000, avgAge: 3.2 },
-      { bucket: '8-15 days', claims: 40, amount: 200000, avgAge: 10.8 },
-      { bucket: '16-30 days', claims: 40, amount: 100000, avgAge: 23.0 },
-      { bucket: '31-60 days', claims: 20, amount: 100000, avgAge: 44.5 },
-      { bucket: '61-90 days', claims: 10, amount: 50000, avgAge: 74.0 },
-      { bucket: '>90 days', claims: 5, amount: 30000, avgAge: 115.0 },
+    "ICICI Lombard": [
+      { bucket: "0-7 days", claims: 80, amount: 400000 },
+      { bucket: "8-15 days", claims: 40, amount: 200000 },
+      { bucket: "16-30 days", claims: 40, amount: 100000 },
+      { bucket: "31-60 days", claims: 20, amount: 100000 },
+      { bucket: "61-90 days", claims: 10, amount: 50000 },
+      { bucket: ">90 days", claims: 5, amount: 30000 },
     ],
-    'Star Health': [
-      { bucket: '0-7 days', claims: 90, amount: 450000, avgAge: 3.5 },
-      { bucket: '8-15 days', claims: 50, amount: 250000, avgAge: 11.0 },
-      { bucket: '16-30 days', claims: 30, amount: 150000, avgAge: 23.5 },
-      { bucket: '31-60 days', claims: 20, amount: 80000, avgAge: 45.0 },
-      { bucket: '61-90 days', claims: 8, amount: 40000, avgAge: 75.0 },
-      { bucket: '>90 days', claims: 6, amount: 20000, avgAge: 118.0 },
+    "Star Health": [
+      { bucket: "0-7 days", claims: 90, amount: 450000 },
+      { bucket: "8-15 days", claims: 50, amount: 250000 },
+      { bucket: "16-30 days", claims: 30, amount: 150000 },
+      { bucket: "31-60 days", claims: 20, amount: 80000 },
+      { bucket: "61-90 days", claims: 8, amount: 40000 },
+      { bucket: ">90 days", claims: 6, amount: 20000 },
     ],
-    'HDFC ERGO': [
-      { bucket: '0-7 days', claims: 65, amount: 300000, avgAge: 3.6 },
-      { bucket: '8-15 days', claims: 40, amount: 150000, avgAge: 11.1 },
-      { bucket: '16-30 days', claims: 20, amount: 100000, avgAge: 24.0 },
-      { bucket: '31-60 days', claims: 10, amount: 60000, avgAge: 45.5 },
-      { bucket: '61-90 days', claims: 5, amount: 25000, avgAge: 73.0 },
-      { bucket: '>90 days', claims: 2, amount: 10000, avgAge: 110.0 },
+    "HDFC ERGO": [
+      { bucket: "0-7 days", claims: 65, amount: 300000 },
+      { bucket: "8-15 days", claims: 40, amount: 150000 },
+      { bucket: "16-30 days", claims: 20, amount: 100000 },
+      { bucket: "31-60 days", claims: 10, amount: 60000 },
+      { bucket: "61-90 days", claims: 5, amount: 25000 },
+      { bucket: ">90 days", claims: 2, amount: 10000 },
     ],
-    'Bajaj Allianz': [
-      { bucket: '0-7 days', claims: 50, amount: 200000, avgAge: 3.1 },
-      { bucket: '8-15 days', claims: 30, amount: 100000, avgAge: 10.9 },
-      { bucket: '16-30 days', claims: 20, amount: 80000, avgAge: 22.8 },
-      { bucket: '31-60 days', claims: 9, amount: 50000, avgAge: 43.5 },
-      { bucket: '61-90 days', claims: 3, amount: 20000, avgAge: 70.0 },
-      { bucket: '>90 days', claims: 5, amount: 12000, avgAge: 109.0 },
+    "Bajaj Allianz": [
+      { bucket: "0-7 days", claims: 50, amount: 200000 },
+      { bucket: "8-15 days", claims: 30, amount: 100000 },
+      { bucket: "16-30 days", claims: 20, amount: 80000 },
+      { bucket: "31-60 days", claims: 9, amount: 50000 },
+      { bucket: "61-90 days", claims: 3, amount: 20000 },
+      { bucket: ">90 days", claims: 5, amount: 12000 },
     ],
   };
 
   const getCombinedData = () => {
-    const isAllSelected = selectedCompanies.includes('ALL');
-    const companies = isAllSelected ? insuranceCompanies : selectedCompanies;
+    const isAll = selectedCompanies.includes("ALL");
+    const companies = isAll ? insuranceCompanies : selectedCompanies;
 
     return buckets.map((bucket) => {
       let claims = 0;
       let amount = 0;
-      let avgAgeTotal = 0;
 
       companies.forEach((company) => {
         const record = companyData[company].find((d) => d.bucket === bucket);
         if (record) {
           claims += record.claims;
           amount += record.amount;
-          avgAgeTotal += record.avgAge;
         }
       });
 
@@ -95,36 +107,90 @@ const AgingBucketDistribution: React.FC = () => {
         bucket,
         claims,
         amount,
-        avgAge: +(avgAgeTotal / companies.length).toFixed(1),
       };
     });
   };
 
   const handleCompanyChange = (selected: string[]) => {
     if (selected.length === 0) {
-      setSelectedCompanies(['NTR Vaidyaseva']);
-    } else if (selected.includes('ALL')) {
-      setSelectedCompanies(['ALL']);
+      setSelectedCompanies(["NTR Vaidyaseva"]);
+    } else if (selected.includes("ALL")) {
+      setSelectedCompanies(["ALL"]);
     } else {
       setSelectedCompanies(selected);
     }
   };
 
+  const formatAmount = (value: number): string => {
+    if (value >= 1_00_00_000) return `${(value / 1_00_00_000).toFixed(1)}Cr`;
+    if (value >= 1_00_000) return `${(value / 1_00_000).toFixed(1)}L`;
+    if (value >= 1_000) return `${(value / 1_000).toFixed(1)}K`;
+    return `${value}`;
+  };
+
   const data = getCombinedData();
+
+  const handleMouseEnter = (
+    event: React.MouseEvent<SVGRectElement>,
+    index: number
+  ) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    setHoveredIndex(index);
+    setTooltipData({
+      ...data[index],
+      x: rect.left + rect.width / 2,
+      y: rect.top,
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setTooltipData(null);
+  };
+
+  const createVirtualAnchor = () => {
+    if (!tooltipData) return null;
+
+    return {
+      getBoundingClientRect: () => ({
+        top: tooltipData.y,
+        left: tooltipData.x,
+        right: tooltipData.x,
+        bottom: tooltipData.y,
+        width: 0,
+        height: 0,
+        x: tooltipData.x,
+        y: tooltipData.y,
+        toJSON: () => ({
+          top: tooltipData.y,
+          left: tooltipData.x,
+          right: tooltipData.x,
+          bottom: tooltipData.y,
+          width: 0,
+          height: 0,
+          x: tooltipData.x,
+          y: tooltipData.y,
+        }),
+      }),
+    };
+  };
 
   return (
     <Card
       elevation={3}
       sx={{
-        bgcolor: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+        bgcolor: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",
         borderRadius: 3,
         boxShadow: 2,
-        transition: 'transform 0.2s ease-in-out',
+        transition: "transform 0.2s ease-in-out",
       }}
     >
       <CardHeader
         title={
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
             <Typography variant="h6" fontWeight="medium">
               Aging Bucket Distribution
             </Typography>
@@ -133,8 +199,8 @@ const AgingBucketDistribution: React.FC = () => {
                 options={insuranceCompanies}
                 selected={selectedCompanies}
                 onChange={handleCompanyChange}
-                width={250}
                 includeAllOption
+                width={250}
                 placeholder="Select insurance companies"
               />
             </Box>
@@ -142,15 +208,24 @@ const AgingBucketDistribution: React.FC = () => {
         }
       />
       <CardContent>
-        <Box display="flex" gap={4} justifyContent="center" mt={1} mb={3} flexWrap="wrap">
+        <Box
+          display="flex"
+          gap={4}
+          justifyContent="center"
+          mt={1}
+          mb={3}
+          flexWrap="wrap"
+        >
           <Box display="flex" alignItems="center" gap={1}>
-            <Box sx={{ width: 14, height: 14, bgcolor: '#3b82f6', borderRadius: 0.5 }} />
+            <Box
+              sx={{
+                width: 14,
+                height: 14,
+                bgcolor: "#3b82f6",
+                borderRadius: 0.5,
+              }}
+            />
             <Typography variant="body2">Claims Count</Typography>
-          </Box>
-
-          <Box display="flex" alignItems="center" gap={1}>
-            <Box sx={{ width: 14, height: 14, bgcolor: '#10b981', borderRadius: 0.5 }} />
-            <Typography variant="body2">Amount (₹L)</Typography>
           </Box>
 
           <Box display="flex" alignItems="center" gap={1}>
@@ -158,74 +233,135 @@ const AgingBucketDistribution: React.FC = () => {
               sx={{
                 width: 14,
                 height: 14,
-                borderRadius: '50%',
-                border: '2px solid #ef4444',
-                bgcolor: 'transparent',
+                borderRadius: "50%",
+                border: "2px solid #ef4444",
+                bgcolor: "transparent",
               }}
             />
-            <Typography variant="body2">Average Age (Days)</Typography>
+            <Typography variant="body2">Amount </Typography>
           </Box>
         </Box>
 
-        <Box sx={{ position: 'relative', height: 420 }}>
+        <Box sx={{ position: "relative", height: 420 }}>
           <BarChart
             height={420}
             margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
             xAxis={[
               {
-                id: 'bucket',
+                id: "bucket",
                 data: buckets,
-                scaleType: 'band',
+                scaleType: "band",
                 tickLabelStyle: {
                   angle: -30,
-                  textAnchor: 'end',
+                  textAnchor: "end",
                   fontSize: 12,
                 },
               },
             ]}
-            yAxis={[{ id: 'left-axis', label: 'Claims / Amount' }]}
+            yAxis={[{ id: "left-axis", label: "Claims Count" }]}
             series={[
               {
-                id: 'claims',
+                id: "claims",
                 data: data.map((d) => d.claims),
-                color: '#3b82f6',
-              },
-              {
-                id: 'amount',
-                data: data.map((d) => +(d.amount / 100000).toFixed(2)),
-                color: '#10b981',
+                color: "#3b82f6",
               },
             ]}
             grid={{ horizontal: true }}
+            slotProps={{
+              bar: {
+                onMouseEnter: (event: React.MouseEvent<SVGRectElement>) => {
+                  // Get the index from the event target's position
+                  const svgRect = event.currentTarget
+                    .closest("svg")
+                    ?.getBoundingClientRect();
+                  const barWidth = svgRect?.width
+                    ? svgRect.width / buckets.length
+                    : 0;
+                  const mouseX = event.clientX - (svgRect?.left || 0);
+                  const index = Math.floor(mouseX / barWidth);
+
+                  if (index >= 0 && index < buckets.length) {
+                    handleMouseEnter(event, index);
+                  }
+                },
+                onMouseLeave: () => {
+                  setHoveredIndex(null);
+                  setTooltipData(null);
+                },
+              },
+              tooltip: {
+                trigger: "none",
+              },
+            }}
           />
 
           <LineChart
             height={420}
             margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
-            xAxis={[
+            xAxis={[{ id: "bucket", data: buckets, scaleType: "band" }]}
+            yAxis={[
               {
-                id: 'bucket',
-                data: buckets,
-                scaleType: 'band',
+                id: "amount-axis",
+                label: "Amount (₹)",
+                position: "right",
+                valueFormatter: formatAmount,
               },
             ]}
-            yAxis={[{ id: 'avg-age', label: 'Avg Age (Days)', position: 'right' }]}
             series={[
               {
-                id: 'avgAge',
-                data: data.map((d) => d.avgAge),
-                color: '#ef4444',
-                curve: 'monotoneX',
+                id: "amount-line",
+                data: data.map((d) => d.amount),
+                color: "#ef4444",
+                curve: "monotoneX",
               },
             ]}
             sx={{
-              position: 'absolute',
+              position: "absolute",
               top: 0,
               left: 0,
               right: 0,
-              pointerEvents: 'none',
+              pointerEvents: "none",
             }}
           />
+
+          {hoveredIndex !== null && tooltipData && (
+            <Tooltip
+              open
+              title={
+                <Box>
+                  <Typography variant="subtitle2" fontWeight="bold">
+                    {data[hoveredIndex].bucket}
+                  </Typography>
+                  <Typography variant="body2">
+                    Claims: <strong>{data[hoveredIndex].claims}</strong>
+                  </Typography>
+                  <Typography variant="body2">
+                    Amount:{" "}
+                    <strong>₹{formatAmount(data[hoveredIndex].amount)}</strong>
+                  </Typography>
+                </Box>
+              }
+              arrow
+              placement="top"
+              PopperProps={{
+                anchorEl: {
+                  getBoundingClientRect: () => ({
+                    top: tooltipData.y,
+                    left: tooltipData.x,
+                    right: tooltipData.x,
+                    bottom: tooltipData.y,
+                    width: 0,
+                    height: 0,
+                    x: tooltipData.x,
+                    y: tooltipData.y,
+                    toJSON: () => ({}),
+                  }),
+                },
+              }}
+            >
+              <div style={{ display: "none" }} />
+            </Tooltip>
+          )}
         </Box>
       </CardContent>
     </Card>

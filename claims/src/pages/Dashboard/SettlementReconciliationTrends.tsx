@@ -33,7 +33,7 @@ const SettlementReconciliationTrends: React.FC = () => {
   const theme = useTheme();
 
   const [selectedCompanies, setSelectedCompanies] = React.useState<string[]>([
-    'NTR Vaidyaseva',
+    'ALL'
   ]);
 
   const formatCurrency = (value: number) => `₹${(value / 100000).toFixed(1)}L`;

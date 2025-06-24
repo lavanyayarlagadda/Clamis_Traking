@@ -27,8 +27,7 @@ interface MonthlyAmounts {
 
 const ClaimAmountChart: React.FC = () => {
   const [selectedCompanies, setSelectedCompanies] = React.useState<string[]>([
-    'NTR Vaidyaseva',
-    'ICICI Lombard'
+    'ALL'
   ]);
 
   // Sample data for each insurance company

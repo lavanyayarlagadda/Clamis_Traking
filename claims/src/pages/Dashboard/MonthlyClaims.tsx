@@ -28,7 +28,7 @@ interface MonthlyData {
 const MonthlyClaimsTrend: React.FC = () => {
   const theme = useTheme();
   const [selectedCompanies, setSelectedCompanies] = React.useState<string[]>([
-    'NTR Vaidyaseva'
+    'ALL'
   ]);
 
   // Sample data for each insurance company
