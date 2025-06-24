@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FilterList } from "@mui/icons-material";
 import { unreconciledClaimsData, unreconciledClaimsOther ,claimsData} from "./data";
-import { DynamicTabs } from "../../components/reusable/tabs";
+import { DynamicTabs } from "../../Components/reusable/tabs";
 import {
   Chip,
   Typography,
@@ -14,10 +14,10 @@ import {
 } from "@mui/material";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
 import DescriptionIcon from '@mui/icons-material/Description';
-import DynamicTable from "../../components/reusable/dynamicTable";
-import { DynamicClaimDialog } from "../../components/reusable/dialog";
+import DynamicTable from "../../Components/reusable/dynamicTable";
+import { DynamicClaimDialog } from "../../Components/reusable/dialog";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
-import { FilterDrawer } from "../../components/reusable/filter";
+import { FilterDrawer } from "../../Components/reusable/filter";
 import ManualReconciliationDialog from "./Manual_reconciled_Dialog";
 
 export interface ClaimRow {
@@ -114,7 +114,7 @@ const columns = [
     key: "claimedAmount",
     label: "Claimed Amount",
     render: (row: any) => (
-      <span style={{ color: "#DC2626", fontWeight: 500 }}>
+      <span style={{ color: "#3B82F6", fontWeight: 500 }}>
         ₹{row.claimedAmount?.toLocaleString() ?? "0"}
       </span>
     ),
@@ -142,7 +142,7 @@ const columns = [
     label: "Deposit Amount",
     render: (row: any) =>
       row.depositAmount ? (
-        <span style={{ color: "#6B7280", fontWeight: 500 }}>
+        <span style={{ color: "#3B82F6", fontWeight: 500 }}>
           ₹{row.depositAmount.toLocaleString()}
         </span>
       ) : (

@@ -30,7 +30,7 @@ export function DynamicTabs({
         backgroundColor: 'white', // light blue container
         borderRadius: 2,
         overflowX: 'auto',
-        mb:1
+        mb: 1
       }}
     >
       <Tabs
@@ -48,17 +48,26 @@ export function DynamicTabs({
           '& .MuiTab-root': {
             minHeight: 'unset',
             textTransform: 'none',
-            fontSize: '13px',
-            fontWeight: 500,
-            padding: '4px 12px',
+            fontSize: '14px',
+            fontWeight: 600,
+            // padding: '4px 12px',
+            padding: '6px 16px',
             borderRadius: '999px',
-            transition: '0.2s',
-            color: '#64748B', // Tailwind gray-500
+            // transition: '0.2s',
+            transition: 'all 0.2s ease-in-out',
+            // color: '#64748B', // Tailwind gray-500
+            color: '#374151',
             backgroundColor: 'transparent',
+            '&:hover': {
+              backgroundColor: '#F3F4F6', // light hover
+            },
             '&.Mui-selected': {
-              backgroundColor: '#48D56B',
-              color: '#ffffff',
+              // backgroundColor: '#48D56B',
+               backgroundColor: '#10B981',
+              // color: '#ffffff',
+               color: '#fff',
               fontWeight: 600,
+                boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
             },
           },
         }}

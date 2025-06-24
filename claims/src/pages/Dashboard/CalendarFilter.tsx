@@ -99,8 +99,8 @@ const DashboardFilterPopover = ({ anchorEl, onClose, onApply,open }: Props) => {
           onChange={(e) => setType(e.target.value)}
         >
           <MenuItem value="today">Today</MenuItem>
-          <MenuItem value="week">This Week</MenuItem>
-          <MenuItem value="month">This Month</MenuItem>
+          <MenuItem value="week">Week</MenuItem>
+          <MenuItem value="month">Month</MenuItem>
           <MenuItem value="quarter">Quarter</MenuItem>
           <MenuItem value="year">Year</MenuItem>
           <MenuItem value="custom">Custom Range</MenuItem>
