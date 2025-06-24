@@ -61,12 +61,9 @@ const ClaimAmountChart: React.FC = () => {
        sx={{
         bgcolor: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
         borderRadius: 3,
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+        boxShadow: 2,
         transition: 'transform 0.2s ease-in-out',
-        '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
-        },
+        
       }}
     >
       <CardHeader
