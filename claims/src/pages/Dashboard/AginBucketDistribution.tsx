@@ -19,11 +19,10 @@ import {
 import Dropdown from '../../components/reusable/Dropdown';
 
 const AgingBucketDistribution: React.FC = () => {
-  // Dropdown options and state
+
   const insuranceOptions = ['All', 'NTR vaidhya seva', 'Private Insurance'];
   const [selectedInsurance, setSelectedInsurance] = React.useState<string>(insuranceOptions[0]);
 
-  // Sample data for different insurance types
   const allData = [
     { bucket: '0-7 days', claims: 456, amount: 1867890, avgAge: 3.5 },
     { bucket: '8-15 days', claims: 234, amount: 945678, avgAge: 11.2 },
@@ -65,7 +64,7 @@ const AgingBucketDistribution: React.FC = () => {
 
   const data = getData();
   const buckets = data.map((d) => d.bucket);
-  const formatCurrency = (val: number) => `₹${(val / 100000).toFixed(1)}L`;
+
 
   const handleInsuranceChange = (value: string) => {
     setSelectedInsurance(value);
@@ -99,7 +98,7 @@ const AgingBucketDistribution: React.FC = () => {
         }
       />
     <CardContent>
-  {/* ✅ Custom Legend */}
+
   <Box display="flex" gap={4} justifyContent="center" mt={1} mb={3} flexWrap="wrap">
     <Box display="flex" alignItems="center" gap={1}>
       <Box sx={{ width: 14, height: 14, bgcolor: '#3b82f6', borderRadius: 0.5 }} />
@@ -124,10 +123,7 @@ const AgingBucketDistribution: React.FC = () => {
       <Typography variant="body2">Average Age (Days)</Typography>
     </Box>
   </Box>
-
-  {/* ✅ Dual-Axis Chart */}
 <Box sx={{ position: 'relative', height: 420 }}>
-  {/* 👉 BarChart */}
   <BarChart
     height={420}
     margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
@@ -152,13 +148,11 @@ const AgingBucketDistribution: React.FC = () => {
     series={[
       {
         id: 'claims',
-        // label: 'Claims Count',
         data: data.map((d) => d.claims),
         color: '#3b82f6',
       },
       {
         id: 'amount',
-        // label: 'Amount (₹L)',
         data: data.map((d) => +(d.amount / 100000).toFixed(2)),
         color: '#10b981',
       },
@@ -166,7 +160,6 @@ const AgingBucketDistribution: React.FC = () => {
     grid={{ horizontal: true }}
   />
 
-  {/* 👉 LineChart overlaid, aligned using same xAxis ID */}
   <LineChart
     height={420}
     margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
@@ -174,7 +167,7 @@ const AgingBucketDistribution: React.FC = () => {
       {
         id: 'bucket',
         data: buckets,
-        scaleType: 'band', // match BarChart
+        scaleType: 'band', 
       },
     ]}
     yAxis={[
@@ -187,7 +180,6 @@ const AgingBucketDistribution: React.FC = () => {
     series={[
       {
         id: 'avgAge',
-        // label: 'Average Age (Days)',
         data: data.map((d) => d.avgAge),
         color: '#ef4444',
         curve: 'monotoneX',

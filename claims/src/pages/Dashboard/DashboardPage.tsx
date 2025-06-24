@@ -78,7 +78,6 @@ const Dashboard: React.FC = () => {
     <Box sx={{ minHeight: "100vh" }}>
       <Box
         sx={{
-          // maxWidth: "1200px",
           mx: "auto",
           display: "flex",
           flexDirection: "column",
@@ -116,7 +115,7 @@ const Dashboard: React.FC = () => {
 
         {/* Chart Sections */}
         <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '1fr 1fr' }} gap={3}
-          sx={{ alignItems: 'stretch', mt: 2 }}
+          sx={{ alignItems: 'stretch' }}
         >
           <CardWrapper>
             <MonthlyClaimsTrend />
@@ -127,7 +126,7 @@ const Dashboard: React.FC = () => {
 
         </Box>
  <Box display="grid" gridTemplateColumns={{ xs: '1fr', lg: '1fr 1fr' }} gap={3}
-          sx={{ alignItems: 'stretch', mt: 2 }}
+          sx={{ alignItems: 'stretch' }}
         >
           <CardWrapper>
             <ClaimsByStatus />
