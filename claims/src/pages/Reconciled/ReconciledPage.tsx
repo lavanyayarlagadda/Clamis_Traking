@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Filter, FilterList, Visibility } from "@mui/icons-material";
 import { reconciledClaimsNTR, reconciledClaimsOther } from "./data";
-import { DynamicTabs } from "../../components/reusable/tabs";
-import { DynamicClaimDialog } from "../../components/reusable/dialog";
+import { DynamicTabs } from "../../Components/reusable/tabs";
+import { DynamicClaimDialog } from "../../Components/reusable/dialog";
 import { Box, Chip } from "@mui/material";
-import DynamicTable from "../../components/reusable/dynamicTable";
+import DynamicTable from "../../Components/reusable/dynamicTable";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { FilterDrawer } from "../../components/reusable/filter";
+import { FilterDrawer } from "../../Components/reusable/filter";
 
 export default function ReconciledPage() {
   const [activeTab, setActiveTab] = useState("ntr");
@@ -164,7 +164,7 @@ const columns = [
           <DynamicTabs
             tabs={[
               { label: "NTR Vaidyaseva", value: "ntr" },
-              { label: "Other Schemes", value: "other" },
+              { label: "Private Insurances", value: "other" },
             ]}
             currentValue={activeTab}
             onChange={setActiveTab}
@@ -206,14 +206,14 @@ const columns = [
 
       <DynamicTable
         title={`Reconciled Claims - ${
-          activeTab === "ntr" ? "NTR Vaidyaseva" : "Other Schemes"
+          activeTab === "ntr" ? "NTR Vaidyaseva" : "Private Insurances"
         }`}
         countLabel={`${currentClaims.length} Claims`}
         columns={columns}
         data={currentClaims}
         actions={[
           {
-            label: "View Timeline",
+            label: "View",
             icon: <Visibility fontSize="small" />,
             onClick: (row) => {
               setDialogOpen(true);

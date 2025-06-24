@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { FilterList } from "@mui/icons-material";
+import { FilterList, Visibility } from "@mui/icons-material";
 import { unreconciledClaimsData, unreconciledClaimsOther } from "./data";
-import { DynamicTabs } from "../../components/reusable/tabs";
+import { DynamicTabs } from "../../Components/reusable/tabs";
 import {
   Chip,
   Typography,
@@ -13,10 +13,10 @@ import {
   Button,
 } from "@mui/material";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
-import DynamicTable from "../../components/reusable/dynamicTable";
-import { DynamicClaimDialog } from "../../components/reusable/dialog";
+import DynamicTable from "../../Components/reusable/dynamicTable";
+import { DynamicClaimDialog } from "../../Components/reusable/dialog";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
-import { FilterDrawer } from "../../components/reusable/filter";
+import { FilterDrawer } from "../../Components/reusable/filter";
 import ManualReconciliationDialog from "./Manual_reconciled_Dialog";
 
 export interface ClaimRow {
@@ -80,82 +80,82 @@ export default function UnReconciledPage() {
   };
 
 
-const columns = [
-  { key: "claimNumber", label: "Claim Number" },
-  ...(activeTab === "ntr"
-    ? [
+  const columns = [
+    { key: "claimNumber", label: "Claim Number" },
+    ...(activeTab === "ntr"
+      ? [
         {
           key: "cardNumber",
           label: "Card Number",
           render: (row: any) => row.cardNumber ?? "N/A",
         },
       ]
-    : []),
-  { key: "chequeNumber", label: "Cheque No." },
-  {
-    key: "claimedAmount",
-    label: "Claimed Amount",
-    render: (row: any) => `₹${row.claimedAmount?.toLocaleString()}`,
-  },
-  {
-    key: "approvedAmount",
-    label: "Approved Amount",
-    render: (row: any) => `₹${row.approvedAmount?.toLocaleString()}`,
-  },
-  {
-    key: "settledAmount",
-    label: "Settled Amount",
-    render: (row: any) => `₹${row.settledAmount?.toLocaleString()}`,
-  },
-
-  {
-    key: "depositAmount",
-    label: "Deposit Amount",
-    render: (row: any) =>
-      row.depositAmount ? `₹${row.depositAmount?.toLocaleString()}` : "N/A",
-  },
-  {
-    key: "status",
-    label: "Status",
-    render: (row: any) => {
-      const backgroundColor =
-        statusColorMap[row.status as keyof typeof statusColorMap] ||
-        "#E5E7EB";
-      return (
-        <Chip
-          label={row.status}
-          size="small"
-          sx={{
-            backgroundColor,
-            color: "#fff",
-            fontWeight: 500,
-          }}
-        />
-      );
+      : []),
+    { key: "chequeNumber", label: "Cheque No." },
+    {
+      key: "claimedAmount",
+      label: "Claimed Amount",
+      render: (row: any) => `₹${row.claimedAmount?.toLocaleString()}`,
     },
-  },
-        {
+    {
+      key: "approvedAmount",
+      label: "Approved Amount",
+      render: (row: any) => `₹${row.approvedAmount?.toLocaleString()}`,
+    },
+    {
+      key: "settledAmount",
+      label: "Settled Amount",
+      render: (row: any) => `₹${row.settledAmount?.toLocaleString()}`,
+    },
+
+    {
+      key: "depositAmount",
+      label: "Deposit Amount",
+      render: (row: any) =>
+        row.depositAmount ? `₹${row.depositAmount?.toLocaleString()}` : "N/A",
+    },
+    {
+      key: "status",
+      label: "Status",
+      render: (row: any) => {
+        const backgroundColor =
+          statusColorMap[row.status as keyof typeof statusColorMap] ||
+          "#E5E7EB";
+        return (
+          <Chip
+            label={row.status}
+            size="small"
+            sx={{
+              backgroundColor,
+              color: "#fff",
+              fontWeight: 500,
+            }}
+          />
+        );
+      },
+    },
+    {
       key: "differenceAmount",
-      label: "Difference Amount",
+      label: "Variance Amount",
       render: (row: any) => {
         const diff = (row.claimedAmount ?? 0) - (row.settledAmount ?? 0);
         const display = `₹${Math.abs(diff).toLocaleString()}`;
         return diff === 0 ? "₹0" : display;
       },
     },
-  {
-    key: "claimAge",
-    label: "Claim Age",
-  },
-  { key: "insuranceCompany", label: "Insurance Company" },
-  { key: "chequeReceivedDate", label: "Cheque Received Date" },
-  { key: "claimedDate", label: "Claimed Date" },
-  {
-    key: "depositDate",
-    label: "Deposit Date",
-    render: (row: any) => row.depositDate ?? "N/A",
-  },
-];
+    {
+      key: "claimAge",
+      label: "Claim Age",
+    },
+    { key: "insuranceCompany", label: "Insurance Company" },
+    { key: "chequeReceivedDate", label: "Cheque Received Date" },
+    { key: "claimedDate", label: "Claimed Date" },
+    {
+      key: "depositDate",
+      label: "Deposit Date",
+      render: (row: any) => row.depositDate ?? "N/A",
+    },
+  ];
 
   const currentClaims =
     activeTab === "ntr" ? unreconciledClaimsData : unreconciledClaimsOther;
@@ -241,7 +241,7 @@ const columns = [
           <DynamicTabs
             tabs={[
               { label: "NTR Vaidyaseva", value: "ntr" },
-              { label: "Other Schemes", value: "other" },
+              { label: "Private Insurances", value: "other" },
             ]}
             currentValue={activeTab}
             onChange={setActiveTab}
@@ -274,9 +274,8 @@ const columns = [
       </Box>
       <DynamicTable
         // title="Unreconciled Claims - NTR Vaidyaseva"
-        title={`Unreconciled Claims - ${
-          activeTab === "ntr" ? "NTR Vaidyaseva" : "Other Schemes"
-        }`}
+        title={`Unreconciled Claims - ${activeTab === "ntr" ? "NTR Vaidyaseva" : "Private Insurances"
+          }`}
         countLabel={`${currentClaims.length} Claims`}
         columns={columns}
         data={currentClaims}
@@ -284,18 +283,27 @@ const columns = [
         iconColor={"#EF4444"}
         Icon={ReportProblemOutlinedIcon}
         actions={[
-          {
-            label: "Start Manual Reconcilation",
+          // {
+          //   label: "Start Manual Reconcilation",
 
-            icon: <PlayArrowOutlinedIcon fontSize="small" />,
+          //   icon: <PlayArrowOutlinedIcon fontSize="small" />,
+          //   onClick: (row) => {
+          //     setDialogData(row);
+
+          //     setOpen(true);
+          //   },
+          // },
+          {
+            label: "View",
+            icon: <Visibility fontSize="small" />,
             onClick: (row) => {
               setDialogData(row);
-
-              setOpen(true);
+              setDialogMode("view");
+              setDialogOpen(true);
             },
           },
         ]}
-         minColumns={8}
+        minColumns={8}
       />
       {open && (
         <ManualReconciliationDialog
@@ -328,20 +336,17 @@ const columns = [
             exceptionDetails:
               dialogData.status === "Exception"
                 ? {
-                    "Exception Type": dialogData.exceptionType || "N/A",
-                    "Exception Reason": dialogData.reason || "N/A",
-                  }
+                  "Exception Type": dialogData.exceptionType || "N/A",
+                  "Exception Reason": dialogData.reason || "N/A",
+                }
                 : undefined,
             financialDetails: {
-              "Claimed Amount": `₹${
-                dialogData.claimedAmount?.toLocaleString() || 0
-              }`,
-              "Approved Amount": `₹${
-                dialogData.approvedAmount?.toLocaleString() || 0
-              }`,
-              Difference: `₹${
-                dialogData.differenceAmount?.toLocaleString() || 0
-              }`,
+              "Claimed Amount": `₹${dialogData.claimedAmount?.toLocaleString() || 0
+                }`,
+              "Approved Amount": `₹${dialogData.approvedAmount?.toLocaleString() || 0
+                }`,
+              Difference: `₹${dialogData.differenceAmount?.toLocaleString() || 0
+                }`,
             },
             timeline: getTimeline(dialogData),
           }}
