@@ -67,9 +67,9 @@ const MonthlyClaimsTrend: React.FC = () => {
       //   },
       // }}
       sx={{
-        bgcolor: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
+       background: 'linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)',
         borderRadius: 3,
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
         transition: 'transform 0.2s ease-in-out',
         '&:hover': {
           transform: 'translateY(-4px)',
@@ -80,7 +80,7 @@ const MonthlyClaimsTrend: React.FC = () => {
       <CardHeader
         title={
           <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-            <Typography variant="h6" fontWeight={600} color="text.primary">
+            <Typography variant="h6" fontWeight={500} sx={{ color: theme.palette.text.primary, letterSpacing: 0.3 }}>
               Monthly Claims Trend
             </Typography>
             <Box sx={{ minWidth: 180 }}>
@@ -120,11 +120,6 @@ const MonthlyClaimsTrend: React.FC = () => {
             height={300}
             margin={{ top: 20, bottom: 40, left: 50, right: 20 }}
             grid={{ horizontal: true, vertical: true }}
-            // sx={{
-            //   '.MuiChartsAxis-tickLabel': { fontSize: 12 },
-            //   '.MuiChartsLegend-root': { mt: 2 },
-            //   '.MuiChartsAxis-label': { fontWeight: 500 },
-            // }}
             sx={{
               '.MuiChartsAxis-tickLabel': {
                 fontSize: 12,
