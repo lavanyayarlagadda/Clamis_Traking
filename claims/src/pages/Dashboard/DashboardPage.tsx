@@ -88,19 +88,33 @@ const Dashboard: React.FC = () => {
           size={{ xs: 8, sm: 12 }}
           sx={{
             display: "flex",
-            justifyContent: { xs: "center", sm: "flex-end", gap: 3 },
+            justifyContent: { xs: "flex-end", sm: "flex-end", gap: 3 },
             alignItems: "center",
           }}
         >
-          <Button
-            variant="outlined"
-            onClick={() => {
-              setOpenFilter(true);
-            }}
-          >
-            <FilterList />
-            <span style={{ marginLeft: 5 }}>Filter</span>
-          </Button>
+  <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            cursor: "pointer",
+            px: 1,
+            py: 0.5,
+            borderRadius: 2,
+            backgroundColor: "white",
+            color: "#2563EB",
+            fontSize: "14px",
+            fontWeight: 500,
+            "&:hover": {
+              backgroundColor: "#BAE6FD",
+            },
+            mt: 0,
+          }}
+          onClick={() => setOpenFilter(true)}
+        >
+          <FilterList fontSize="small" />
+          Filter 
+        </Box>
         </Grid>
 
         <DashboardFilterPopover

@@ -9,12 +9,12 @@ import ChatWidget from './components/chatBot';
 const theme = createTheme();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <App />
         <ChatWidget/>
       </ThemeProvider>
     </BrowserRouter>
-  </React.StrictMode>
+
 );

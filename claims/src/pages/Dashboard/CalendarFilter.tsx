@@ -88,7 +88,16 @@ const DashboardFilterPopover = ({ anchorEl, onClose, onApply,open }: Props) => {
       }}
        sx={{  display: "flex", padding: 1, mt: 14 }}
     >
-      <Box sx={{ p: 3, width: 320 }}>
+    <Box
+  sx={{
+    p: 3,
+    pr: { xs: '30px', sm: 3 }, 
+    '@media (min-width:300px) and (max-width:374px)': {
+      pr: '50px', // 6 * 8 = 48px
+    },
+    width: 320,
+  }}
+>
         <Typography variant="subtitle1" mb={1}>
           Select Period
         </Typography>
@@ -160,14 +169,35 @@ const DashboardFilterPopover = ({ anchorEl, onClose, onApply,open }: Props) => {
           )}
         </LocalizationProvider>
 
-        <Box display="flex" justifyContent="flex-end" mt={3}>
-          <Button onClick={onClose} size="small" sx={{ mr: 1 }}>
-            Cancel
-          </Button>
-          <Button onClick={handleApply} variant="contained" size="small">
-            Apply
-          </Button>
-        </Box>
+       <Box
+  display="flex"
+  flexDirection={{ xs: "column", sm: "row" }}
+  justifyContent="flex-end"
+  alignItems="flex-end"
+  mt={3}
+  gap={1}
+>
+  <Button
+    onClick={onClose}
+    size="small"
+    sx={{
+      width: { xs: "100%", sm: "auto" },
+    }}
+  >
+    Cancel
+  </Button>
+  <Button
+    onClick={handleApply}
+    variant="contained"
+    size="small"
+    sx={{
+      width: { xs: "100%", sm: "auto" },
+    }}
+  >
+    Apply
+  </Button>
+</Box>
+
       </Box>
     </Popover>
   );

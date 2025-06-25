@@ -242,50 +242,54 @@ const statusColorMap: Record<string, string> = {
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          mb: 2,
-        }}
-      >
+    <Box
+  sx={{
+    display: "flex",
+    flexDirection: { xs: "column", sm: "row" },
+    justifyContent: "space-between",
+    alignItems: { xs: "stretch", sm: "center" },
+    flexWrap: "wrap",
+    mb: 2,
+  }}
+>
         <Box sx={{ mt: 1 }}>
-          <DynamicTabs
-            tabs={[
-              { label: "NTR Vaidyaseva", value: "ntr" },
-              { label: "Private Insurances", value: "other" },
-            ]}
-            currentValue={activeTab}
-            onChange={setActiveTab}
-          />
-        </Box>
+    <DynamicTabs
+      tabs={[
+        { label: "NTR Vaidyaseva", value: "ntr" },
+        { label: "Private Insurances", value: "other" },
+      ]}
+      currentValue={activeTab}
+      onChange={setActiveTab}
+    />
+  </Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-            cursor: "pointer",
-            px: 1,
-            py: 0.5,
-            borderRadius: 2,
-            backgroundColor: "white",
-            color: "#2563EB",
-            fontSize: "14px",
-            fontWeight: 500,
-            "&:hover": {
-              backgroundColor: "#BAE6FD",
-            },
-            mt: 0,
-          }}
-          onClick={() => setFilterOpen(true)}
-        >
-          <FilterList fontSize="small" />
-          Filter Claims
-        </Box>
-      </Box>
+  {/* Filter Button */}
+  <Box
+    sx={{
+      display: "flex",
+      alignSelf: { xs: "flex-end", sm: "center" },
+      justifyContent: "flex-end",
+      alignItems: "center",
+      gap: 1,
+      mt:'-10px',
+      cursor: "pointer",
+            px: 1, 
+        py: 1.5,
+      borderRadius: 2,
+      backgroundColor: "white",
+      color: "#2563EB",
+      fontSize: "14px",
+      fontWeight: 500,
+      "&:hover": {
+        backgroundColor: "#BAE6FD",
+      },
+    }}
+    onClick={() => setFilterOpen(true)}
+  >
+    <FilterList fontSize="small" />
+    Filter Claims
+  </Box>
+</Box>
     <DynamicTable
       key={activeTab}
         // title="Unreconciled Claims - NTR Vaidyaseva"
