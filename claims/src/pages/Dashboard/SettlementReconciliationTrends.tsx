@@ -50,15 +50,20 @@ const SettlementReconciliationTrends: React.FC = () => {
  };
  
  
- const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-   if (!isDragging.current || !scrollRef.current) return;
- 
-   const dx = e.clientX - startX.current;
-   const dy = e.clientY - startY.current;
- 
-   scrollRef.current.scrollLeft = scrollLeft.current - dx;
-   scrollRef.current.scrollTop = scrollTop.current - dy; 
- };
+const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+  if (!isDragging.current || !scrollRef.current) return;
+
+  const dx = e.clientX - startX.current;
+  const dy = e.clientY - startY.current;
+
+  // Only enable scroll if the pointer moved enough
+  if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
+
+  e.preventDefault(); // Stop native scrolling only on real drag
+
+  scrollRef.current.scrollLeft = scrollLeft.current - dx;
+  scrollRef.current.scrollTop = scrollTop.current - dy;
+};
  
  
    const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -186,36 +191,36 @@ const SettlementReconciliationTrends: React.FC = () => {
         sx={{ px: { xs: 2, sm: 3 }, pt: 3, pb: 0 }}
       />
       <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, pb: 3 }}>
-        <Box
-          ref={scrollRef}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          sx={{
-            width: '100%',
-            overflowX: 'auto',
-            overflowY: 'auto',
-            WebkitOverflowScrolling: 'touch',
-            touchAction: 'pan-y',
-            cursor: { xs: 'auto', sm: 'grab' },
-            userSelect: isDragging.current ? 'none' : 'auto',
-            scrollbarWidth: 'thin',
-            "&::-webkit-scrollbar": {
-              height: 6,
-            },
-            "&::-webkit-scrollbar-track": {
-              backgroundColor: "#f1f1f1",
-              borderRadius: 6,
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: "#c1c1c1",
-              borderRadius: 6,
-            },
-            "&::-webkit-scrollbar-thumb:hover": {
-              backgroundColor: "#999",
-            },
-          }}
-        >
+            <Box
+           ref={scrollRef}
+           onPointerDown={handlePointerDown}
+           onPointerMove={handlePointerMove}
+           onPointerUp={handlePointerUp}
+           sx={{
+             width: '100%',
+             overflow: 'auto',
+             WebkitOverflowScrolling: 'touch',
+             touchAction: 'auto', // ✅ let mobile tap events go through!
+             cursor: { xs: 'grab', sm: 'grab' },
+             userSelect: isDragging.current ? 'none' : 'auto',
+             scrollbarWidth: 'thin',
+             "&::-webkit-scrollbar": {
+               height: 6,
+               width: 6,
+             },
+             "&::-webkit-scrollbar-track": {
+               backgroundColor: "#f1f1f1",
+               borderRadius: 6,
+             },
+             "&::-webkit-scrollbar-thumb": {
+               backgroundColor: "#c1c1c1",
+               borderRadius: 6,
+             },
+             "&::-webkit-scrollbar-thumb:hover": {
+               backgroundColor: "#999",
+             },
+           }}
+         >
           <Box sx={{ minWidth: 460, width: '100%' }}>
             <ChartContainer
               series={[

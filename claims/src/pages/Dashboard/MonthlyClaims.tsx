@@ -55,9 +55,15 @@ const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
   const dx = e.clientX - startX.current;
   const dy = e.clientY - startY.current;
 
+  // Only enable scroll if the pointer moved enough
+  if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
+
+  e.preventDefault(); // Stop native scrolling only on real drag
+
   scrollRef.current.scrollLeft = scrollLeft.current - dx;
-  scrollRef.current.scrollTop = scrollTop.current - dy; 
+  scrollRef.current.scrollTop = scrollTop.current - dy;
 };
+
 
 
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -193,9 +199,9 @@ const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
   onPointerUp={handlePointerUp}
   sx={{
     width: '100%',
-    overflow: 'auto', 
+    overflow: 'auto',
     WebkitOverflowScrolling: 'touch',
-    touchAction: 'none', 
+    touchAction: 'auto', // ✅ let mobile tap events go through!
     cursor: { xs: 'grab', sm: 'grab' },
     userSelect: isDragging.current ? 'none' : 'auto',
     scrollbarWidth: 'thin',
@@ -216,6 +222,7 @@ const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     },
   }}
 >
+
           <Box
             sx={{
               minWidth: `${months.length * 80}px`,
