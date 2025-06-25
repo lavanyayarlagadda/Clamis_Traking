@@ -30,41 +30,40 @@ const MonthlyClaimsTrend: React.FC = () => {
   const [selectedCompanies, setSelectedCompanies] = React.useState<string[]>([
     'ALL'
   ]);
- const scrollRef = useRef<HTMLDivElement>(null);
 
-const isDragging = useRef(false);
-const startX = useRef(0);
-const startY = useRef(0);
-const scrollLeft = useRef(0);
-const scrollTop = useRef(0); 
+  
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-  if (!scrollRef.current) return;
-  startX.current = e.clientX;
-  startY.current = e.clientY;
-  scrollLeft.current = scrollRef.current.scrollLeft;
-  scrollTop.current = scrollRef.current.scrollTop; // ✅ Capture vertical scroll
-  isDragging.current = true;
-  scrollRef.current.setPointerCapture(e.pointerId);
-};
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const startY = useRef(0);
+  const scrollLeft = useRef(0);
 
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!scrollRef.current) return;
+    startX.current = e.clientX;
+    startY.current = e.clientY;
+    scrollLeft.current = scrollRef.current.scrollLeft;
+    isDragging.current = false;
 
-const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-  if (!isDragging.current || !scrollRef.current) return;
+    scrollRef.current.setPointerCapture(e.pointerId);
+  };
 
-  const dx = e.clientX - startX.current;
-  const dy = e.clientY - startY.current;
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!scrollRef.current) return;
+    const dx = e.clientX - startX.current;
+    const dy = Math.abs(e.clientY - startY.current);
 
-  // Only enable scroll if the pointer moved enough
-  if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
+    if (dy > 10) {
+      scrollRef.current.releasePointerCapture(e.pointerId);
+      return;
+    }
 
-  e.preventDefault(); // Stop native scrolling only on real drag
-
-  scrollRef.current.scrollLeft = scrollLeft.current - dx;
-  scrollRef.current.scrollTop = scrollTop.current - dy;
-};
-
-
+    if (Math.abs(dx) > 5) {
+      isDragging.current = true;
+      scrollRef.current.scrollLeft = scrollLeft.current - dx;
+    }
+  };
 
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!scrollRef.current) return;
@@ -199,9 +198,9 @@ const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
   onPointerUp={handlePointerUp}
   sx={{
     width: '100%',
-    overflow: 'auto',
+    overflow: 'auto', // ✅ allow both x and y scroll
     WebkitOverflowScrolling: 'touch',
-    touchAction: 'auto', // ✅ let mobile tap events go through!
+    touchAction: 'none', // ✅ disable default gestures so we can control both axes
     cursor: { xs: 'grab', sm: 'grab' },
     userSelect: isDragging.current ? 'none' : 'auto',
     scrollbarWidth: 'thin',
@@ -227,7 +226,7 @@ const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
             sx={{
               minWidth: `${months.length * 80}px`,
               width: '100%',
-              height: { xs: 250, sm: 300, md: 350 }
+              height:  350 
             }}
           >
             <LineChart
