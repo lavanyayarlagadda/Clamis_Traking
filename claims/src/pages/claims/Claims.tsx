@@ -208,29 +208,60 @@ const columns = [
   {
     key: "chequeReceivedDate",
     label: "Cheque Received",
-    render: (row: any) => (
+    render: (row: any) => {
+    const formatDate = (dateString: string) => {
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    };
+
+    return (
       <span style={{ color: "#64748B" }}>
-        {row.chequeReceivedDate ? new Date(row.chequeReceivedDate).toLocaleDateString() : "N/A"}
+        {row.chequeReceivedDate ? formatDate(row.chequeReceivedDate) : "N/A"}
       </span>
-    ),
+    );
+  },
   },
   {
     key: "claimedDate",
     label: "Claimed Date",
-    render: (row: any) => (
+     render: (row: any) => {
+    const formatDate = (dateString: string) => {
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    };
+
+    return (
       <span style={{ color: "#64748B" }}>
-        {row.claimedDate ? new Date(row.claimedDate).toLocaleDateString() : "N/A"}
+        {row.claimedDate ? formatDate(row.claimedDate) : "N/A"}
       </span>
-    ),
+    );
   },
+},
   {
     key: "depositDate",
     label: "Deposit Date",
-    render: (row: any) => (
+    render: (row: any) => {
+    const formatDate = (dateString: string) => {
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    };
+
+    return (
+
       <span style={{ color: "#64748B" }}>
-        {row.depositDate ? new Date(row.depositDate).toLocaleDateString() : "N/A"}
+        {row.depositDate ? formatDate(row.depositDate) : "N/A"}
       </span>
-    ),
+    );
+  },
   },
 ];
 

@@ -20,6 +20,7 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';       // For Claims Settl
 import PaidIcon from '@mui/icons-material/Paid';             // For Settled Amount
 import PercentIcon from '@mui/icons-material/Percent';       // For Settlement Rate
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows'; // For Reconciliation Rate
+import { CurrencyRupee } from '@mui/icons-material';
 
 
 interface Metric {
@@ -52,7 +53,7 @@ const KPIMetrics: React.FC = () => {
     {
       title: 'Settled Amount',
       value: '₹1.64Cr',
-      icon: <PaidIcon  />,
+      icon: <CurrencyRupee  />,
       trend: '+15.2%',
       trendUp: true,
       color: 'purple',

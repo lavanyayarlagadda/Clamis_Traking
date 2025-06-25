@@ -162,12 +162,36 @@ const statusColorMap: Record<string, string> = {
       label: "Claim Age",
     },
     { key: "insuranceCompany", label: "Insurance Company" },
-    { key: "chequeReceivedDate", label: "Cheque Received Date" },
-    { key: "claimedDate", label: "Claimed Date" },
+    { key: "chequeReceivedDate", label: "Cheque Received Date",render: (row: any) => {
+    const formatDate = (dateString: string) => {
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    };
+    return( formatDate(row.chequeReceivedDate));}, },
+    { key: "claimedDate", label: "Claimed Date", render: (row: any) => {
+    const formatDate = (dateString: string) => {
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    };
+    return( formatDate(row.claimedDate??'N/A'));}, },
     {
       key: "depositDate",
       label: "Deposit Date",
-      render: (row: any) => row.depositDate ?? "N/A",
+      render: (row: any) => {
+    const formatDate = (dateString: string) => {
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    };
+    return( formatDate(row.depositDate ?? "N/A"))},
     },
   ];
 
@@ -181,64 +205,74 @@ const statusColorMap: Record<string, string> = {
     color?: "error" | "success" | "warning" | "info";
   };
 
-  const getTimeline = (dialogData: any): TimelineStep[] => {
-    const baseTimeline: TimelineStep[] = [
-      {
-        label: "Claim Created",
-        description: "Claim created in system",
-        date: dialogData.claimCreationDate,
-      },
-      {
-        label: "Claim Submitted",
-        description: "Initial claim submission received",
-        date: dialogData.claimedDate,
-      },
-    ];
-
-    if (dialogData.status === "Approved" || dialogData.status === "Settled") {
-      baseTimeline.push({
-        label: "Approved",
-        description: "Claim approved for settlement",
-        date: dialogData.approvedDate,
-      });
-    }
-
-    if (dialogData.status === "Exception") {
-      baseTimeline.push({
-        label: "Exception Raised",
-        description: dialogData.reason || "Exception raised",
-        date: dialogData.claimCreationDate,
-        color: "error", // This will be used to style red in UI
-      });
-    }
-
-    if (dialogData.status === "Rejected") {
-      baseTimeline.push({
-        label: "Rejected",
-        description: dialogData.reason || "Claim rejected by insurer",
-        date: dialogData.rejectedDate || dialogData.claimCreationDate,
-        color: "error",
-      });
-    }
-
-    if (dialogData.status === "In Progress") {
-      baseTimeline.push({
-        label: "In Progress",
-        description: "Claim processing is underway",
-        date: dialogData.inProgressDate || dialogData.claimCreationDate,
-      });
-    }
-
-    if (dialogData.status === "To Do") {
-      baseTimeline.push({
-        label: "To Do",
-        description: "Awaiting submission of documents/processing",
-        date: dialogData.claimCreationDate,
-      });
-    }
-
-    return baseTimeline;
+const getTimeline = (dialogData: any): TimelineStep[] => {
+  const formatDate = (dateStr: string | null | undefined): string => {
+    if (!dateStr) return "N/A";
+    const date = new Date(dateStr);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
   };
+
+  const baseTimeline: TimelineStep[] = [
+    {
+      label: "Claim Created",
+      description: "Claim created in system",
+      date: formatDate(dialogData.claimCreationDate),
+    },
+    {
+      label: "Claim Submitted",
+      description: "Initial claim submission received",
+      date: formatDate(dialogData.claimedDate),
+    },
+  ];
+
+  if (dialogData.status === "Approved" || dialogData.status === "Settled") {
+    baseTimeline.push({
+      label: "Approved",
+      description: "Claim approved for settlement",
+      date: formatDate(dialogData.approvalDate),
+    });
+  }
+
+  if (dialogData.status === "Exception") {
+    baseTimeline.push({
+      label: "Exception Raised",
+      description: dialogData.reason || "Exception raised",
+      date: formatDate(dialogData.claimCreationDate),
+      color: "error",
+    });
+  }
+
+  if (dialogData.status === "Rejected") {
+    baseTimeline.push({
+      label: "Rejected",
+      description: dialogData.reason || "Claim rejected by insurer",
+      date: formatDate(dialogData.rejectedDate || dialogData.claimCreationDate),
+      color: "error",
+    });
+  }
+
+  if (dialogData.status === "In Progress") {
+    baseTimeline.push({
+      label: "In Progress",
+      description: "Claim processing is underway",
+      date: formatDate(dialogData.inProgressDate || dialogData.claimCreationDate),
+    });
+  }
+
+  if (dialogData.status === "To Do") {
+    baseTimeline.push({
+      label: "To Do",
+      description: "Awaiting submission of documents/processing",
+      date: formatDate(dialogData.claimCreationDate),
+    });
+  }
+
+  return baseTimeline;
+};
+
 
   return (
     <>

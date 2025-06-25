@@ -103,12 +103,38 @@ const columns = [
     label: "Claim Age",
   },
   { key: "insuranceCompany", label: "Insurance Company" },
-  { key: "chequeReceivedDate", label: "Cheque Received Date" },
-  { key: "claimedDate", label: "Claimed Date" },
+  { key: "chequeReceivedDate", label: "Cheque Received Date",render: (row: any) => {
+    const formatDate = (dateString: string) => {
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    };
+    return( formatDate(row.chequeReceivedDate));}, },
+  { key: "claimedDate", label: "Claimed Date", render: (row: any) => {
+    const formatDate = (dateString: string) => {
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    };
+    return( formatDate(row.claimedDate));
+   }, },
   {
     key: "depositDate",
     label: "Deposit Date",
-    render: (row: any) => row.depositDate ?? "N/A",
+    render: (row: any) => {
+    const formatDate = (dateString: string) => {
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    };
+    return( formatDate(row.depositDate) ?? "N/A");
+  },
   },
 ];
 
@@ -119,14 +145,14 @@ const dummyDialogData = {
   claimNumber: "CLM-001245",
   insuranceCompany: "ICICI Lombard",
   chequeNumber: "CHQ90887711",
-  chequeReceivedDate: "2024-06-19",
-  claimedDate: "2024-06-01",
+  chequeReceivedDate: "19-06-2024",
+  claimedDate: "01-06-2024",
   claimedAmount: 85000,
   approvedAmount: 80000,
   settledAmount: 78000,
   tds: 2000,
   utrNo: "UTR202406180001",
-  paymentDate: "2024-06-18",
+  paymentDate: "18-06-2024",
   hospitalName: "Apollo Hospitals, Hyderabad",
   patientName: "Ravi Kumar",
   diagnosis: "Acute Appendicitis",
@@ -135,32 +161,32 @@ const dummyDialogData = {
     {
       label: "Claim Submitted",
       description: "Claim submitted by hospital to TPA",
-      date: "2024-06-01",
+      date: "01-06-2024",
     },
     {
       label: "Documents Verified",
       description: "All supporting documents verified by claim processor",
-      date: "2024-06-03",
+      date: "03-06-2024",
     },
     {
       label: "Approved",
       description: "Claim approved by insurance company",
-      date: "2024-06-06",
+      date: "06-06-2024",
     },
     {
       label: "NEFT Processed",
       description: "Amount processed through bank NEFT",
-      date: "2024-06-08",
+      date: "08-06-2024",
     },
     {
       label: "Settled",
       description: "Final settlement processed and amount credited",
-      date: "2024-06-09",
+      date: "09-06-2024",
     },
     {
       label: "Reconciled",
       description: "Hospital confirmed receipt of payment",
-      date: "2024-06-10",
+      date: "10-06-2024",
     },
   ],
 };
