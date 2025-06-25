@@ -12,7 +12,7 @@ import {
   Tooltip,
 } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
-import MultiSelect from '../../components/reusable/MultiSelect';
+import MultiSelect from '../../Components/reusable/MultiSelect';
 
 const insuranceCompanies = [
   'NTR Vaidyaseva',

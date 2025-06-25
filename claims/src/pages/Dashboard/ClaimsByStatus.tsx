@@ -11,7 +11,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { PieChart } from '@mui/x-charts/PieChart';
-import MultiSelect from '../../components/reusable/MultiSelect';
+import MultiSelect from '../../Components/reusable/MultiSelect';
 
 const insuranceCompanies = [
   'NTR Vaidyaseva',
@@ -121,9 +121,9 @@ const ClaimsByStatus: React.FC = () => {
       <CardHeader
         title={
           <Stack
-            direction="row"
+             direction={{ xs: 'column', sm: 'row' }}
             justifyContent="space-between"
-            alignItems="center"
+             alignItems={{ xs: 'flex-start', sm: 'center' }}
             spacing={2}
           >
             <Typography
@@ -136,12 +136,13 @@ const ClaimsByStatus: React.FC = () => {
             >
               Claims by Status
             </Typography>
-            <Box sx={{ minWidth: 250 }}>
+            <Box  sx={{ width: { xs: '100%', sm: 250 } }}>
               <MultiSelect
                 options={insuranceCompanies}
                 selected={selectedCompanies}
                 onChange={handleCompanyChange}
-                width={250}
+                // width={250}
+                width="100%"
                 includeAllOption
                 placeholder="Select insurance companies"
               />
@@ -150,43 +151,55 @@ const ClaimsByStatus: React.FC = () => {
         }
         sx={{ px: 3, pt: 3, pb: 0 }}
       />
-      <CardContent sx={{ px: 3, pt: 1, pb: 3 }}>
-        <Box height={300}>
-          <PieChart
-            series={[
-              {
-                data,
-                innerRadius: 40,
-                outerRadius: 80,
-                arcLabel: (item) =>
-                  `${((item.value / total) * 100).toFixed(1)}%`,
-                arcLabelMinAngle: 10,
-              },
-            ]}
-            slotProps={{
-              legend: {
-                direction: 'horizontal',
-                position: { vertical: 'bottom', horizontal: 'center' },
-              },
-            }}
-            height={250}
+      <CardContent 
+      sx={{ px: { xs: 2, sm: 3 }, pt: 1, pb: 3 }}
+      // sx={{ px: 3, pt: 1, pb: 3 }}
+      >
+        <Box
+          sx={{
+            width: '100%',
+            overflowX: 'auto',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <Box
             sx={{
-              '.MuiChartsAxis-tickLabel': {
-                fontSize: 12,
-                fill: '#4b5563',
-              },
-              '.MuiChartsLegend-series text': {
-                fontSize: 13,
-              },
-              '.MuiChartsAxis-line': {
-                stroke: '#e5e7eb',
-              },
-              '.MuiChartsGrid-line': {
-                stroke: '#f3f4f6',
-              },
+              minWidth: 320,
+              width: { xs: 320, sm: 400, md: 450 }, 
+              height: { xs: 240, sm: 280, md: 300 },
             }}
-          />
+          >
+            <PieChart
+              series={[
+                {
+                  data,
+                  innerRadius: 40,
+                  outerRadius: 80,
+                  arcLabel: (item) =>
+                    `${((item.value / total) * 100).toFixed(1)}%`,
+                  arcLabelMinAngle: 10,
+                },
+              ]}
+              slotProps={{
+                legend: {
+                  direction: 'horizontal',
+                  position: { vertical: 'bottom', horizontal: 'center' },
+                },
+              }}
+              height={250}
+              sx={{
+                '.MuiChartsLegend-series text': {
+                  fontSize: 13,
+                },
+                '.MuiChartsArcLabel-root': {
+                  fontSize: 11,
+                },
+              }}
+            />
+          </Box>
         </Box>
+
       </CardContent>
     </Card>
   );

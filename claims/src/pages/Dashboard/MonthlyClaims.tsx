@@ -9,7 +9,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
-import MultiSelect from '../../components/reusable/MultiSelect';
+import MultiSelect from '../../Components/reusable/MultiSelect';
 
 const insuranceCompanies = [
   'NTR Vaidyaseva',
@@ -74,7 +74,7 @@ const MonthlyClaimsTrend: React.FC = () => {
     }
 
     const months = companyData[companiesToProcess[0]].months;
-    
+
     const combinedData = {
       months,
       totalClaims: Array(months.length).fill(0),
@@ -100,19 +100,19 @@ const MonthlyClaimsTrend: React.FC = () => {
       setSelectedCompanies(['NTR Vaidyaseva']);
       return;
     }
-    
+
     // If ALL is selected, replace current selection with ALL
     if (selected.includes('ALL')) {
       setSelectedCompanies(['ALL']);
       return;
     }
-    
+
     // If ALL was previously selected and now something else is selected
     if (selectedCompanies.includes('ALL') && !selected.includes('ALL')) {
       setSelectedCompanies(selected);
       return;
     }
-    
+
     setSelectedCompanies(selected);
   };
 
@@ -128,16 +128,20 @@ const MonthlyClaimsTrend: React.FC = () => {
     >
       <CardHeader
         title={
-          <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+          <
+            Stack direction={{ xs: 'column', sm: 'row' }}
+            justifyContent="space-between"
+            alignItems={{ xs: 'flex-start', sm: 'center' }}
+            spacing={2}>
             <Typography variant="subtitle1" fontWeight={600} sx={{ color: theme.palette.text.primary, letterSpacing: 0.3 }}>
               Monthly Claims Trend
             </Typography>
-            <Box sx={{ minWidth: 250 }}>
+            <Box sx={{ width: { xs: '100%', sm: 250 } }}>
               <MultiSelect
                 options={insuranceCompanies}
                 selected={selectedCompanies}
                 onChange={handleCompanyChange}
-                width={250}
+                width="100%"
                 includeAllOption={true}
                 placeholder="Select insurance companies"
               />
@@ -147,42 +151,50 @@ const MonthlyClaimsTrend: React.FC = () => {
         sx={{ px: 3, pt: 3, pb: 0 }}
       />
 
-      <CardContent sx={{ px: 3, pt: 1, pb: 3 }}>
-        <Box height={300}>
-          <LineChart
-            xAxis={[{ id: 'months', data: months, scaleType: 'point', label: 'Month' }]}
-            series={[
-              {
-                id: 'totalClaims',
-                data: totalClaims,
-                label: 'Total Claims',
-                color: '#3b82f6',
-              },
-              {
-                id: 'reconciledClaims',
-                data: reconciledClaims,
-                label: 'Reconciled Claims',
-                color: '#10b981',
-              },
-            ]}
-            height={300}
-            margin={{ top: 20, bottom: 40, left: 50, right: 20 }}
+      <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, pb: 3 }}>
+        <Box sx={{ overflowX: 'auto', width: '100%' }}>
+          <Box
             sx={{
-              '.MuiChartsAxis-tickLabel': {
-                fontSize: 12,
-                fill: '#4b5563',
-              },
-              '.MuiChartsLegend-series text': {
-                fontSize: 13,
-              },
-              '.MuiChartsAxis-line': {
-                stroke: '#e5e7eb',
-              },
-              '.MuiChartsGrid-line': {
-                stroke: '#f3f4f6',
-              },
+              minWidth: `${months.length * 80}px`,
+              width: '100%',
+              height: { xs: 250, sm: 300, md: 350 }
             }}
-          />
+          >
+            <LineChart
+              xAxis={[{ id: 'months', data: months, scaleType: 'point', label: 'Month' }]}
+              series={[
+                {
+                  id: 'totalClaims',
+                  data: totalClaims,
+                  label: 'Total Claims',
+                  color: '#3b82f6',
+                },
+                {
+                  id: 'reconciledClaims',
+                  data: reconciledClaims,
+                  label: 'Reconciled Claims',
+                  color: '#10b981',
+                },
+              ]}
+              height={300}
+              margin={{ top: 20, bottom: 40, left: 50, right: 20 }}
+              sx={{
+                '.MuiChartsAxis-tickLabel': {
+                  fontSize: 12,
+                  fill: '#4b5563',
+                },
+                '.MuiChartsLegend-series text': {
+                  fontSize: 13,
+                },
+                '.MuiChartsAxis-line': {
+                  stroke: '#e5e7eb',
+                },
+                '.MuiChartsGrid-line': {
+                  stroke: '#f3f4f6',
+                },
+              }}
+            />
+          </Box>
         </Box>
       </CardContent>
     </Card>

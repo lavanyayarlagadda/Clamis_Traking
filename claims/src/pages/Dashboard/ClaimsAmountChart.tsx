@@ -8,7 +8,7 @@ import {
   Stack,
 } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
-import MultiSelect from '../../components/reusable/MultiSelect';
+import MultiSelect from '../../Components/reusable/MultiSelect';
 
 const insuranceCompanies = [
   'NTR Vaidyaseva',
@@ -79,7 +79,7 @@ const ClaimAmountChart: React.FC = () => {
     }
 
     const months = companyData[companiesToProcess[0]].months;
-    
+
     const combinedData: MonthlyAmounts = {
       months,
       claimAmount: Array(months.length).fill(0),
@@ -106,17 +106,17 @@ const ClaimAmountChart: React.FC = () => {
       setSelectedCompanies(['NTR Vaidyaseva']);
       return;
     }
-    
+
     if (selected.includes('ALL')) {
       setSelectedCompanies(['ALL']);
       return;
     }
-    
+
     if (selectedCompanies.includes('ALL') && !selected.includes('ALL')) {
       setSelectedCompanies(selected);
       return;
     }
-    
+
     setSelectedCompanies(selected);
   };
 
@@ -135,11 +135,17 @@ const ClaimAmountChart: React.FC = () => {
     >
       <CardHeader
         title={
-          <Stack direction="row" justifyContent="space-between" alignItems="center" width="100%">
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            justifyContent="space-between"
+            alignItems={{ xs: 'flex-start', sm: 'center' }}
+            spacing={2}
+            width="100%"
+          >
             <Typography variant="subtitle1" fontWeight={600} color="text.primary">
               Claim vs Approved vs Settled Amount
             </Typography>
-            <Box sx={{ width: '40%' }}>
+            <Box sx={{ width: { xs: '100%', sm: '40%' } }}>
               <MultiSelect
                 options={insuranceCompanies}
                 selected={selectedCompanies}
@@ -151,58 +157,66 @@ const ClaimAmountChart: React.FC = () => {
             </Box>
           </Stack>
         }
-        sx={{ px: 3, pt: 3, pb: 0 }}
+        sx={{ px: { xs: 2, sm: 3 }, pt: 3, pb: 0 }}
       />
-      <CardContent sx={{ px: 3, pt: 1, pb: 3 }}>
-        <Box height={300}>
-          <BarChart
-            height={300}
-            xAxis={[{ 
-              id: 'months', 
-              data: months, 
-              scaleType: 'band', 
-              label: 'Month' 
-            }]}
-            series={[
-              {
-                id: 'claimAmount',
-                data: claimAmount,
-                label: 'Claim Amount',
-                color: '#3b82f6', // Blue
-              },
-              {
-                id: 'approvedAmount',
-                data: approvedAmount,
-                label: 'Approved Amount',
-                color: '#10b981', // Green
-              },
-              {
-                id: 'settledAmount',
-                data: settledAmount,
-                label: 'Settled Amount',
-                color: '#8b5cf6', // Purple
-              },
-            ]}
-            yAxis={[{ valueFormatter: formatCurrency }]}
-            margin={{ top: 20, bottom: 40, left: 60, right: 20 }}
-            grid={{ horizontal: true }}
+      <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, pb: 3 }}>
+        <Box sx={{ overflowX: 'auto', width: '100%' }}>
+          <Box
             sx={{
-              '.MuiChartsLegend-root': {
-                mt: 2,
-                fontSize: 13,
-              },
-              '.MuiChartsAxis-tickLabel': {
-                fontSize: 12,
-                fill: '#4b5563',
-              },
-              '.MuiChartsAxis-line': {
-                stroke: '#e5e7eb',
-              },
-              '.MuiChartsGrid-line': {
-                stroke: '#f3f4f6',
-              },
+              minWidth: `${months.length * 100}px`,
+              width: '100%',
+              height: { xs: 250, sm: 300, md: 350 },
             }}
-          />
+          >
+            <BarChart
+              height={300}
+              xAxis={[{
+                id: 'months',
+                data: months,
+                scaleType: 'band',
+                label: 'Month'
+              }]}
+              series={[
+                {
+                  id: 'claimAmount',
+                  data: claimAmount,
+                  label: 'Claim Amount',
+                  color: '#3b82f6', // Blue
+                },
+                {
+                  id: 'approvedAmount',
+                  data: approvedAmount,
+                  label: 'Approved Amount',
+                  color: '#10b981', // Green
+                },
+                {
+                  id: 'settledAmount',
+                  data: settledAmount,
+                  label: 'Settled Amount',
+                  color: '#8b5cf6', // Purple
+                },
+              ]}
+              yAxis={[{ valueFormatter: formatCurrency }]}
+              margin={{ top: 20, bottom: 40, left: 60, right: 20 }}
+              grid={{ horizontal: true }}
+              sx={{
+                '.MuiChartsLegend-root': {
+                  mt: 2,
+                  fontSize: 13,
+                },
+                '.MuiChartsAxis-tickLabel': {
+                  fontSize: 12,
+                  fill: '#4b5563',
+                },
+                '.MuiChartsAxis-line': {
+                  stroke: '#e5e7eb',
+                },
+                '.MuiChartsGrid-line': {
+                  stroke: '#f3f4f6',
+                },
+              }}
+            />
+          </Box>
         </Box>
       </CardContent>
     </Card>
