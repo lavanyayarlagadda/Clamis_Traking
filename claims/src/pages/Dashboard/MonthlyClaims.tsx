@@ -30,38 +30,35 @@ const MonthlyClaimsTrend: React.FC = () => {
   const [selectedCompanies, setSelectedCompanies] = React.useState<string[]>([
     'ALL'
   ]);
-  const scrollRef = useRef<HTMLDivElement>(null);
+ const scrollRef = useRef<HTMLDivElement>(null);
 
-  const isDragging = useRef(false);
-  const startX = useRef(0);
-  const startY = useRef(0);
-  const scrollLeft = useRef(0);
+const isDragging = useRef(false);
+const startX = useRef(0);
+const startY = useRef(0);
+const scrollLeft = useRef(0);
+const scrollTop = useRef(0); 
 
-  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!scrollRef.current) return;
-    startX.current = e.clientX;
-    startY.current = e.clientY;
-    scrollLeft.current = scrollRef.current.scrollLeft;
-    isDragging.current = false;
+const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+  if (!scrollRef.current) return;
+  startX.current = e.clientX;
+  startY.current = e.clientY;
+  scrollLeft.current = scrollRef.current.scrollLeft;
+  scrollTop.current = scrollRef.current.scrollTop; // ✅ Capture vertical scroll
+  isDragging.current = true;
+  scrollRef.current.setPointerCapture(e.pointerId);
+};
 
-    scrollRef.current.setPointerCapture(e.pointerId);
-  };
 
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!scrollRef.current) return;
-    const dx = e.clientX - startX.current;
-    const dy = Math.abs(e.clientY - startY.current);
+const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+  if (!isDragging.current || !scrollRef.current) return;
 
-    if (dy > 10) {
-      scrollRef.current.releasePointerCapture(e.pointerId);
-      return;
-    }
+  const dx = e.clientX - startX.current;
+  const dy = e.clientY - startY.current;
 
-    if (Math.abs(dx) > 5) {
-      isDragging.current = true;
-      scrollRef.current.scrollLeft = scrollLeft.current - dx;
-    }
-  };
+  scrollRef.current.scrollLeft = scrollLeft.current - dx;
+  scrollRef.current.scrollTop = scrollTop.current - dy; 
+};
+
 
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!scrollRef.current) return;
@@ -189,36 +186,36 @@ const MonthlyClaimsTrend: React.FC = () => {
       />
 
       <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, pb: 3 }}>
-    <Box
-           ref={scrollRef}
-           onPointerDown={handlePointerDown}
-           onPointerMove={handlePointerMove}
-           onPointerUp={handlePointerUp}
-           sx={{
-             width: '100%',
-             overflowX: 'auto',
-             overflowY: 'auto',
-             WebkitOverflowScrolling: 'touch',
-             touchAction: 'pan-y',
-             cursor: { xs: 'auto', sm: 'grab' },
-             userSelect: isDragging.current ? 'none' : 'auto',
-             scrollbarWidth: 'thin',
-             "&::-webkit-scrollbar": {
-               height: 6,
-             },
-             "&::-webkit-scrollbar-track": {
-               backgroundColor: "#f1f1f1",
-               borderRadius: 6,
-             },
-             "&::-webkit-scrollbar-thumb": {
-               backgroundColor: "#c1c1c1",
-               borderRadius: 6,
-             },
-             "&::-webkit-scrollbar-thumb:hover": {
-               backgroundColor: "#999",
-             },
-           }}
-         >
+   <Box
+  ref={scrollRef}
+  onPointerDown={handlePointerDown}
+  onPointerMove={handlePointerMove}
+  onPointerUp={handlePointerUp}
+  sx={{
+    width: '100%',
+    overflow: 'auto', 
+    WebkitOverflowScrolling: 'touch',
+    touchAction: 'none', 
+    cursor: { xs: 'grab', sm: 'grab' },
+    userSelect: isDragging.current ? 'none' : 'auto',
+    scrollbarWidth: 'thin',
+    "&::-webkit-scrollbar": {
+      height: 6,
+      width: 6,
+    },
+    "&::-webkit-scrollbar-track": {
+      backgroundColor: "#f1f1f1",
+      borderRadius: 6,
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "#c1c1c1",
+      borderRadius: 6,
+    },
+    "&::-webkit-scrollbar-thumb:hover": {
+      backgroundColor: "#999",
+    },
+  }}
+>
           <Box
             sx={{
               minWidth: `${months.length * 80}px`,
