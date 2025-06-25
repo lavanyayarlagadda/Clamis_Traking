@@ -120,54 +120,58 @@ You can ask me things like:
     <>
 
     {!isOpen && (
-<Draggable
-  nodeRef={floatRef}
-  bounds="parent"
-  onStop={(_, data) => {
-    // Optional: blur to release stuck cursor
-    if (floatRef.current) {
-      const button = floatRef.current.querySelector("button");
-      if (button instanceof HTMLElement) {
-        button.blur();
-      }
-    }
-  }}
->
-  <Box
-    ref={floatRef}
-    sx={{
-      position: "absolute",
-      bottom: { xs: 16, sm: 24 },
-      right: { xs: 16, sm: 24 },
-      width: 64,
-      height: 64,
-      zIndex: 1300,
-      cursor: "move",
-      pointerEvents: "auto",
-    }}
-  >
-    <IconButton
-      onMouseDown={(e) => e.preventDefault()} // prevents stuck focus
-      onClick={() => {
-        setIsOpen(true);
-        setIsExpanded(false);
-      }}
-      sx={{
-        width: 64,
-        height: 64,
-        borderRadius: "50%",
-        background: "linear-gradient(135deg, #7C3AED, #9333EA)",
-        color: "white",
-        boxShadow: 6,
-        "&:hover": {
-          background: "linear-gradient(135deg, #6D28D9, #7C3AED)",
-        },
+  <Draggable
+      nodeRef={floatRef}
+      bounds="body" // 👈 makes sure it stays within screen
+      onStop={(_, data) => {
+        // remove focus to fix stuck interaction
+        if (floatRef.current) {
+          const button = floatRef.current.querySelector("button");
+          if (button instanceof HTMLElement) {
+            button.blur();
+          }
+        }
       }}
     >
-      <img src={chatBot} alt="chatBot" style={{ width: 35, height: 35 }} />
-    </IconButton>
-  </Box>
-</Draggable>
+      <Box
+        ref={floatRef}
+        sx={{
+          position: "fixed", // 👈 stays fixed even on scroll
+          bottom: { xs: 16, sm: 24 },
+          right: { xs: 16, sm: 24 },
+          width: 64,
+          height: 64,
+          zIndex: 1300,
+          cursor: "move",
+          pointerEvents: "auto",
+        }}
+      >
+        <IconButton
+          onMouseDown={(e) => e.preventDefault()} // prevent sticky focus
+          onClick={() => {
+            setIsOpen(true);
+            setIsExpanded(false);
+          }}
+          sx={{
+            width: 64,
+            height: 64,
+            borderRadius: "50%",
+            background: "linear-gradient(135deg, #7C3AED, #9333EA)",
+            color: "white",
+            boxShadow: 6,
+            "&:hover": {
+              background: "linear-gradient(135deg, #6D28D9, #7C3AED)",
+            },
+          }}
+        >
+          {isOpen ? (
+            <Close />
+          ) : (
+            <img src={chatBot} alt="chatBot" style={{ width: 35, height: 35 }} />
+          )}
+        </IconButton>
+      </Box>
+    </Draggable>
 
 )}
 
@@ -181,7 +185,7 @@ You can ask me things like:
               xs: isExpanded ? 170 : 175,
               sm: isExpanded ? 165 : 170,
               md: isExpanded ? 150 : 170,
-              lg: isExpanded ? 100 : 0,
+              lg: isExpanded ? 100 : 50,
               xl: isExpanded ? 160 : 170,
             },
             bottom: { xs: 70, sm: 100, md: isExpanded ? 20 : 100 },
