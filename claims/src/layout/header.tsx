@@ -33,8 +33,8 @@ const Header: React.FC<HeaderProps> = ({ isSidebarOpen, currentTab, onSidebarTog
         return 'Reconciled Claims';
       case 'unreconciled':
         return 'Unreconciled Claims';
-      case 'claims':
-        return 'Claims';
+      case 'allclaims':
+        return 'All Claims';
       case 'workQueue':
         return 'Work Queue';
       default:
@@ -68,9 +68,18 @@ const Header: React.FC<HeaderProps> = ({ isSidebarOpen, currentTab, onSidebarTog
               <MenuIcon />
             </IconButton>
           )}
-          <Typography variant="h6" color="text.primary" fontWeight={600} noWrap>
-            {getHeaderTitle(currentTab)}
-          </Typography>
+        <Typography
+  variant="h6"
+  color="text.primary"
+  noWrap
+  sx={{
+    fontSize: { xs: '1rem', sm: '1.25rem' }, // 1rem ≈ 16px, 1.25rem ≈ 20px
+    fontWeight: { xs: 400, sm: 600 },
+  }}
+>
+  {getHeaderTitle(currentTab)}
+</Typography>
+
         </Box>
 
         {/* Right Section: Search, Bell, Avatar */}
