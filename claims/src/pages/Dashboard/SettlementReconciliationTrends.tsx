@@ -1,5 +1,3 @@
-// components/dashboard/SettlementReconciliationTrends.tsx
-
 import React, { useRef } from 'react';
 import {
   ChartContainer,
@@ -32,40 +30,49 @@ const insuranceCompanies = [
 const SettlementReconciliationTrends: React.FC = () => {
   const theme = useTheme();
 
-  const [selectedCompanies, setSelectedCompanies] = React.useState<string[]>([
-    'ALL'
-  ]);
+  const [selectedCompanies, setSelectedCompanies] = React.useState<string[]>(['ALL']);
   const scrollRef = useRef<HTMLDivElement>(null);
+
   const isDragging = useRef(false);
   const startX = useRef(0);
+  const startY = useRef(0);
   const scrollLeft = useRef(0);
-  
+
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!scrollRef.current) return;
-    isDragging.current = true;
-    scrollRef.current.setPointerCapture(e.pointerId);
     startX.current = e.clientX;
+    startY.current = e.clientY;
     scrollLeft.current = scrollRef.current.scrollLeft;
+    isDragging.current = false;
+
+    scrollRef.current.setPointerCapture(e.pointerId);
   };
-  
+
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDragging.current || !scrollRef.current) return;
+    if (!scrollRef.current) return;
     const dx = e.clientX - startX.current;
-    scrollRef.current.scrollLeft = scrollLeft.current - dx;
+    const dy = Math.abs(e.clientY - startY.current);
+
+    if (dy > 10) {
+      scrollRef.current.releasePointerCapture(e.pointerId);
+      return;
+    }
+
+    if (Math.abs(dx) > 5) {
+      isDragging.current = true;
+      scrollRef.current.scrollLeft = scrollLeft.current - dx;
+    }
   };
-  
+
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!scrollRef.current) return;
-    isDragging.current = false;
     scrollRef.current.releasePointerCapture(e.pointerId);
+    isDragging.current = false;
   };
+
   const formatCurrency = (value: number) => `₹${(value / 100000).toFixed(1)}L`;
 
-  // Sample company-wise data
-  const companyData: Record<
-    string,
-    { month: string; settled: number; reconciled: number }[]
-  > = {
+  const companyData: Record<string, { month: string; settled: number; reconciled: number }[]> = {
     'NTR Vaidyaseva': [
       { month: 'Jan', settled: 2845678, reconciled: 2523456 },
       { month: 'Feb', settled: 3123456, reconciled: 2867890 },
@@ -120,8 +127,6 @@ const SettlementReconciliationTrends: React.FC = () => {
     return combined;
   };
 
-  const data = getCombinedData();
-
   const handleCompanyChange = (selected: string[]) => {
     if (selected.length === 0) {
       setSelectedCompanies(['NTR Vaidyaseva']);
@@ -137,6 +142,8 @@ const SettlementReconciliationTrends: React.FC = () => {
     }
     setSelectedCompanies(selected);
   };
+
+  const data = getCombinedData();
 
   return (
     <Card
@@ -183,17 +190,19 @@ const SettlementReconciliationTrends: React.FC = () => {
       />
       <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, pb: 3 }}>
         <Box
-
           ref={scrollRef}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           sx={{
-            width: "100%",
-            overflow: "auto",
-            WebkitOverflowScrolling: "touch",
-            touchAction: "pan-y", // Prevent conflict with vertical scrolling
-            scrollbarWidth: "thin",
+            width: '100%',
+            overflowX: 'auto',
+            overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch',
+            touchAction: 'pan-y',
+            cursor: { xs: 'auto', sm: 'grab' },
+            userSelect: isDragging.current ? 'none' : 'auto',
+            scrollbarWidth: 'thin',
             "&::-webkit-scrollbar": {
               height: 6,
             },
@@ -210,12 +219,7 @@ const SettlementReconciliationTrends: React.FC = () => {
             },
           }}
         >
-          <Box
-            sx={{
-              minWidth: 500, // Ensure enough space for small devices
-              width: '100%',
-            }}
-          >
+          <Box sx={{ minWidth: 460, width: '100%' }}>
             <ChartContainer
               series={[
                 {
@@ -240,20 +244,10 @@ const SettlementReconciliationTrends: React.FC = () => {
               dataset={data}
               height={320}
               sx={{
-                '.MuiChartsLegend-root': {
-                  mt: 2,
-                  fontSize: 13,
-                },
-                '.MuiChartsAxis-tickLabel': {
-                  fontSize: 12,
-                  fill: '#4b5563',
-                },
-                '.MuiChartsAxis-line': {
-                  stroke: '#e5e7eb',
-                },
-                '.MuiChartsGrid-line': {
-                  stroke: '#f3f4f6',
-                },
+                '.MuiChartsLegend-root': { mt: 2, fontSize: 13 },
+                '.MuiChartsAxis-tickLabel': { fontSize: 12, fill: '#4b5563' },
+                '.MuiChartsAxis-line': { stroke: '#e5e7eb' },
+                '.MuiChartsGrid-line': { stroke: '#f3f4f6' },
               }}
             >
               <ChartsGrid horizontal vertical />

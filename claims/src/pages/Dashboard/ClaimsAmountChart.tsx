@@ -30,28 +30,42 @@ const ClaimAmountChart: React.FC = () => {
     'ALL'
   ]);
   const scrollRef = useRef<HTMLDivElement>(null);
+
   const isDragging = useRef(false);
   const startX = useRef(0);
+  const startY = useRef(0);
   const scrollLeft = useRef(0);
-  
+
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!scrollRef.current) return;
-    isDragging.current = true;
-    scrollRef.current.setPointerCapture(e.pointerId);
     startX.current = e.clientX;
+    startY.current = e.clientY;
     scrollLeft.current = scrollRef.current.scrollLeft;
+    isDragging.current = false;
+
+    scrollRef.current.setPointerCapture(e.pointerId);
   };
-  
+
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDragging.current || !scrollRef.current) return;
+    if (!scrollRef.current) return;
     const dx = e.clientX - startX.current;
-    scrollRef.current.scrollLeft = scrollLeft.current - dx;
+    const dy = Math.abs(e.clientY - startY.current);
+
+    if (dy > 10) {
+      scrollRef.current.releasePointerCapture(e.pointerId);
+      return;
+    }
+
+    if (Math.abs(dx) > 5) {
+      isDragging.current = true;
+      scrollRef.current.scrollLeft = scrollLeft.current - dx;
+    }
   };
-  
+
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!scrollRef.current) return;
-    isDragging.current = false;
     scrollRef.current.releasePointerCapture(e.pointerId);
+    isDragging.current = false;
   };
   // Sample data for each insurance company
   const companyData: Record<string, MonthlyAmounts> = {
@@ -183,33 +197,36 @@ const ClaimAmountChart: React.FC = () => {
         sx={{ px: { xs: 2, sm: 3 }, pt: 3, pb: 0 }}
       />
       <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, pb: 3 }}>
-                <Box
-                    ref={scrollRef}
-                    onPointerDown={handlePointerDown}
-                    onPointerMove={handlePointerMove}
-                    onPointerUp={handlePointerUp}
-                    sx={{
-                      width: "100%",
-                      overflow: "auto",
-                      WebkitOverflowScrolling: "touch",
-                      touchAction: "pan-y", // Prevent conflict with vertical scrolling
-                      scrollbarWidth: "thin",
-                      "&::-webkit-scrollbar": {
-                        height: 6,
-                      },
-                      "&::-webkit-scrollbar-track": {
-                        backgroundColor: "#f1f1f1",
-                        borderRadius: 6,
-                      },
-                      "&::-webkit-scrollbar-thumb": {
-                        backgroundColor: "#c1c1c1",
-                        borderRadius: 6,
-                      },
-                      "&::-webkit-scrollbar-thumb:hover": {
-                        backgroundColor: "#999",
-                      },
-                    }}
-                  >
+                 <Box
+                        ref={scrollRef}
+                        onPointerDown={handlePointerDown}
+                        onPointerMove={handlePointerMove}
+                        onPointerUp={handlePointerUp}
+                        sx={{
+                          width: '100%',
+                          overflowX: 'auto',
+                          overflowY: 'auto',
+                          WebkitOverflowScrolling: 'touch',
+                          touchAction: 'pan-y',
+                          cursor: { xs: 'auto', sm: 'grab' },
+                          userSelect: isDragging.current ? 'none' : 'auto',
+                          scrollbarWidth: 'thin',
+                          "&::-webkit-scrollbar": {
+                            height: 6,
+                          },
+                          "&::-webkit-scrollbar-track": {
+                            backgroundColor: "#f1f1f1",
+                            borderRadius: 6,
+                          },
+                          "&::-webkit-scrollbar-thumb": {
+                            backgroundColor: "#c1c1c1",
+                            borderRadius: 6,
+                          },
+                          "&::-webkit-scrollbar-thumb:hover": {
+                            backgroundColor: "#999",
+                          },
+                        }}
+                      >
           <Box
             sx={{
               minWidth: `${months.length * 100}px`,
