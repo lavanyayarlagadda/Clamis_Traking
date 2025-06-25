@@ -39,31 +39,39 @@ const SettlementReconciliationTrends: React.FC = () => {
  const scrollLeft = useRef(0);
  const scrollTop = useRef(0); 
  
- const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-   if (!scrollRef.current) return;
-   startX.current = e.clientX;
-   startY.current = e.clientY;
-   scrollLeft.current = scrollRef.current.scrollLeft;
-   scrollTop.current = scrollRef.current.scrollTop; // ✅ Capture vertical scroll
-   isDragging.current = true;
-   scrollRef.current.setPointerCapture(e.pointerId);
- };
- 
+ const downTime = useRef<number>(0);
+
+const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+  if (!scrollRef.current) return;
+  startX.current = e.clientX;
+  startY.current = e.clientY;
+  scrollLeft.current = scrollRef.current.scrollLeft;
+  scrollTop.current = scrollRef.current.scrollTop;
+  isDragging.current = false; // Start as not dragging
+  downTime.current = Date.now(); // Capture tap time
+  scrollRef.current.setPointerCapture(e.pointerId);
+};
+
  
 const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-  if (!isDragging.current || !scrollRef.current) return;
+  if (!scrollRef.current) return;
 
   const dx = e.clientX - startX.current;
   const dy = e.clientY - startY.current;
 
-  // Only enable scroll if the pointer moved enough
-  if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
+  const moveThreshold = 5; // px threshold
 
-  e.preventDefault(); // Stop native scrolling only on real drag
+  // If movement is significant, mark as dragging
+  if (Math.abs(dx) > moveThreshold || Math.abs(dy) > moveThreshold) {
+    isDragging.current = true;
+  }
+
+  if (!isDragging.current) return;
 
   scrollRef.current.scrollLeft = scrollLeft.current - dx;
   scrollRef.current.scrollTop = scrollTop.current - dy;
 };
+
  
  
    const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -200,7 +208,7 @@ const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
              width: '100%',
              overflow: 'auto',
              WebkitOverflowScrolling: 'touch',
-             touchAction: 'auto', // ✅ let mobile tap events go through!
+             touchAction: 'auto', 
              cursor: { xs: 'grab', sm: 'grab' },
              userSelect: isDragging.current ? 'none' : 'auto',
              scrollbarWidth: 'thin',
