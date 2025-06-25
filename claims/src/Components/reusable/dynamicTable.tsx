@@ -258,6 +258,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
             borderRadius: 2,
             boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
             overflowX: "auto",
+            WebkitOverflowScrolling: "touch",
           }}
         >
           <Table stickyHeader sx={{ minWidth: "100%" }}>
