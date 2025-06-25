@@ -19,7 +19,7 @@ import {
   Stack,
   useTheme,
 } from '@mui/material';
-import MultiSelect from '../../components/reusable/MultiSelect';
+import MultiSelect from '../../Components/reusable/MultiSelect';
 
 const insuranceCompanies = [
   'NTR Vaidyaseva',
@@ -132,9 +132,9 @@ const SettlementReconciliationTrends: React.FC = () => {
       <CardHeader
         title={
           <Stack
-            direction="row"
+            direction={{ xs: 'column', sm: 'row' }}
             justifyContent="space-between"
-            alignItems="center"
+            alignItems={{ xs: 'flex-start', sm: 'center' }}
             spacing={2}
           >
             <Typography
@@ -144,68 +144,77 @@ const SettlementReconciliationTrends: React.FC = () => {
             >
               Settlement vs Reconciliation Trends
             </Typography>
-            <Box sx={{ minWidth: 250 }}>
+            <Box sx={{ width: { xs: '100%', sm: 250 } }}>
               <MultiSelect
                 options={insuranceCompanies}
                 selected={selectedCompanies}
                 onChange={handleCompanyChange}
-                width={250}
+                width="100%"
                 includeAllOption
                 placeholder="Select insurance companies"
               />
             </Box>
           </Stack>
         }
-        sx={{ px: 3, pt: 3, pb: 0 }}
+        sx={{ px: { xs: 2, sm: 3 }, pt: 3, pb: 0 }}
       />
-      <CardContent sx={{ px: 3, pt: 1, pb: 3 }}>
-        <ChartContainer
-          series={[
-            {
-              type: 'line',
-              id: 'settled',
-              label: 'Settled',
-              dataKey: 'settled',
-              color: '#3b82f6',
-              area: true,
-            },
-            {
-              type: 'line',
-              id: 'reconciled',
-              label: 'Reconciled',
-              dataKey: 'reconciled',
-              color: '#10b981',
-              area: true,
-            },
-          ]}
-          xAxis={[{ scaleType: 'point', dataKey: 'month' }]}
-          yAxis={[{ valueFormatter: formatCurrency }]}
-          dataset={data}
-          height={320}
-          sx={{
-            '.MuiChartsLegend-root': {
-              mt: 2,
-              fontSize: 13,
-            },
-            '.MuiChartsAxis-tickLabel': {
-              fontSize: 12,
-              fill: '#4b5563',
-            },
-            '.MuiChartsAxis-line': {
-              stroke: '#e5e7eb',
-            },
-            '.MuiChartsGrid-line': {
-              stroke: '#f3f4f6',
-            },
-          }}
-        >
-          <ChartsGrid horizontal vertical />
-          <ChartsXAxis />
-          <ChartsYAxis />
-          <ChartsTooltip />
-          <ChartsLegend />
-          <AreaPlot />
-        </ChartContainer>
+      <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, pb: 3 }}>
+        <Box sx={{ overflowX: 'auto' }}>
+          <Box
+            sx={{
+              minWidth: 500, // Ensure enough space for small devices
+              width: '100%',
+            }}
+          >
+            <ChartContainer
+              series={[
+                {
+                  type: 'line',
+                  id: 'settled',
+                  label: 'Settled',
+                  dataKey: 'settled',
+                  color: '#3b82f6',
+                  area: true,
+                },
+                {
+                  type: 'line',
+                  id: 'reconciled',
+                  label: 'Reconciled',
+                  dataKey: 'reconciled',
+                  color: '#10b981',
+                  area: true,
+                },
+              ]}
+              xAxis={[{ scaleType: 'point', dataKey: 'month' }]}
+              yAxis={[{ valueFormatter: formatCurrency }]}
+              dataset={data}
+              height={320}
+              sx={{
+                '.MuiChartsLegend-root': {
+                  mt: 2,
+                  fontSize: 13,
+                },
+                '.MuiChartsAxis-tickLabel': {
+                  fontSize: 12,
+                  fill: '#4b5563',
+                },
+                '.MuiChartsAxis-line': {
+                  stroke: '#e5e7eb',
+                },
+                '.MuiChartsGrid-line': {
+                  stroke: '#f3f4f6',
+                },
+              }}
+            >
+              <ChartsGrid horizontal vertical />
+              <ChartsXAxis />
+              <ChartsYAxis />
+              <ChartsTooltip />
+              <ChartsLegend />
+              <AreaPlot />
+            </ChartContainer>
+          </Box>
+        </Box>
       </CardContent>
     </Card>
   );

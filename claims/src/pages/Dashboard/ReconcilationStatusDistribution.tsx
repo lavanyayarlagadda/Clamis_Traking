@@ -9,7 +9,7 @@ import {
   Stack,
   useTheme,
 } from '@mui/material';
-import MultiSelect from '../../components/reusable/MultiSelect';
+import MultiSelect from '../../Components/reusable/MultiSelect';
 
 interface StatusData {
   name: string;
@@ -130,7 +130,12 @@ const ReconciliationStatusDistribution: React.FC = () => {
     >
       <CardHeader
         title={
-          <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            justifyContent="space-between"
+            alignItems={{ xs: 'flex-start', sm: 'center' }}
+            spacing={2}
+          >
             <Typography
               variant="subtitle1"
               fontWeight={600}
@@ -138,25 +143,30 @@ const ReconciliationStatusDistribution: React.FC = () => {
             >
               Reconciliation Status Distribution
             </Typography>
-            <Box sx={{ minWidth: 250 }}>
+            <Box sx={{ width: { xs: '100%', sm: 250 } }}>
               <MultiSelect
                 options={insuranceCompanies}
                 selected={selectedCompanies}
                 onChange={handleCompanyChange}
-                width={250}
+                width="100%"
                 includeAllOption
                 placeholder="Select insurance companies"
               />
             </Box>
           </Stack>
         }
-        sx={{ px: 3, pt: 3, pb: 0 }}
+        sx={{ px: { xs: 2, sm: 3 }, pt: 3, pb: 0 }}
       />
-      <CardContent sx={{ px: 3, pt: 1, pb: 3 }}>
+      <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, pb: 3 }}>
         {data.map((item, index) => (
           <Box key={index} mb={3}>
-            <Box display="flex" justifyContent="space-between" alignItems="center">
-              <Typography variant="body2" fontWeight={500} color="text.secondary">
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems={{ xs: 'flex-start', sm: 'center' }}
+              flexWrap="wrap"
+            >
+              <Typography variant="body2" fontWeight={500} color="text.secondary" sx={{ mb: { xs: 0.5, sm: 0 } }}>
                 {item.name}
               </Typography>
               <Box textAlign="right">
@@ -167,8 +177,7 @@ const ReconciliationStatusDistribution: React.FC = () => {
                   {formatCurrency(item.amount)}
                 </Typography>
               </Box>
-            </Box>
-
+            </Stack>
             <LinearProgress
               variant="determinate"
               value={item.value}

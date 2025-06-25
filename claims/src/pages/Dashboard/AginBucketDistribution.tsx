@@ -7,9 +7,10 @@ import {
   Box,
   Stack,
   Tooltip,
+  useTheme
 } from "@mui/material";
 import { BarChart, LineChart } from "@mui/x-charts";
-import MultiSelect from "../../components/reusable/MultiSelect";
+import MultiSelect from "../../Components/reusable/MultiSelect";
 
 const insuranceCompanies = [
   "NTR Vaidyaseva",
@@ -20,6 +21,7 @@ const insuranceCompanies = [
 ];
 
 const AgingBucketDistribution: React.FC = () => {
+  const theme = useTheme()
   const [selectedCompanies, setSelectedCompanies] = React.useState<string[]>([
     "ALL",
   ]);
@@ -187,32 +189,37 @@ const AgingBucketDistribution: React.FC = () => {
       <CardHeader
         title={
           <Stack
-            direction="row"
+            direction={{ xs: 'column', sm: 'row' }}
             justifyContent="space-between"
-            alignItems="center"
+            alignItems={{ xs: 'flex-start', sm: 'center' }}
+            spacing={2}
           >
-            <Typography variant="h6" fontWeight="medium">
+            <Typography
+              variant="subtitle1"
+              fontWeight={600}
+              sx={{ color: theme.palette.text.primary, letterSpacing: 0.3 }}>
               Aging Bucket Distribution
             </Typography>
-            <Box sx={{ width: 250 }}>
+            <Box sx={{ width: { xs: '100%', sm: 250 } }}>
               <MultiSelect
                 options={insuranceCompanies}
                 selected={selectedCompanies}
                 onChange={handleCompanyChange}
                 includeAllOption
-                width={250}
+                width="100%"
                 placeholder="Select insurance companies"
               />
             </Box>
           </Stack>
         }
+        sx={{ px: { xs: 2, sm: 3 }, pt: 2, pb: 0 }}
       />
-      <CardContent>
+      <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, pb: 3 }}>
         <Box
           display="flex"
-          gap={4}
+          gap={3}
           justifyContent="center"
-          mt={1}
+          // mt={1}
           mb={3}
           flexWrap="wrap"
         >
@@ -242,129 +249,131 @@ const AgingBucketDistribution: React.FC = () => {
           </Box>
         </Box>
 
-        <Box sx={{ position: "relative", height: 420 }}>
-          <BarChart
-            height={420}
-            margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
-            xAxis={[
-              {
-                id: "bucket",
-                data: buckets,
-                scaleType: "band",
-                tickLabelStyle: {
-                  angle: -30,
-                  textAnchor: "end",
-                  fontSize: 12,
+        <Box sx={{ width: "100%", overflowX: "auto" }}>
+          <Box sx={{ minWidth: 600, position: "relative", height: 420 }}>
+            <BarChart
+              height={420}
+              margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
+              xAxis={[
+                {
+                  id: "bucket",
+                  data: buckets,
+                  scaleType: "band",
+                  tickLabelStyle: {
+                    angle: -30,
+                    textAnchor: "end",
+                    fontSize: 12,
+                  },
                 },
-              },
-            ]}
-            yAxis={[{ id: "left-axis", label: "Claims Count" }]}
-            series={[
-              {
-                id: "claims",
-                data: data.map((d) => d.claims),
-                color: "#3b82f6",
-              },
-            ]}
-            grid={{ horizontal: true }}
-            slotProps={{
-              bar: {
-                onMouseEnter: (event: React.MouseEvent<SVGRectElement>) => {
-                  // Get the index from the event target's position
-                  const svgRect = event.currentTarget
-                    .closest("svg")
-                    ?.getBoundingClientRect();
-                  const barWidth = svgRect?.width
-                    ? svgRect.width / buckets.length
-                    : 0;
-                  const mouseX = event.clientX - (svgRect?.left || 0);
-                  const index = Math.floor(mouseX / barWidth);
-
-                  if (index >= 0 && index < buckets.length) {
-                    handleMouseEnter(event, index);
-                  }
+              ]}
+              yAxis={[{ id: "left-axis", label: "Claims Count" }]}
+              series={[
+                {
+                  id: "claims",
+                  data: data.map((d) => d.claims),
+                  color: "#3b82f6",
                 },
-                onMouseLeave: () => {
-                  setHoveredIndex(null);
-                  setTooltipData(null);
+              ]}
+              grid={{ horizontal: true }}
+              slotProps={{
+                bar: {
+                  onMouseEnter: (event: React.MouseEvent<SVGRectElement>) => {
+                    // Get the index from the event target's position
+                    const svgRect = event.currentTarget
+                      .closest("svg")
+                      ?.getBoundingClientRect();
+                    const barWidth = svgRect?.width
+                      ? svgRect.width / buckets.length
+                      : 0;
+                    const mouseX = event.clientX - (svgRect?.left || 0);
+                    const index = Math.floor(mouseX / barWidth);
+
+                    if (index >= 0 && index < buckets.length) {
+                      handleMouseEnter(event, index);
+                    }
+                  },
+                  onMouseLeave: () => {
+                    setHoveredIndex(null);
+                    setTooltipData(null);
+                  },
                 },
-              },
-              tooltip: {
-                trigger: "none",
-              },
-            }}
-          />
-
-          <LineChart
-            height={420}
-            margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
-            xAxis={[{ id: "bucket", data: buckets, scaleType: "band" }]}
-            yAxis={[
-              {
-                id: "amount-axis",
-                label: "Amount (₹)",
-                position: "right",
-                valueFormatter: formatAmount,
-              },
-            ]}
-            series={[
-              {
-                id: "amount-line",
-                data: data.map((d) => d.amount),
-                color: "#ef4444",
-                curve: "monotoneX",
-              },
-            ]}
-            sx={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              pointerEvents: "none",
-            }}
-          />
-
-          {hoveredIndex !== null && tooltipData && (
-            <Tooltip
-              open
-              title={
-                <Box>
-                  <Typography variant="subtitle2" fontWeight="bold">
-                    {data[hoveredIndex].bucket}
-                  </Typography>
-                  <Typography variant="body2">
-                    Claims: <strong>{data[hoveredIndex].claims}</strong>
-                  </Typography>
-                  <Typography variant="body2">
-                    Amount:{" "}
-                    <strong>₹{formatAmount(data[hoveredIndex].amount)}</strong>
-                  </Typography>
-                </Box>
-              }
-              arrow
-              placement="top"
-              PopperProps={{
-                anchorEl: {
-                  getBoundingClientRect: () => ({
-                    top: tooltipData.y,
-                    left: tooltipData.x,
-                    right: tooltipData.x,
-                    bottom: tooltipData.y,
-                    width: 0,
-                    height: 0,
-                    x: tooltipData.x,
-                    y: tooltipData.y,
-                    toJSON: () => ({}),
-                  }),
+                tooltip: {
+                  trigger: "none",
                 },
               }}
-            >
-              <div style={{ display: "none" }} />
-            </Tooltip>
-          )}
+            />
+
+            <LineChart
+              height={420}
+              margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
+              xAxis={[{ id: "bucket", data: buckets, scaleType: "band" }]}
+              yAxis={[
+                {
+                  id: "amount-axis",
+                  label: "Amount (₹)",
+                  position: "right",
+                  valueFormatter: formatAmount,
+                },
+              ]}
+              series={[
+                {
+                  id: "amount-line",
+                  data: data.map((d) => d.amount),
+                  color: "#ef4444",
+                  curve: "monotoneX",
+                },
+              ]}
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                pointerEvents: "none",
+              }}
+            />
+
+            {hoveredIndex !== null && tooltipData && (
+              <Tooltip
+                open
+                title={
+                  <Box>
+                    <Typography variant="subtitle2" fontWeight="bold">
+                      {data[hoveredIndex].bucket}
+                    </Typography>
+                    <Typography variant="body2">
+                      Claims: <strong>{data[hoveredIndex].claims}</strong>
+                    </Typography>
+                    <Typography variant="body2">
+                      Amount:{" "}
+                      <strong>₹{formatAmount(data[hoveredIndex].amount)}</strong>
+                    </Typography>
+                  </Box>
+                }
+                arrow
+                placement="top"
+                PopperProps={{
+                  anchorEl: {
+                    getBoundingClientRect: () => ({
+                      top: tooltipData.y,
+                      left: tooltipData.x,
+                      right: tooltipData.x,
+                      bottom: tooltipData.y,
+                      width: 0,
+                      height: 0,
+                      x: tooltipData.x,
+                      y: tooltipData.y,
+                      toJSON: () => ({}),
+                    }),
+                  },
+                }}
+              >
+                <div style={{ display: "none" }} />
+              </Tooltip>
+            )}
+          </Box>
         </Box>
       </CardContent>
-    </Card>
+    </Card >
   );
 };
 

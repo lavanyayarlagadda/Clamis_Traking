@@ -93,9 +93,9 @@ const InsurancePerformance: React.FC = () => {
       <CardHeader
         title={
           <Stack
-            direction="row"
+            direction={{ xs: 'column', sm: 'row' }}
             justifyContent="space-between"
-            alignItems="center"
+            alignItems={{ xs: 'flex-start', sm: 'center' }}
             spacing={2}
           >
             <Typography
@@ -105,77 +105,85 @@ const InsurancePerformance: React.FC = () => {
             >
               Top 5 Insurance Companies Performance
             </Typography>
-            <Box sx={{ minWidth: 250 }}>
+            <Box sx={{ width: { xs: '100%', sm: 250 } }}>
               <MultiSelect
                 options={insuranceCompanies}
                 selected={selectedCompanies}
                 onChange={handleCompanyChange}
-                width={250}
+                width="100%"
                 includeAllOption
                 placeholder="Select insurance companies"
               />
             </Box>
           </Stack>
         }
-        sx={{ px: 3, pt: 3, pb: 0 }}
+        sx={{ px: { xs: 2, sm: 3 }, pt: 3, pb: 0 }}
       />
 
-      <CardContent sx={{ px: 3, pt: 1, pb: 3 }}>
-        <Box height={300}>
-          <LineChart
-            height={300}
-            xAxis={[
-              {
-                id: 'company',
-                data: truncatedLabels.map((label) => label.short),
-                scaleType: 'point',
-                label: 'Insurance Company',
-                valueFormatter: (value) =>
-                  value.length > 12 ? `${value.slice(0, 10)}…` : value,
-              },
-            ]}
-            series={[
-              {
-                id: 'amount',
-                data: data.map((d) => d.amount),
-                label: 'Settlement Amount',
-                color: '#3b82f6',
-              },
-              {
-                id: 'claims',
-                data: data.map((d) => d.claims),
-                label: 'Claims Count',
-                color: '#10b981',
-              },
-            ]}
-            yAxis={[
-              {
-                id: 'y-left',
-                valueFormatter: formatCurrency,
-              },
-            ]}
-            margin={{ top: 20, bottom: 60, left: 60, right: 20 }}
+      <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, pb: 3 }}>
+        <Box sx={{ width: '100%', overflowX: 'auto' }}>
+          <Box
             sx={{
-              '.MuiChartsAxis-tickLabel': {
-                fontSize: 12,
-                fill: '#4b5563',
-                textOverflow: 'ellipsis',
-                overflow: 'hidden',
-                whiteSpace: 'nowrap',
-                maxWidth: 60,
-                cursor: 'default',
-              },
-              '.MuiChartsLegend-series text': {
-                fontSize: 13,
-              },
-              '.MuiChartsAxis-line': {
-                stroke: '#e5e7eb',
-              },
-              '.MuiChartsGrid-line': {
-                stroke: '#f3f4f6',
-              },
-            }}
-          />
+              minWidth: data.length * 100,
+              // height: { xs: 260, sm: 300, md: 320 },
+              height: 'auto',
+              maxHeight: 400,
+            }}>
+            <LineChart
+              height={300}
+              xAxis={[
+                {
+                  id: 'company',
+                  data: truncatedLabels.map((label) => label.short),
+                  scaleType: 'point',
+                  label: 'Insurance Company',
+                  valueFormatter: (value) =>
+                    value.length > 12 ? `${value.slice(0, 10)}…` : value,
+                },
+              ]}
+              series={[
+                {
+                  id: 'amount',
+                  data: data.map((d) => d.amount),
+                  label: 'Settlement Amount',
+                  color: '#3b82f6',
+                },
+                {
+                  id: 'claims',
+                  data: data.map((d) => d.claims),
+                  label: 'Claims Count',
+                  color: '#10b981',
+                },
+              ]}
+              yAxis={[
+                {
+                  id: 'y-left',
+                  valueFormatter: formatCurrency,
+                },
+              ]}
+              margin={{ top: 20, bottom: 60, left: 60, right: 20 }}
+              sx={{
+                '.MuiChartsAxis-tickLabel': {
+                  fontSize: 12,
+                  fill: '#4b5563',
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                  maxWidth: 60,
+                  cursor: 'default',
+                },
+                '.MuiChartsLegend-series text': {
+                  fontSize: 13,
+                },
+                '.MuiChartsAxis-line': {
+                  stroke: '#e5e7eb',
+                },
+                '.MuiChartsGrid-line': {
+                  stroke: '#f3f4f6',
+                },
+              }}
+            />
+          </Box>
         </Box>
       </CardContent>
     </Card>
