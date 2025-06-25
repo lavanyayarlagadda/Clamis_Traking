@@ -201,7 +201,6 @@ const AgingBucketDistribution: React.FC = () => {
             }}
           >
             <BarChart
-            width={buckets.length * 100}
               height={420}
               margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
               xAxis={[
