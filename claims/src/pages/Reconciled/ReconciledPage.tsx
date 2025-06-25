@@ -115,50 +115,56 @@ const columns = [
 
 
 
-  const dummyDialogData = {
-    claimNumber: "CLM-001245",
-    insuranceCompany: "ICICI Lombard",
-    chequeNumber: "CHQ90887711",
-    chequeReceivedDate: "2024-06-19", // add if needed
-    claimedDate: "2024-06-01",
-    claimedAmount: 85000,
-    approvedAmount: 80000,
-    settledAmount: 78000,
-    tds: 2000,
-    utrNo: "UTR202406180001",
-    paymentDate: "2024-06-18",
-    hospitalName: "Apollo Hospitals, Hyderabad",
-    patientName: "Ravi Kumar",
-    diagnosis: "Acute Appendicitis",
-    manualReconciled: true,
-    timeline: [
-      {
-        label: "Claim Submitted",
-        description: "Claim submitted by hospital to TPA",
-        date: "2024-06-01",
-      },
-      {
-        label: "Documents Verified",
-        description: "All supporting documents verified by claim processor",
-        date: "2024-06-03",
-      },
-      {
-        label: "Approved",
-        description: "Claim approved by insurance company",
-        date: "2024-06-06",
-      },
-      {
-        label: "NEFT Processed",
-        description: "Amount processed through bank NEFT",
-        date: "2024-06-08",
-      },
-      {
-        label: "Reconciled",
-        description: "Hospital confirmed receipt of payment",
-        date: "2024-06-10",
-      },
-    ],
-  };
+const dummyDialogData = {
+  claimNumber: "CLM-001245",
+  insuranceCompany: "ICICI Lombard",
+  chequeNumber: "CHQ90887711",
+  chequeReceivedDate: "2024-06-19",
+  claimedDate: "2024-06-01",
+  claimedAmount: 85000,
+  approvedAmount: 80000,
+  settledAmount: 78000,
+  tds: 2000,
+  utrNo: "UTR202406180001",
+  paymentDate: "2024-06-18",
+  hospitalName: "Apollo Hospitals, Hyderabad",
+  patientName: "Ravi Kumar",
+  diagnosis: "Acute Appendicitis",
+  manualReconciled: true,
+  timeline: [
+    {
+      label: "Claim Submitted",
+      description: "Claim submitted by hospital to TPA",
+      date: "2024-06-01",
+    },
+    {
+      label: "Documents Verified",
+      description: "All supporting documents verified by claim processor",
+      date: "2024-06-03",
+    },
+    {
+      label: "Approved",
+      description: "Claim approved by insurance company",
+      date: "2024-06-06",
+    },
+    {
+      label: "NEFT Processed",
+      description: "Amount processed through bank NEFT",
+      date: "2024-06-08",
+    },
+    {
+      label: "Settled",
+      description: "Final settlement processed and amount credited",
+      date: "2024-06-09",
+    },
+    {
+      label: "Reconciled",
+      description: "Hospital confirmed receipt of payment",
+      date: "2024-06-10",
+    },
+  ],
+};
+
 
   const currentClaims =
     activeTab === "ntr" ? reconciledClaimsNTR : reconciledClaimsOther;
