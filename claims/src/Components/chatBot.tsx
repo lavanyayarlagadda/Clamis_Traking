@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import Draggable from "react-draggable";
 import {
   Box,
   Button,
@@ -19,7 +18,9 @@ import {
   OpenInFull,
   CloseFullscreen,
 } from "@mui/icons-material";
-import chatBot from "../assets/chatbot.png"; // Replace with your path
+import { motion } from "framer-motion";
+import chatBot from "../assets/chatbot.png";
+import FloatingChatIcon from "./FloatChatBotIcon";
 
 interface Message {
   id: string;
@@ -29,13 +30,12 @@ interface Message {
 }
 
 const ChatWidget = () => {
-  const [iconPosition, setIconPosition] = useState({ x: 0, y: 0 });
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Hello!  I'm your intelligent assistant. How can I help you today?",
+      text: "Hello! I'm your intelligent assistant. How can I help you today?",
       isUser: false,
       timestamp: new Date(),
     },
@@ -43,10 +43,6 @@ const ChatWidget = () => {
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  // Refs for draggable
-  const floatRef = useRef<HTMLElement>(null) as React.RefObject<HTMLElement>;
-  const chatRef = useRef<HTMLElement>(null) as React.RefObject<HTMLElement>;
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -79,13 +75,12 @@ const ChatWidget = () => {
     if (lower.includes("bye") || lower.includes("goodbye"))
       return "Until next time! I'm always here whenever you need assistance. Have a great day!";
 
-    // Generic fallback for unknown prompts
     return `I'm sorry, I didn't quite understand that request.
 
 You can ask me things like:
-• "Show claim summary for [Patient Name] or [Claim Number]"
-• "What is the reconciliation rate for [Month/Year]?"
-• "How many claims were processed this month?"`;
+ "Show claim summary for [Patient Name] or [Claim Number]",
+ "What is the reconciliation rate for [Month/Year]?",
+ "How many claims were processed this month?"`;
   };
 
   const handleSendMessage = () => {
@@ -112,282 +107,237 @@ You can ask me things like:
     }, 1000);
   };
 
-  console.log(isOpen, "isOpen");
-
   return (
     <>
       {!isOpen && (
-        <Draggable
-          nodeRef={floatRef}
-          bounds="body" // 👈 makes sure it stays within screen
-          onStop={(_, data) => {
-            // remove focus to fix stuck interaction
-            if (floatRef.current) {
-              const button = floatRef.current.querySelector("button");
-              if (button instanceof HTMLElement) {
-                button.blur();
-              }
-            }
+        <FloatingChatIcon
+          onClick={() => {
+            setIsOpen(true), setIsExpanded(false);
           }}
-        >
-          <Box
-            ref={floatRef}
-            sx={{
-              position: "fixed",
-              bottom: { xs: 16, sm: 24 },
-              right: { xs: 16, sm: 24 },
-              width: 64,
-              height: 64,
-              zIndex: 1300,
-              cursor: "move",
-              pointerEvents: "auto",
-            }}
-          >
-            <IconButton
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={() => {
-                setIsOpen(true);
-                setIsExpanded(false);
-              }}
-              sx={{
-                width: 64,
-                height: 64,
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #7C3AED, #9333EA)",
-                color: "white",
-                boxShadow: 6,
-                "&:hover": {
-                  background: "linear-gradient(135deg, #6D28D9, #7C3AED)",
-                },
-              }}
-            >
-              {isOpen ? (
-                <Close />
-              ) : (
-                <img
-                  src={chatBot}
-                  alt="chatBot"
-                  style={{ width: 35, height: 35 }}
-                />
-              )}
-            </IconButton>
-          </Box>
-        </Draggable>
+        />
       )}
 
       {isOpen && (
-        <Box
-          sx={{
-            position: "fixed",
-            top: {
-              xs: isExpanded ? 170 : 175,
-              sm: isExpanded ? 165 : 170,
-              md: isExpanded ? 150 : 170,
-              lg: isExpanded ? 100 : 50,
-              xl: isExpanded ? 160 : 170,
-            },
-            bottom: { xs: 70, sm: 100, md: isExpanded ? 20 : 100 },
-            right: { xs: 10, sm: 24 },
-            left: {
-              xs: isExpanded ? 10 : "auto",
-              sm: "auto",
-            },
-            width: {
-              xs: isExpanded ? "calc(100% - 20px)" : "calc(100% - 20px)",
-              sm: isExpanded ? "95%" : 400,
-              md: isExpanded ? "85%" : 400,
-              lg: isExpanded ? "75%" : 400,
-              xl: isExpanded ? "65%" : 400,
-            },
-            height: {
-              xs: isExpanded ? "calc(100vh - 240px)" : 520,
-              sm: isExpanded ? "calc(100vh - 240px)" : 520,
-              md: isExpanded ? "70vh" : 520,
-            },
-            bgcolor: "white",
-            borderRadius: 3,
-            boxShadow: 12,
-            display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
-            zIndex: 1200,
-            transition: "all 0.3s ease",
-            "@media (min-width:1440px)": {
-              top: isExpanded ? 160 : 170,
-            },
-          }}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 50 }}
+          transition={{ duration: 0.3 }}
         >
-          {/* Header */}
           <Box
             sx={{
-              p: 1,
-              background:
-                "linear-gradient(to right, #7C3AED, rgb(139, 92, 246))",
-              color: "#fff",
+              position: "fixed",
+              top: {
+                xs: isExpanded ? 170 : 175,
+                sm: isExpanded ? 165 : 170,
+                md: isExpanded ? 150 : 170,
+                lg: isExpanded ? 100 : 50,
+                xl: isExpanded ? 160 : 170,
+              },
+              bottom: { xs: 70, sm: 100, md: isExpanded ? 20 : 100 },
+              right: { xs: 10, sm: 24 },
+              left: {
+                xs: isExpanded ? 10 : "auto",
+                sm: "auto",
+              },
+              width: {
+                xs: isExpanded ? "calc(100% - 20px)" : "calc(100% - 20px)",
+                sm: isExpanded ? "95%" : 400,
+                md: isExpanded ? "85%" : 400,
+                lg: isExpanded ? "75%" : 400,
+                xl: isExpanded ? "65%" : 400,
+              },
+              height: {
+                xs: isExpanded ? "calc(100vh - 240px)" : 520,
+                sm: isExpanded ? "calc(100vh - 240px)" : 520,
+                md: isExpanded ? "70vh" : 520,
+              },
+              bgcolor: "white",
+              borderRadius: 3,
+              boxShadow: 12,
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
+              overflow: "hidden",
+              zIndex: 1200,
+              transition: "all 0.3s ease",
+              "@media (min-width:1440px)": {
+                top: isExpanded ? 160 : 170,
+              },
             }}
           >
-            <Box position="relative" mr={2}>
-              <Avatar sx={{ bgcolor: "white", width: 40, height: 40 }}>
-                <SmartToy color="primary" />
-              </Avatar>
-              <Box
-                sx={{
-                  position: "absolute",
-                  bottom: 0,
-                  right: 0,
-                  width: 12,
-                  height: 12,
-                  borderRadius: "50%",
-                  backgroundColor: "#48D56B",
-                  border: "2px solid white",
-                  animation: "pulse-green 1.5s infinite",
-                }}
-              />
-            </Box>
-            <Box>
-              <Typography variant="subtitle1" fontWeight={600}>
-                AI Assistant
-              </Typography>
-              <Box display="flex" alignItems="center" gap={1}>
+            {/* Header */}
+            <Box
+              sx={{
+                p: 1,
+                background:
+                  "linear-gradient(to right, #7C3AED, rgb(139, 92, 246))",
+                color: "#fff",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Box position="relative" mr={2}>
+                <Avatar sx={{ bgcolor: "white", width: 40, height: 40 }}>
+                  <SmartToy color="primary" />
+                </Avatar>
                 <Box
                   sx={{
-                    width: 8,
-                    height: 8,
+                    position: "absolute",
+                    bottom: 0,
+                    right: 0,
+                    width: 12,
+                    height: 12,
                     borderRadius: "50%",
                     backgroundColor: "#48D56B",
+                    border: "2px solid white",
+                    animation: "pulse-green 1.5s infinite",
                   }}
                 />
-                <Typography variant="caption" sx={{ color: "white" }}>
-                  Online & Ready
-                </Typography>
               </Box>
-            </Box>
-            <Box ml="auto">
-              <IconButton
-                size="small"
-                onClick={() => setIsExpanded((p) => !p)}
-                sx={{ color: "white" }}
-              >
-                {isExpanded ? <CloseFullscreen /> : <OpenInFull />}
-              </IconButton>
-              <IconButton
-                size="small"
-                onClick={() => setIsOpen(false)}
-                sx={{ color: "white" }}
-              >
-                <Close />
-              </IconButton>
-            </Box>
-          </Box>
-
-          {/* Messages */}
-          <Box sx={{ p: 2, flex: 1, overflowY: "auto", bgcolor: "#f9fafb" }}>
-            <Stack spacing={2}>
-              {messages.map((msg) => (
-                <Box
-                  key={msg.id}
-                  sx={{
-                    display: "flex",
-                    justifyContent: msg.isUser ? "flex-end" : "flex-start",
-                  }}
-                >
+              <Box>
+                <Typography variant="subtitle1" fontWeight={600}>
+                  AI Assistant
+                </Typography>
+                <Box display="flex" alignItems="center" gap={1}>
                   <Box
                     sx={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: "50%",
+                      backgroundColor: "#48D56B",
+                    }}
+                  />
+                  <Typography variant="caption" sx={{ color: "white" }}>
+                    Online & Ready
+                  </Typography>
+                </Box>
+              </Box>
+              <Box ml="auto">
+                <IconButton
+                  size="small"
+                  onClick={() => setIsExpanded((p) => !p)}
+                  sx={{ color: "white" }}
+                >
+                  {isExpanded ? <CloseFullscreen /> : <OpenInFull />}
+                </IconButton>
+                <IconButton
+                  size="small"
+                  onClick={() => setIsOpen(false)}
+                  sx={{ color: "white" }}
+                >
+                  <Close />
+                </IconButton>
+              </Box>
+            </Box>
+
+            {/* Messages */}
+            <Box sx={{ p: 2, flex: 1, overflowY: "auto", bgcolor: "#f9fafb" }}>
+              <Stack spacing={2}>
+                {messages.map((msg) => (
+                  <Box
+                    key={msg.id}
+                    sx={{
                       display: "flex",
-                      gap: 1.5,
-                      flexDirection: msg.isUser ? "row-reverse" : "row",
+                      justifyContent: msg.isUser ? "flex-end" : "flex-start",
                     }}
                   >
-                    <Avatar
+                    <Box
                       sx={{
-                        background: msg.isUser
-                          ? "linear-gradient(to right,rgb(116, 94, 155),rgb(153, 138, 187))"
-                          : "linear-gradient(to right, #7C3AED, rgb(139, 92, 246))",
+                        display: "flex",
+                        gap: 1.5,
+                        flexDirection: msg.isUser ? "row-reverse" : "row",
                       }}
                     >
-                      {msg.isUser ? (
-                        <AccountCircle />
-                      ) : (
-                        <img
-                          src={chatBot}
-                          alt="chatBot"
-                          style={{ width: 20, height: 20 }}
-                        />
-                      )}
-                    </Avatar>
-                    <Paper
-                      sx={{
-                        p: 1.5,
-                        background: msg.isUser
-                          ? "linear-gradient(to right,rgb(116, 94, 155),rgb(153, 138, 187))"
-                          : "white",
-                        color: msg.isUser ? "white" : "text.primary",
-                        borderRadius: 2,
-                        maxWidth: {
-                          xs: isExpanded ? "100%" : "90%",
-                          sm: isExpanded ? "100%" : "85%",
-                          md: isExpanded ? "100%" : "75%",
-                        },
-                        width: "auto",
-                        boxShadow: 2,
-                        wordBreak: "break-word",
-                      }}
-                    >
-                      <Typography variant="body2">{msg.text}</Typography>
-                      <Stack
-                        direction="row"
-                        spacing={0.5}
-                        alignItems="center"
-                        mt={1}
+                      <Avatar
+                        sx={{
+                          background: msg.isUser
+                            ? "linear-gradient(to right,rgb(116, 94, 155),rgb(153, 138, 187))"
+                            : "linear-gradient(to right, #7C3AED, rgb(139, 92, 246))",
+                        }}
                       >
-                        <AccessTime sx={{ fontSize: 14, opacity: 0.6 }} />
-                        <Typography variant="caption" sx={{ opacity: 0.6 }}>
-                          {msg.timestamp.toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </Typography>
-                      </Stack>
-                    </Paper>
+                        {msg.isUser ? (
+                          <AccountCircle />
+                        ) : (
+                          <img
+                            src={chatBot}
+                            alt="chatBot"
+                            style={{ width: 20, height: 20 }}
+                          />
+                        )}
+                      </Avatar>
+                      <Paper
+                        sx={{
+                          p: 1.5,
+                          background: msg.isUser
+                            ? "linear-gradient(to right,rgb(116, 94, 155),rgb(153, 138, 187))"
+                            : "white",
+                          color: msg.isUser ? "white" : "text.primary",
+                          borderRadius: 2,
+                          maxWidth: {
+                            xs: isExpanded ? "100%" : "90%",
+                            sm: isExpanded ? "100%" : "85%",
+                            md: isExpanded ? "100%" : "75%",
+                          },
+                          width: "auto",
+                          boxShadow: 2,
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        <Typography variant="body2">{msg.text}</Typography>
+                        <Stack
+                          direction="row"
+                          spacing={0.5}
+                          alignItems="center"
+                          mt={1}
+                        >
+                          <AccessTime sx={{ fontSize: 14, opacity: 0.6 }} />
+                          <Typography variant="caption" sx={{ opacity: 0.6 }}>
+                            {msg.timestamp.toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </Typography>
+                        </Stack>
+                      </Paper>
+                    </Box>
                   </Box>
-                </Box>
-              ))}
-              {isTyping && (
-                <Typography variant="body2" color="text.secondary">
-                  Assistant is typing...
-                </Typography>
-              )}
-              <div ref={messagesEndRef} />
-            </Stack>
-          </Box>
+                ))}
+                {isTyping && (
+                  <Typography variant="body2" color="text.secondary">
+                    Assistant is typing...
+                  </Typography>
+                )}
+                <div ref={messagesEndRef} />
+              </Stack>
+            </Box>
 
-          {/* Input */}
-          <Box sx={{ p: { xs: 0.5, sm: 1 }, borderTop: "1px solid #eee" }}>
-            <Box display="flex" gap={1} p={1} flexWrap="nowrap">
-              <TextField
-                fullWidth
-                placeholder="Type your message..."
-                variant="outlined"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                size="small"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSendMessage}
-                disabled={!inputValue.trim()}
-                sx={{ px: 2, minWidth: 40 }}
-              >
-                <Send />
-              </Button>
+            {/* Input */}
+            <Box sx={{ p: { xs: 0.5, sm: 1 }, borderTop: "1px solid #eee" }}>
+              <Box display="flex" gap={1} p={1} flexWrap="nowrap">
+                <TextField
+                  fullWidth
+                  placeholder="Type your message..."
+                  variant="outlined"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+                  size="small"
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSendMessage}
+                  disabled={!inputValue.trim()}
+                  sx={{ px: 2, minWidth: 40 }}
+                >
+                  <Send />
+                </Button>
+              </Box>
             </Box>
           </Box>
-        </Box>
+        </motion.div>
       )}
+
       <style>{`
         @keyframes pulse-green {
           0% { transform: scale(1); opacity: 1; }

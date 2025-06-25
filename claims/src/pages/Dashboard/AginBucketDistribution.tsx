@@ -219,20 +219,11 @@ const AgingBucketDistribution: React.FC = () => {
           </Box>
         </Box>
 
-         <Box sx={{ width: "100%", overflowX: "auto" }}>
-  <Box
-    sx={{
-      minWidth: { xs: 650, sm: 700 }, // more width for mobile
-      width: "100%",
-      position: "relative",
-      height: 420,
-    }}
-  >
-
-      <BarChart
-  width={700}
-  height={420}
-  margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
+        <Box sx={{ width: "100%", overflowX: "auto" }}>
+          <Box sx={{ minWidth: 600, position: "relative", height: 420 }}>
+            <BarChart
+              height={420}
+              margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
               xAxis={[
                 {
                   id: "bucket",
@@ -282,11 +273,10 @@ const AgingBucketDistribution: React.FC = () => {
               }}
             />
 
-          <LineChart
-  width={630}
-  height={460}
-  margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
-  xAxis={[{ id: "bucket", data: buckets, scaleType: "band" }]}
+            <LineChart
+              height={420}
+              margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
+              xAxis={[{ id: "bucket", data: buckets, scaleType: "band" }]}
               yAxis={[
                 {
                   id: "amount-axis",
