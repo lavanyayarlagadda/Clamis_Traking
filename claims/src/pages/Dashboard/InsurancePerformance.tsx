@@ -1,6 +1,4 @@
-// components/dashboard/InsurancePerformance.tsx
-
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   Card,
   CardContent,
@@ -27,7 +25,30 @@ const InsurancePerformance: React.FC = () => {
   const [selectedCompanies, setSelectedCompanies] = React.useState<string[]>([
     'ALL'
   ]);
-
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+  
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!scrollRef.current) return;
+    isDragging.current = true;
+    scrollRef.current.setPointerCapture(e.pointerId);
+    startX.current = e.clientX;
+    scrollLeft.current = scrollRef.current.scrollLeft;
+  };
+  
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDragging.current || !scrollRef.current) return;
+    const dx = e.clientX - startX.current;
+    scrollRef.current.scrollLeft = scrollLeft.current - dx;
+  };
+  
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!scrollRef.current) return;
+    isDragging.current = false;
+    scrollRef.current.releasePointerCapture(e.pointerId);
+  };
   const formatCurrency = (value: number) => `₹${(value / 100000).toFixed(1)}L`;
 
   const allTimeData = [
@@ -121,11 +142,39 @@ const InsurancePerformance: React.FC = () => {
       />
 
       <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, pb: 3 }}>
-        <Box sx={{ width: '100%', overflowX: 'auto' }}>
+        <Box
+
+          ref={scrollRef}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          sx={{
+            width: "100%",
+            overflowX: "auto",
+            WebkitOverflowScrolling: "touch",
+            touchAction: "pan-y", // Prevent conflict with vertical scrolling
+            scrollbarWidth: "thin",
+            "&::-webkit-scrollbar": {
+              height: 6,
+            },
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: "#f1f1f1",
+              borderRadius: 6,
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "#c1c1c1",
+              borderRadius: 6,
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              backgroundColor: "#999",
+            },
+          }}
+        >
           <Box
             sx={{
-              minWidth: data.length * 100,
+              // minWidth: data.length * 100,
               // height: { xs: 260, sm: 300, md: 320 },
+              minWidth: 500,
               height: 'auto',
               maxHeight: 400,
             }}>

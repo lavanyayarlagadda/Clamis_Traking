@@ -1,4 +1,4 @@
-import React from "react";
+import React ,{useRef} from "react";
 import {
   Card,
   CardContent,
@@ -31,6 +31,31 @@ const AgingBucketDistribution: React.FC = () => {
     x: number;
     y: number;
   } | null>(null);
+
+const scrollRef = useRef<HTMLDivElement>(null);
+const isDragging = useRef(false);
+const startX = useRef(0);
+const scrollLeft = useRef(0);
+
+const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+  if (!scrollRef.current) return;
+  isDragging.current = true;
+  scrollRef.current.setPointerCapture(e.pointerId);
+  startX.current = e.clientX;
+  scrollLeft.current = scrollRef.current.scrollLeft;
+};
+
+const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+  if (!isDragging.current || !scrollRef.current) return;
+  const dx = e.clientX - startX.current;
+  scrollRef.current.scrollLeft = scrollLeft.current - dx;
+};
+
+const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+  if (!scrollRef.current) return;
+  isDragging.current = false;
+  scrollRef.current.releasePointerCapture(e.pointerId);
+};
 
   const buckets = [
     "0-7 days",
@@ -186,11 +211,30 @@ const AgingBucketDistribution: React.FC = () => {
 
         {/* SCROLLABLE CHART WRAPPER */}
         <Box
+          ref={scrollRef}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
           sx={{
-            width: '100%',
-            overflow: 'auto',
-            WebkitOverflowScrolling: 'touch',
-            touchAction: 'pan-x pan-y',
+            width: "100%",
+            overflow: "auto",
+            WebkitOverflowScrolling: "touch",
+            touchAction: "pan-y", // Prevent conflict with vertical scrolling
+            scrollbarWidth: "thin",
+            "&::-webkit-scrollbar": {
+              height: 6,
+            },
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: "#f1f1f1",
+              borderRadius: 6,
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "#c1c1c1",
+              borderRadius: 6,
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              backgroundColor: "#999",
+            },
           }}
         >
           <Box
