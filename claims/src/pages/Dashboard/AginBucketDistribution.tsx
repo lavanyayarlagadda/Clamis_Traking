@@ -219,12 +219,16 @@ const AgingBucketDistribution: React.FC = () => {
           </Box>
         </Box>
 
-        <Box  sx={{
-    width: "100%",
-    overflowX: "auto",
-    WebkitOverflowScrolling: "touch", // smooth scroll on iOS
-    touchAction: "pan-x",              // allows horizontal touch gestures
-  }}>
+      <Box
+  sx={{
+    width: '100%',
+    overflowX: 'auto',
+    overflowY: 'auto', // Allow vertical scrolling too
+    WebkitOverflowScrolling: 'touch', // Smooth iOS scroll
+    touchAction: 'pan-x pan-y',       // Allow both horizontal and vertical gestures
+    maxHeight: { xs: 440, sm: 'unset' }, // Optional: limit height on small devices
+  }}
+>
           <Box sx={{ minWidth: 600, position: "relative", height: 420 }}>
             <BarChart
               height={420}
