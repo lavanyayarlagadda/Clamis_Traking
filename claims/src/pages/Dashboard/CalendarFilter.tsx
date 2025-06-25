@@ -157,13 +157,37 @@ const DashboardFilterPopover = ({ anchorEl, onClose, onApply,open }: Props) => {
                 label="From Date"
                 value={customFrom}
                 onChange={setCustomFrom}
-                slotProps={{ textField: { fullWidth: true, size: "small" } }}
+                slotProps={{ textField: { fullWidth: true, size: "small", placeholder: "dd/MM/yyyy",sx: {
+                    "& .MuiOutlinedInput-root": {
+                      borderWidth: "2px",
+                      border: "#f0f0f0",
+                      "& fieldset": { borderWidth: "2px" },
+                      "&:hover fieldset": { borderWidth: "2px" },
+                      "&.Mui-focused fieldset": {
+                        borderWidth: "2px",
+                        border: "#81C784",
+                      },
+                    },
+                  }, } }}
+                format="dd/MM/yyyy"
               />
               <DatePicker
                 label="To Date"
                 value={customTo}
                 onChange={setCustomTo}
-                slotProps={{ textField: { fullWidth: true, size: "small" } }}
+                slotProps={{ textField: { fullWidth: true, size: "small", placeholder: "dd/MM/yyyy", sx: {
+                    "& .MuiOutlinedInput-root": {
+                      borderWidth: "2px",
+                      border: "#f0f0f0",
+                      "& fieldset": { borderWidth: "2px" },
+                      "&:hover fieldset": { borderWidth: "2px" },
+                      "&.Mui-focused fieldset": {
+                        borderWidth: "2px",
+                        border: "#81C784",
+                      },
+                    },
+                  },} }}
+                 format="dd/MM/yyyy"
               />
             </Box>
           )}
