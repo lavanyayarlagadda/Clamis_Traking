@@ -45,10 +45,8 @@ const ChatWidget = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Refs for draggable
-const floatRef = useRef<HTMLElement>(null) as React.RefObject<HTMLElement>;
-const chatRef = useRef<HTMLElement>(null) as React.RefObject<HTMLElement>;
-
-
+  const floatRef = useRef<HTMLElement>(null) as React.RefObject<HTMLElement>;
+  const chatRef = useRef<HTMLElement>(null) as React.RefObject<HTMLElement>;
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -114,73 +112,73 @@ You can ask me things like:
     }, 1000);
   };
 
-  console.log(isOpen,"isOpen")
+  console.log(isOpen, "isOpen");
 
   return (
     <>
-
-    {!isOpen && (
-  <Draggable
-      nodeRef={floatRef}
-      bounds="body" // 👈 makes sure it stays within screen
-      onStop={(_, data) => {
-        // remove focus to fix stuck interaction
-        if (floatRef.current) {
-          const button = floatRef.current.querySelector("button");
-          if (button instanceof HTMLElement) {
-            button.blur();
-          }
-        }
-      }}
-    >
-      <Box
-        ref={floatRef}
-        sx={{
-          position: "fixed", // 👈 stays fixed even on scroll
-          bottom: { xs: 16, sm: 24 },
-          right: { xs: 16, sm: 24 },
-          width: 64,
-          height: 64,
-          zIndex: 1300,
-          cursor: "move",
-          pointerEvents: "auto",
-        }}
-      >
-        <IconButton
-          onMouseDown={(e) => e.preventDefault()} // prevent sticky focus
-          onClick={() => {
-            setIsOpen(true);
-            setIsExpanded(false);
-          }}
-          sx={{
-            width: 64,
-            height: 64,
-            borderRadius: "50%",
-            background: "linear-gradient(135deg, #7C3AED, #9333EA)",
-            color: "white",
-            boxShadow: 6,
-            "&:hover": {
-              background: "linear-gradient(135deg, #6D28D9, #7C3AED)",
-            },
+      {!isOpen && (
+        <Draggable
+          nodeRef={floatRef}
+          bounds="body" // 👈 makes sure it stays within screen
+          onStop={(_, data) => {
+            // remove focus to fix stuck interaction
+            if (floatRef.current) {
+              const button = floatRef.current.querySelector("button");
+              if (button instanceof HTMLElement) {
+                button.blur();
+              }
+            }
           }}
         >
-          {isOpen ? (
-            <Close />
-          ) : (
-            <img src={chatBot} alt="chatBot" style={{ width: 35, height: 35 }} />
-          )}
-        </IconButton>
-      </Box>
-    </Draggable>
+          <Box
+            ref={floatRef}
+            sx={{
+              position: "fixed",
+              bottom: { xs: 16, sm: 24 },
+              right: { xs: 16, sm: 24 },
+              width: 64,
+              height: 64,
+              zIndex: 1300,
+              cursor: "move",
+              pointerEvents: "auto",
+            }}
+          >
+            <IconButton
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => {
+                setIsOpen(true);
+                setIsExpanded(false);
+              }}
+              sx={{
+                width: 64,
+                height: 64,
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, #7C3AED, #9333EA)",
+                color: "white",
+                boxShadow: 6,
+                "&:hover": {
+                  background: "linear-gradient(135deg, #6D28D9, #7C3AED)",
+                },
+              }}
+            >
+              {isOpen ? (
+                <Close />
+              ) : (
+                <img
+                  src={chatBot}
+                  alt="chatBot"
+                  style={{ width: 35, height: 35 }}
+                />
+              )}
+            </IconButton>
+          </Box>
+        </Draggable>
+      )}
 
-)}
-
-
-      {/* Draggable Chat Window */}
-{isOpen && (
+      {isOpen && (
         <Box
-      sx={{
-        position: "fixed",
+          sx={{
+            position: "fixed",
             top: {
               xs: isExpanded ? 170 : 175,
               sm: isExpanded ? 165 : 170,
@@ -206,37 +204,35 @@ You can ask me things like:
               sm: isExpanded ? "calc(100vh - 240px)" : 520,
               md: isExpanded ? "70vh" : 520,
             },
-        bgcolor: "white",
-        borderRadius: 3,
-        boxShadow: 12,
-        display: "flex",
-        flexDirection: "column",
+            bgcolor: "white",
+            borderRadius: 3,
+            boxShadow: 12,
+            display: "flex",
+            flexDirection: "column",
             overflow: "hidden",
             zIndex: 1200,
             transition: "all 0.3s ease",
-
-            // ✅ Custom media query override here
             "@media (min-width:1440px)": {
               top: isExpanded ? 160 : 170,
             },
-      }}
-    >
-            {/* Header */}
-            <Box
-              sx={{
-                p: 1,
+          }}
+        >
+          {/* Header */}
+          <Box
+            sx={{
+              p: 1,
               background:
                 "linear-gradient(to right, #7C3AED, rgb(139, 92, 246))",
-                color: "#fff",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
+              color: "#fff",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
             <Box position="relative" mr={2}>
               <Avatar sx={{ bgcolor: "white", width: 40, height: 40 }}>
                 <SmartToy color="primary" />
               </Avatar>
-               <Box
+              <Box
                 sx={{
                   position: "absolute",
                   bottom: 0,
@@ -263,73 +259,72 @@ You can ask me things like:
                     backgroundColor: "#48D56B",
                   }}
                 />
- <Typography variant="caption" sx={{ color: "white" }}>
+                <Typography variant="caption" sx={{ color: "white" }}>
                   Online & Ready
                 </Typography>
               </Box>
             </Box>
             <Box ml="auto">
-                <IconButton
-                  size="small"
-                  onClick={() => setIsExpanded((p) => !p)}
-                  sx={{ color: "white" }}
-                >
-                  {isExpanded ? <CloseFullscreen /> : <OpenInFull />}
-                </IconButton>
-                <IconButton
-                  size="small"
-                  onClick={() => setIsOpen(false)}
-                  sx={{ color: "white" }}
-                >
-                  <Close />
-                </IconButton>
-              </Box>
-
+              <IconButton
+                size="small"
+                onClick={() => setIsExpanded((p) => !p)}
+                sx={{ color: "white" }}
+              >
+                {isExpanded ? <CloseFullscreen /> : <OpenInFull />}
+              </IconButton>
+              <IconButton
+                size="small"
+                onClick={() => setIsOpen(false)}
+                sx={{ color: "white" }}
+              >
+                <Close />
+              </IconButton>
             </Box>
+          </Box>
 
-            {/* Messages */}
-            <Box sx={{ p: 2, flex: 1, overflowY: "auto", bgcolor: "#f9fafb" }}>
-              <Stack spacing={2}>
-                {messages.map((msg) => (
+          {/* Messages */}
+          <Box sx={{ p: 2, flex: 1, overflowY: "auto", bgcolor: "#f9fafb" }}>
+            <Stack spacing={2}>
+              {messages.map((msg) => (
+                <Box
+                  key={msg.id}
+                  sx={{
+                    display: "flex",
+                    justifyContent: msg.isUser ? "flex-end" : "flex-start",
+                  }}
+                >
                   <Box
-                    key={msg.id}
                     sx={{
                       display: "flex",
-                      justifyContent: msg.isUser ? "flex-end" : "flex-start",
+                      gap: 1.5,
+                      flexDirection: msg.isUser ? "row-reverse" : "row",
                     }}
                   >
-                    <Box
+                    <Avatar
                       sx={{
-                        display: "flex",
-                      gap: 1.5,
-                        flexDirection: msg.isUser ? "row-reverse" : "row",
+                        background: msg.isUser
+                          ? "linear-gradient(to right,rgb(116, 94, 155),rgb(153, 138, 187))"
+                          : "linear-gradient(to right, #7C3AED, rgb(139, 92, 246))",
                       }}
                     >
-                      <Avatar
-                        sx={{
-                          background: msg.isUser
-                            ? "linear-gradient(to right,rgb(116, 94, 155),rgb(153, 138, 187))"
-                          : "linear-gradient(to right, #7C3AED, rgb(139, 92, 246))",
-                        }}
-                      >
-                        {msg.isUser ? (
-                          <AccountCircle />
-                        ) : (
+                      {msg.isUser ? (
+                        <AccountCircle />
+                      ) : (
                         <img
                           src={chatBot}
                           alt="chatBot"
                           style={{ width: 20, height: 20 }}
                         />
-                        )}
-                      </Avatar>
-                      <Paper
-                        sx={{
-                          p: 1.5,
+                      )}
+                    </Avatar>
+                    <Paper
+                      sx={{
+                        p: 1.5,
                         background: msg.isUser
                           ? "linear-gradient(to right,rgb(116, 94, 155),rgb(153, 138, 187))"
                           : "white",
                         color: msg.isUser ? "white" : "text.primary",
-                          borderRadius: 2,
+                        borderRadius: 2,
                         maxWidth: {
                           xs: isExpanded ? "100%" : "90%",
                           sm: isExpanded ? "100%" : "85%",
@@ -338,62 +333,62 @@ You can ask me things like:
                         width: "auto",
                         boxShadow: 2,
                         wordBreak: "break-word",
-                        }}
-                      >
-                        <Typography variant="body2">{msg.text}</Typography>
+                      }}
+                    >
+                      <Typography variant="body2">{msg.text}</Typography>
                       <Stack
                         direction="row"
                         spacing={0.5}
                         alignItems="center"
                         mt={1}
                       >
-                          <AccessTime sx={{ fontSize: 14, opacity: 0.6 }} />
-                          <Typography variant="caption" sx={{ opacity: 0.6 }}>
-                            {msg.timestamp.toLocaleTimeString([], {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                          </Typography>
-                        </Stack>
-                      </Paper>
-                    </Box>
+                        <AccessTime sx={{ fontSize: 14, opacity: 0.6 }} />
+                        <Typography variant="caption" sx={{ opacity: 0.6 }}>
+                          {msg.timestamp.toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </Typography>
+                      </Stack>
+                    </Paper>
                   </Box>
-                ))}
-                {isTyping && (
-                  <Typography variant="body2" color="text.secondary">
-                    Assistant is typing...
-                  </Typography>
-                )}
-                <div ref={messagesEndRef} />
-              </Stack>
-            </Box>
+                </Box>
+              ))}
+              {isTyping && (
+                <Typography variant="body2" color="text.secondary">
+                  Assistant is typing...
+                </Typography>
+              )}
+              <div ref={messagesEndRef} />
+            </Stack>
+          </Box>
 
-            {/* Input */}
+          {/* Input */}
           <Box sx={{ p: { xs: 0.5, sm: 1 }, borderTop: "1px solid #eee" }}>
             <Box display="flex" gap={1} p={1} flexWrap="nowrap">
-                <TextField
-                  fullWidth
-                  placeholder="Type your message..."
-                  variant="outlined"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
+              <TextField
+                fullWidth
+                placeholder="Type your message..."
+                variant="outlined"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                  size="small"
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSendMessage}
-                  disabled={!inputValue.trim()}
-                  sx={{ px: 2, minWidth: 40 }}
-                >
-                  <Send />
-                </Button>
-              </Box>
+                size="small"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSendMessage}
+                disabled={!inputValue.trim()}
+                sx={{ px: 2, minWidth: 40 }}
+              >
+                <Send />
+              </Button>
             </Box>
           </Box>
+        </Box>
       )}
-<style>{`
+      <style>{`
         @keyframes pulse-green {
           0% { transform: scale(1); opacity: 1; }
           50% { transform: scale(1.3); opacity: 0.6; }

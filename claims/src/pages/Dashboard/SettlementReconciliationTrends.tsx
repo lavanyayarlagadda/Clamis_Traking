@@ -19,7 +19,7 @@ import {
   Stack,
   useTheme,
 } from '@mui/material';
-import MultiSelect from '../../Components/reusable/MultiSelect';
+import MultiSelect from '../../components/reusable/MultiSelect';
 
 const insuranceCompanies = [
   'NTR Vaidyaseva',

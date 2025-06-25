@@ -10,7 +10,7 @@ import {
   useTheme
 } from "@mui/material";
 import { BarChart, LineChart } from "@mui/x-charts";
-import MultiSelect from "../../Components/reusable/MultiSelect";
+import MultiSelect from "../../components/reusable/MultiSelect";
 
 const insuranceCompanies = [
   "NTR Vaidyaseva",
@@ -145,36 +145,6 @@ const AgingBucketDistribution: React.FC = () => {
     });
   };
 
-  const handleMouseLeave = () => {
-    setTooltipData(null);
-  };
-
-  const createVirtualAnchor = () => {
-    if (!tooltipData) return null;
-
-    return {
-      getBoundingClientRect: () => ({
-        top: tooltipData.y,
-        left: tooltipData.x,
-        right: tooltipData.x,
-        bottom: tooltipData.y,
-        width: 0,
-        height: 0,
-        x: tooltipData.x,
-        y: tooltipData.y,
-        toJSON: () => ({
-          top: tooltipData.y,
-          left: tooltipData.x,
-          right: tooltipData.x,
-          bottom: tooltipData.y,
-          width: 0,
-          height: 0,
-          x: tooltipData.x,
-          y: tooltipData.y,
-        }),
-      }),
-    };
-  };
 
   return (
     <Card
@@ -249,11 +219,20 @@ const AgingBucketDistribution: React.FC = () => {
           </Box>
         </Box>
 
-        <Box sx={{ width: "100%", overflowX: "auto" }}>
-          <Box sx={{ minWidth: 600, position: "relative", height: 420 }}>
-            <BarChart
-              height={420}
-              margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
+         <Box sx={{ width: "100%", overflowX: "auto" }}>
+  <Box
+    sx={{
+      minWidth: { xs: 650, sm: 700 }, // more width for mobile
+      width: "100%",
+      position: "relative",
+      height: 420,
+    }}
+  >
+
+      <BarChart
+  width={700}
+  height={420}
+  margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
               xAxis={[
                 {
                   id: "bucket",
@@ -303,10 +282,11 @@ const AgingBucketDistribution: React.FC = () => {
               }}
             />
 
-            <LineChart
-              height={420}
-              margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
-              xAxis={[{ id: "bucket", data: buckets, scaleType: "band" }]}
+          <LineChart
+  width={630}
+  height={460}
+  margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
+  xAxis={[{ id: "bucket", data: buckets, scaleType: "band" }]}
               yAxis={[
                 {
                   id: "amount-axis",
