@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -75,6 +75,16 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
 
   const handleChangePage = (event: unknown, newPage: number) =>
     setPage(newPage);
+
+
+  useEffect(() => {
+  setSelectedColumnKeys(
+    defaultColumnKeys ?? columns.map((col) => col.key).slice(0, minColumns)
+  );
+  setTempSelectedColumnKeys(
+    defaultColumnKeys ?? columns.map((col) => col.key).slice(0, minColumns)
+  );
+}, [columns, defaultColumnKeys, minColumns]);
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -153,6 +163,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
     setTempSelectedColumnKeys([]);
     setError(`You must select at least ${minColumns} columns.`);
   };
+
+  console.log(selectedColumnKeys,minColumns,"TABLECOUMNS")
 
   return (
     <>

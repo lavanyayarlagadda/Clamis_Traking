@@ -220,6 +220,7 @@ const columns = [
       />
 
       <DynamicTable
+      key={activeTab}
         title={`Reconciled Claims - ${
           activeTab === "ntr" ? "NTR Vaidyaseva" : "Private Insurances"
         }`}

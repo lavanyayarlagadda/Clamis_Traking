@@ -99,6 +99,7 @@ export function DynamicTabs({
             },
             '&.Mui-selected:hover': {
               backgroundColor: '#1E40AF', // blue-800 - even darker for selected hover
+              color: '#FFFFFF',
             }
           },
         }}

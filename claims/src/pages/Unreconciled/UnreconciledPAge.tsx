@@ -286,7 +286,8 @@ const statusColorMap: Record<string, string> = {
           Filter Claims
         </Box>
       </Box>
-      <DynamicTable
+    <DynamicTable
+      key={activeTab}
         // title="Unreconciled Claims - NTR Vaidyaseva"
         title={`Unreconciled Claims - ${activeTab === "ntr" ? "NTR Vaidyaseva" : "Private Insurances"
           }`}
