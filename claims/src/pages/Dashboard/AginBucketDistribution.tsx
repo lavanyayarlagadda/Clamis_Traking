@@ -21,10 +21,8 @@ const insuranceCompanies = [
 ];
 
 const AgingBucketDistribution: React.FC = () => {
-  const theme = useTheme()
-  const [selectedCompanies, setSelectedCompanies] = React.useState<string[]>([
-    "ALL",
-  ]);
+  const theme = useTheme();
+  const [selectedCompanies, setSelectedCompanies] = React.useState<string[]>(["ALL"]);
   const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
   const [tooltipData, setTooltipData] = React.useState<{
     bucket: string;
@@ -43,10 +41,7 @@ const AgingBucketDistribution: React.FC = () => {
     ">90 days",
   ];
 
-  const companyData: Record<
-    string,
-    { bucket: string; claims: number; amount: number }[]
-  > = {
+  const companyData: Record<string, { bucket: string; claims: number; amount: number }[]> = {
     "NTR Vaidyaseva": [
       { bucket: "0-7 days", claims: 356, amount: 1367890 },
       { bucket: "8-15 days", claims: 184, amount: 745678 },
@@ -96,7 +91,6 @@ const AgingBucketDistribution: React.FC = () => {
     return buckets.map((bucket) => {
       let claims = 0;
       let amount = 0;
-
       companies.forEach((company) => {
         const record = companyData[company].find((d) => d.bucket === bucket);
         if (record) {
@@ -104,12 +98,7 @@ const AgingBucketDistribution: React.FC = () => {
           amount += record.amount;
         }
       });
-
-      return {
-        bucket,
-        claims,
-        amount,
-      };
+      return { bucket, claims, amount };
     });
   };
 
@@ -144,7 +133,6 @@ const AgingBucketDistribution: React.FC = () => {
       y: rect.top,
     });
   };
-
 
   return (
     <Card
@@ -185,51 +173,33 @@ const AgingBucketDistribution: React.FC = () => {
         sx={{ px: { xs: 2, sm: 3 }, pt: 2, pb: 0 }}
       />
       <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, pb: 3 }}>
-        <Box
-          display="flex"
-          gap={3}
-          justifyContent="center"
-          // mt={1}
-          mb={3}
-          flexWrap="wrap"
-        >
+        <Box display="flex" gap={3} justifyContent="center" mb={3} flexWrap="wrap">
           <Box display="flex" alignItems="center" gap={1}>
-            <Box
-              sx={{
-                width: 14,
-                height: 14,
-                bgcolor: "#3b82f6",
-                borderRadius: 0.5,
-              }}
-            />
+            <Box sx={{ width: 14, height: 14, bgcolor: "#3b82f6", borderRadius: 0.5 }} />
             <Typography variant="body2">Claims Count</Typography>
           </Box>
-
           <Box display="flex" alignItems="center" gap={1}>
-            <Box
-              sx={{
-                width: 14,
-                height: 14,
-                borderRadius: "50%",
-                border: "2px solid #ef4444",
-                bgcolor: "transparent",
-              }}
-            />
-            <Typography variant="body2">Amount </Typography>
+            <Box sx={{ width: 14, height: 14, borderRadius: "50%", border: "2px solid #ef4444" }} />
+            <Typography variant="body2">Amount</Typography>
           </Box>
         </Box>
 
-      <Box
-  sx={{
-    width: '100%',
-    overflowX: 'auto',
-    overflowY: 'auto', // Allow vertical scrolling too
-    WebkitOverflowScrolling: 'touch', // Smooth iOS scroll
-    touchAction: 'pan-x pan-y',       // Allow both horizontal and vertical gestures
-    maxHeight: { xs: 440, sm: 'unset' }, // Optional: limit height on small devices
-  }}
->
-          <Box sx={{ minWidth: 600, position: "relative", height: 420 }}>
+        {/* SCROLLABLE CHART WRAPPER */}
+        <Box
+          sx={{
+            width: '100%',
+            overflow: 'auto',
+            WebkitOverflowScrolling: 'touch',
+            touchAction: 'pan-x pan-y',
+          }}
+        >
+          <Box
+            sx={{
+              minWidth: 640,
+              position: "relative",
+              height: 420,
+            }}
+          >
             <BarChart
               height={420}
               margin={{ top: 20, bottom: 60, left: 60, right: 60 }}
@@ -246,27 +216,15 @@ const AgingBucketDistribution: React.FC = () => {
                 },
               ]}
               yAxis={[{ id: "left-axis", label: "Claims Count" }]}
-              series={[
-                {
-                  id: "claims",
-                  data: data.map((d) => d.claims),
-                  color: "#3b82f6",
-                },
-              ]}
+              series={[{ id: "claims", data: data.map(d => d.claims), color: "#3b82f6" }]}
               grid={{ horizontal: true }}
               slotProps={{
                 bar: {
                   onMouseEnter: (event: React.MouseEvent<SVGRectElement>) => {
-                    // Get the index from the event target's position
-                    const svgRect = event.currentTarget
-                      .closest("svg")
-                      ?.getBoundingClientRect();
-                    const barWidth = svgRect?.width
-                      ? svgRect.width / buckets.length
-                      : 0;
+                    const svgRect = event.currentTarget.closest("svg")?.getBoundingClientRect();
+                    const barWidth = svgRect?.width ? svgRect.width / buckets.length : 0;
                     const mouseX = event.clientX - (svgRect?.left || 0);
                     const index = Math.floor(mouseX / barWidth);
-
                     if (index >= 0 && index < buckets.length) {
                       handleMouseEnter(event, index);
                     }
@@ -276,9 +234,7 @@ const AgingBucketDistribution: React.FC = () => {
                     setTooltipData(null);
                   },
                 },
-                tooltip: {
-                  trigger: "none",
-                },
+                tooltip: { trigger: "none" },
               }}
             />
 
@@ -286,22 +242,18 @@ const AgingBucketDistribution: React.FC = () => {
               height={420}
               margin={{ top: 20, bottom: 60, left: 130, right: 60 }}
               xAxis={[{ id: "bucket", data: buckets, scaleType: "band" }]}
-              yAxis={[
-                {
-                  id: "amount-axis",
-                  label: "Amount (₹)",
-                  position: "right",
-                  valueFormatter: formatAmount,
-                },
-              ]}
-              series={[
-                {
-                  id: "amount-line",
-                  data: data.map((d) => d.amount),
-                  color: "#ef4444",
-                  curve: "monotoneX",
-                },
-              ]}
+              yAxis={[{
+                id: "amount-axis",
+                label: "Amount (₹)",
+                position: "right",
+                valueFormatter: formatAmount,
+              }]}
+              series={[{
+                id: "amount-line",
+                data: data.map((d) => d.amount),
+                color: "#ef4444",
+                curve: "monotoneX",
+              }]}
               sx={{
                 position: "absolute",
                 top: 0,
@@ -323,8 +275,7 @@ const AgingBucketDistribution: React.FC = () => {
                       Claims: <strong>{data[hoveredIndex].claims}</strong>
                     </Typography>
                     <Typography variant="body2">
-                      Amount:{" "}
-                      <strong>₹{formatAmount(data[hoveredIndex].amount)}</strong>
+                      Amount: <strong>₹{formatAmount(data[hoveredIndex].amount)}</strong>
                     </Typography>
                   </Box>
                 }
@@ -352,7 +303,7 @@ const AgingBucketDistribution: React.FC = () => {
           </Box>
         </Box>
       </CardContent>
-    </Card >
+    </Card>
   );
 };
 
