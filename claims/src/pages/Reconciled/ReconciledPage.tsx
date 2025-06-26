@@ -254,10 +254,11 @@ const dummyDialogData = {
         filters={filters}
         onChange={setFilters}
         insuranceOptions={["ICICI", "Star", "Religare"]}
-        pageType="reconciliation" // or "reconciliation"
+        pageType="reconciliation" 
       />
 
       <DynamicTable
+       loading={false}
       key={activeTab}
         title={`Reconciled Claims - ${
           activeTab === "ntr" ? "NTR Vaidyaseva" : "Private Insurances"

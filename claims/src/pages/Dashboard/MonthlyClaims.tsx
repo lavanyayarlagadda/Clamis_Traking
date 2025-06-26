@@ -198,9 +198,9 @@ const MonthlyClaimsTrend: React.FC = () => {
   onPointerUp={handlePointerUp}
   sx={{
     width: '100%',
-    overflow: 'auto', // ✅ allow both x and y scroll
+    overflow: 'auto',
     WebkitOverflowScrolling: 'touch',
-    touchAction: 'none', // ✅ disable default gestures so we can control both axes
+    touchAction: 'none',
     cursor: { xs: 'grab', sm: 'grab' },
     userSelect: isDragging.current ? 'none' : 'auto',
     scrollbarWidth: 'thin',

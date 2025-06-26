@@ -43,7 +43,7 @@ type DynamicTableProps = {
   data: any[];
   actions?: ActionType[];
   chipColor?: string;
-
+  loading?: boolean;
   Icon?: SvgIconComponent;
   iconColor?: string;
   defaultColumnKeys?: string[];
@@ -61,6 +61,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
   iconColor = chipColor,
   defaultColumnKeys,
   minColumns = 5,
+  loading = false,
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -76,15 +77,14 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
   const handleChangePage = (event: unknown, newPage: number) =>
     setPage(newPage);
 
-
   useEffect(() => {
-  setSelectedColumnKeys(
-    defaultColumnKeys ?? columns.map((col) => col.key).slice(0, minColumns)
-  );
-  setTempSelectedColumnKeys(
-    defaultColumnKeys ?? columns.map((col) => col.key).slice(0, minColumns)
-  );
-}, [columns, defaultColumnKeys, minColumns]);
+    setSelectedColumnKeys(
+      defaultColumnKeys ?? columns.map((col) => col.key).slice(0, minColumns)
+    );
+    setTempSelectedColumnKeys(
+      defaultColumnKeys ?? columns.map((col) => col.key).slice(0, minColumns)
+    );
+  }, [columns, defaultColumnKeys, minColumns]);
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -94,17 +94,34 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
   };
 
   const handleDownload = () => {
+    const visibleColumns = columns.filter((col) =>
+      selectedColumnKeys.includes(col.key)
+    );
+
     const csv = [
-      columns.map((col) => col.label).join(","),
-      ...data.map((row) => columns.map((col) => row[col.key]).join(",")),
+      visibleColumns.map((col) => col.label).join(","), // headers
+      ...data.map((row) =>
+        visibleColumns
+          .map((col) => {
+            const value = row[col.key];
+            const safeValue =
+              typeof value === "string"
+                ? `"${value.replace(/"/g, '""')}"`
+                : value ?? "";
+            return safeValue;
+          })
+          .join(",")
+      ),
     ].join("\n");
 
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
 
+    const filename = `${title.replace(/\s+/g, "_").toLowerCase()}_data.csv`; // e.g., "claims_summary_data.csv"
+
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "table-data.csv");
+    link.setAttribute("download", filename);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -112,7 +129,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
 
   const filteredData = data.filter((row) =>
     Object.values(row).some((value) =>
-      String(value).toLowerCase().includes(searchTerm.toLowerCase())
+      (value ?? "").toString().toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
 
@@ -123,9 +140,14 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
 
   const open = Boolean(anchorEl);
   const handleSettingsClick = (event: React.MouseEvent<HTMLElement>) => {
-    setTempSelectedColumnKeys(selectedColumnKeys); // reset temp on open
+    setTempSelectedColumnKeys(selectedColumnKeys);
     setError(null);
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleSelectAll = () => {
+    setTempSelectedColumnKeys(columns.map((col) => col.key));
+    setError(null);
   };
 
   const handleClose = () => {
@@ -133,18 +155,15 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
     setError(null);
   };
 
-  // Toggle column selection with min 5 columns enforced
   const toggleColumn = (key: string) => {
     if (tempSelectedColumnKeys.includes(key)) {
-      // Trying to deselect
       if (tempSelectedColumnKeys.length <= minColumns) {
         setError(`You must select at least ${minColumns} columns.`);
-        return; // prevent deselecting below min
+        return;
       }
       setTempSelectedColumnKeys((prev) => prev.filter((k) => k !== key));
       setError(null);
     } else {
-      // Selecting column
       setTempSelectedColumnKeys((prev) => [...prev, key]);
       setError(null);
     }
@@ -164,8 +183,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
     setError(`You must select at least ${minColumns} columns.`);
   };
 
-  console.log(selectedColumnKeys,minColumns,"TABLECOUMNS")
-
   return (
     <>
       <Box
@@ -177,8 +194,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
           boxShadow: 3,
         }}
       >
-        {/* Header Section */}
-
         <Box
           sx={{
             mb: 2,
@@ -189,7 +204,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
             gap: 2,
           }}
         >
-          {/* LEFT SIDE: Icon, Title, Chip */}
           <Box display="flex" alignItems="center" gap={1}>
             {iconColor && Icon && (
               <Icon sx={{ color: iconColor }} fontSize="small" />
@@ -201,14 +215,13 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
               label={countLabel}
               size="small"
               sx={{
-                backgroundColor: chipColor, // e.g., '#48D56B'
-                color: "#fff", // white text for better contrast
+                backgroundColor: chipColor,
+                color: "#fff",
                 fontWeight: 500,
               }}
             />
           </Box>
 
-          {/* RIGHT SIDE: Search + Download + Settings */}
           <Box display="flex" alignItems="center" gap={1}>
             <TextField
               variant="outlined"
@@ -251,7 +264,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
           </Box>
         </Box>
 
-        {/* Table */}
         <TableContainer
           component={Paper}
           sx={{
@@ -294,56 +306,92 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
               </TableRow>
             </TableHead>
             <TableBody>
-              {paginatedData.map((row, idx) => (
-                <TableRow
-                  key={idx}
-                  sx={{
-                    backgroundColor: row.manualReconciled ? "#48D56B" : "white",
-                  }}
-                >
-                  {columns
-                    .filter((col) => selectedColumnKeys.includes(col.key))
-                    .map((col) => (
-                      <TableCell
-                        key={col.key}
-                        sx={{
-                          whiteSpace: "nowrap",
-                          minWidth: "max-content",
-                        }}
-                      >
-                        {col.render ? col.render(row) : row[col.key]}
+              {loading ? (
+                // Show skeleton placeholders
+                Array.from({ length: rowsPerPage }).map((_, idx) => (
+                  <TableRow key={`skeleton-${idx}`}>
+                    {selectedColumnKeys.map((key, i) => (
+                      <TableCell key={i}>
+                        <Box
+                          sx={{
+                            height: 20,
+                            bgcolor: "#f0f0f0",
+                            borderRadius: 1,
+                          }}
+                        />
                       </TableCell>
                     ))}
-                  {actions.length > 0 && (
-                    <TableCell
-                      sx={{ whiteSpace: "nowrap", minWidth: "max-content" }}
-                    >
-                      {actions.map((action, i) => (
-                        <Button
-                          key={i}
-                          size="small"
-                          variant="outlined"
-                          onClick={() => action.onClick(row)}
-                          startIcon={action.icon}
+                    {actions.length > 0 && (
+                      <TableCell>
+                        <Box
                           sx={{
-                            mr: 1,
-                            textTransform: "none",
-                            borderRadius: 2,
-                            fontSize: "0.75rem",
+                            height: 20,
+                            bgcolor: "#f0f0f0",
+                            borderRadius: 1,
                           }}
-                        >
-                          {action.label}
-                        </Button>
-                      ))}
-                    </TableCell>
-                  )}
+                        />
+                      </TableCell>
+                    )}
+                  </TableRow>
+                ))
+              ) : paginatedData.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={
+                      selectedColumnKeys.length + (actions.length > 0 ? 1 : 0)
+                    }
+                    align="center"
+                    sx={{ py: 4, fontStyle: "italic", color: "text.secondary" }}
+                  >
+                    No data available
+                  </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                // Render actual rows
+                paginatedData.map((row, idx) => (
+                  <TableRow
+                    key={idx}
+                    sx={{
+                      backgroundColor: row.manualReconciled
+                        ? "#48D56B"
+                        : "white",
+                    }}
+                  >
+                    {columns
+                      .filter((col) => selectedColumnKeys.includes(col.key))
+                      .map((col) => (
+                        <TableCell key={col.key}>
+                          {col.render ? col.render(row) : row[col.key]}
+                        </TableCell>
+                      ))}
+                    {actions.length > 0 && (
+                      <TableCell>
+                        {actions.map((action, i) => (
+                          <Button
+                            key={i}
+                            size="small"
+                            variant="outlined"
+                            onClick={() => action.onClick(row)}
+                            startIcon={action.icon}
+                            sx={{
+                              mr: 1,
+                              textTransform: "none",
+                              borderRadius: 2,
+                              fontSize: "0.75rem",
+                            }}
+                          >
+                            {action.label}
+                          </Button>
+                        ))}
+                      </TableCell>
+                    )}
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </TableContainer>
 
-        {/* Pagination */}
         <TablePagination
           component="div"
           count={filteredData.length}
@@ -355,7 +403,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
         />
       </Box>
 
-      {/* Popover for column selector */}
       <Popover
         open={open}
         anchorEl={anchorEl}
@@ -367,13 +414,23 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
           <Typography variant="subtitle1" fontWeight="bold" mb={1}>
             Select Columns
           </Typography>
-          <Button
-            size="small"
-            onClick={handleUnselectAll}
-            sx={{ mb: 1, textTransform: "none" }}
-          >
-            Unselect All
-          </Button>
+          <Box display="flex" justifyContent="space-between" mb={1}>
+            <Button
+              size="small"
+              onClick={handleSelectAll}
+              sx={{ textTransform: "none" }}
+            >
+              Select All
+            </Button>
+            <Button
+              size="small"
+              onClick={handleUnselectAll}
+              sx={{ textTransform: "none" }}
+            >
+              Unselect All
+            </Button>
+          </Box>
+
           <FormGroup>
             {columns.map((col) => {
               const isChecked = tempSelectedColumnKeys.includes(col.key);

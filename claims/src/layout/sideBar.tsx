@@ -377,16 +377,19 @@ const Sidebar: React.FC<SidebarProps> = ({
             }}
           >
             {isOpen && (
+              <>
+              <img src={'/healthcare.svg'} alt='healthCare' width={30} height={30}/>
               <Typography variant="h6" noWrap>
                 HealthCare
               </Typography>
+              </>
             )}
             <IconButton onClick={() => setIsOpen(!isOpen)}>
               {isOpen ? (
                 <ChevronLeft />
               ) : (
                 <>
-                  <HealthAndSafety />
+                   <img src={'/healthcare.svg'} alt='healthCare' width={30} height={30}/>
                   <ChevronRight />
                 </>
               )}

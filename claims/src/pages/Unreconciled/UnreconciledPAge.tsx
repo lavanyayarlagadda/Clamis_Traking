@@ -326,7 +326,7 @@ const getTimeline = (dialogData: any): TimelineStep[] => {
 </Box>
     <DynamicTable
       key={activeTab}
-        // title="Unreconciled Claims - NTR Vaidyaseva"
+       loading={false}
         title={`Unreconciled Claims - ${activeTab === "ntr" ? "NTR Vaidyaseva" : "Private Insurances"
           }`}
         countLabel={`${currentClaims.length} Claims`}
@@ -336,16 +336,6 @@ const getTimeline = (dialogData: any): TimelineStep[] => {
         iconColor={"#EF4444"}
         Icon={ReportProblemOutlinedIcon}
         actions={[
-          // {
-          //   label: "Start Manual Reconcilation",
-
-          //   icon: <PlayArrowOutlinedIcon fontSize="small" />,
-          //   onClick: (row) => {
-          //     setDialogData(row);
-
-          //     setOpen(true);
-          //   },
-          // },
           {
             label: "View",
             icon: <Visibility fontSize="small" />,

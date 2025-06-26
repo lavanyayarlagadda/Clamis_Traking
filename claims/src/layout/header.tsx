@@ -73,8 +73,9 @@ const Header: React.FC<HeaderProps> = ({ isSidebarOpen, currentTab, onSidebarTog
   color="text.primary"
   noWrap
   sx={{
-    fontSize: { xs: '1rem', sm: '1.25rem' }, // 1rem ≈ 16px, 1.25rem ≈ 20px
+    fontSize: { xs: '1rem', sm: '1.25rem' }, 
     fontWeight: { xs: 400, sm: 600 },
+    pl:{xs:0,sm:2,md:isSidebarOpen ? 0:2}
   }}
 >
   {getHeaderTitle(currentTab)}

@@ -113,6 +113,7 @@ const actions = [
 const WorkQueueTableGrid: React.FC = () => {
   return (
     <DynamicTable
+     loading={false}
       title="Claim Work Queue"
       countLabel={`${taskData.length} Claims`}
       columns={columns}

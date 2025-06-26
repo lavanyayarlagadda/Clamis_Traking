@@ -384,9 +384,7 @@ const columns = [
       </Box>
       <DynamicTable
         title="Claims"
-        // title={`Unreconciled Claims - ${
-        //   activeTab === "ntr" ? "NTR Vaidyaseva" : "Other Schemes"
-        // }`}
+        loading={false}
         countLabel={`${currentClaims.length} Claims`}
         columns={columns}
         data={currentClaims}
@@ -394,18 +392,6 @@ const columns = [
         iconColor={"#F59E0B"}
         Icon={DescriptionIcon}
         minColumns={8}
-        // actions={[
-        //   {
-        //     label: "Start Manual Reconcilation",
-
-        //     icon: <PlayArrowOutlinedIcon fontSize="small" />,
-        //     onClick: (row) => {
-        //       setDialogData(row);
-
-        //       setOpen(true);
-        //     },
-        //   },
-        // ]}
       />
       {open && (
         <ManualReconciliationDialog
