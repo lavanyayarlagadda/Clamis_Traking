@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -10,8 +10,15 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
-} from '@mui/material';
-import { CircleNotifications, Search, Menu as MenuIcon } from '@mui/icons-material';
+  Menu,
+  MenuItem,
+} from "@mui/material";
+import {
+  CircleNotifications,
+  Search,
+  Menu as MenuIcon,
+} from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
   isSidebarOpen: boolean;
@@ -19,26 +26,60 @@ interface HeaderProps {
   onSidebarToggle: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ isSidebarOpen, currentTab, onSidebarToggle }) => {
+const Header: React.FC<HeaderProps> = ({
+  isSidebarOpen,
+  currentTab,
+  onSidebarToggle,
+}) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const navigate = useNavigate();
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleProfile = () => {
+    handleClose();
+    navigate("/profile");
+  };
+
+  const handleLogout = () => {
+    handleClose();
+    navigate("/login");
+  };
+
+  const handleNotificationsClick = () => {
+    navigate("/notifications");
+  };
 
   const getHeaderTitle = (tab: string) => {
     switch (tab) {
-      case 'dashboard':
-        return 'Dashboard';
-      case 'reports':
-        return 'Reports & Analytics';
-      case 'reconciled':
-        return 'Reconciled Claims';
-      case 'unreconciled':
-        return 'Unreconciled Claims';
-      case 'allclaims':
-        return 'All Claims';
-      case 'workQueue':
-        return 'Work Queue';
+      case "dashboard":
+        return "Dashboard";
+      case "reports":
+        return "Reports & Analytics";
+      case "reconciled":
+        return "Reconciled Claims";
+      case "unreconciled":
+        return "Unreconciled Claims";
+      case "allclaims":
+        return "All Claims";
+      case "workQueue":
+        return "Work Queue";
+      case "notifications":
+        return "Notifications";
+      case "profile":
+        return "Profile";
       default:
-        return 'Healthcare Insurance Management';
+        return "Healthcare Insurance Management";
     }
   };
 
@@ -47,105 +88,113 @@ const Header: React.FC<HeaderProps> = ({ isSidebarOpen, currentTab, onSidebarTog
       position="fixed"
       elevation={0}
       sx={{
-        backgroundColor: 'white',
-        borderBottom: '1px solid #e5e7eb',
+        backgroundColor: "white",
+        borderBottom: "1px solid #e5e7eb",
         width: {
-          xs: '100%',
+          xs: "100%",
           sm: `calc(100% - ${isSidebarOpen ? 240 : 60}px)`,
         },
         ml: {
           xs: 0,
           sm: `${isSidebarOpen ? 240 : 60}px`,
         },
-        transition: 'all 0.3s ease',
+        transition: "all 0.3s ease",
       }}
     >
-      <Toolbar sx={{ justifyContent: 'space-between', px: 3, py: 1 }}>
-        {/* Left Section: Icon or Title */}
+      <Toolbar sx={{ justifyContent: "space-between", px: 3, py: 1 }}>
         <Box display="flex" alignItems="center" gap={2}>
           {isMobile && (
             <IconButton onClick={onSidebarToggle}>
               <MenuIcon />
             </IconButton>
           )}
-        <Typography
-  variant="h6"
-  color="text.primary"
-  noWrap
-  sx={{
-    fontSize: { xs: '1rem', sm: '1.25rem' }, 
-    fontWeight: { xs: 400, sm: 600 },
-    pl:{xs:0,sm:2,md:isSidebarOpen ? 0:2}
-  }}
->
-  {getHeaderTitle(currentTab)}
-</Typography>
-
+          <Typography
+            variant="h6"
+            color="text.primary"
+            noWrap
+            sx={{
+              fontSize: { xs: "1rem", sm: "1.25rem" },
+              fontWeight: { xs: 400, sm: 600 },
+              pl: { xs: 0, sm: 2, md: isSidebarOpen ? 0 : 2 },
+            }}
+          >
+            {getHeaderTitle(currentTab)}
+          </Typography>
         </Box>
 
-        {/* Right Section: Search, Bell, Avatar */}
         <Box
-  display="flex"
-  alignItems="center"
-  gap={1}
-  sx={{
-    flexShrink: 0,
-    minWidth: 0,
-    overflow: 'hidden',
-  }}
->
-  <Box
-    sx={{
-      position: 'relative',
-      flex: 1,
-      minWidth: 0,
-      maxWidth: { xs: '110px', sm: '160px', md: '220px' },
-       display: { xs: 'none', sm: 'block',md:'block' }, 
-    }}
-  >
-    <Search
-      style={{
-        position: 'absolute',
-        top: '50%',
-        left: '10px',
-        transform: 'translateY(-50%)',
-        width: '16px',
-        height: '16px',
-        color: '#9ca3af',
-      }}
-    />
-    <InputBase
-      placeholder="Search"
-      sx={{
-        pl: 4,
-        pr: 1,
-        py: 0.5,
-        border: '1px solid #d1d5db',
-        borderRadius: '8px',
-        fontSize: '13px',
-        width: '100%',
-        fontWeight: 400,
-        bgcolor: '#fff',
-      }}
-    />
-  </Box>
+          display="flex"
+          alignItems="center"
+          gap={1}
+          sx={{
+            flexShrink: 0,
+            minWidth: 0,
+            overflow: "hidden",
+          }}
+        >
+          <Box
+            sx={{
+              position: "relative",
+              flex: 1,
+              minWidth: 0,
+              maxWidth: { xs: "110px", sm: "160px", md: "220px" },
+              display: { xs: "none", sm: "block", md: "block" },
+            }}
+          >
+            <Search
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "10px",
+                transform: "translateY(-50%)",
+                width: "16px",
+                height: "16px",
+                color: "#9ca3af",
+              }}
+            />
+            <InputBase
+              placeholder="Search"
+              sx={{
+                pl: 4,
+                pr: 1,
+                py: 0.5,
+                border: "1px solid #d1d5db",
+                borderRadius: "8px",
+                fontSize: "13px",
+                width: "100%",
+                fontWeight: 400,
+                bgcolor: "#fff",
+              }}
+            />
+          </Box>
 
-  <IconButton sx={{ p: 0.75 }}>
-    <Badge variant="dot" color="error">
-      <CircleNotifications sx={{ fontSize: 20 }} />
-    </Badge>
-  </IconButton>
+          <IconButton sx={{ p: 0.75 }} onClick={handleNotificationsClick}>
+            <Badge variant="dot" color="error">
+              <CircleNotifications sx={{ fontSize: 20 }} />
+            </Badge>
+          </IconButton>
 
-  <Avatar
-    sx={{
-      width: 28,
-      height: 28,
-      background: 'linear-gradient(to right, #3b82f6, #10b981)',
-    }}
-  />
-</Box>
-
+          <IconButton onClick={handleAvatarClick}>
+            <Avatar
+              sx={{
+                width: 28,
+                height: 28,
+                background: "linear-gradient(to right, #3b82f6, #10b981)",
+              }}
+            />
+          </IconButton>
+        </Box>
       </Toolbar>
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <MenuItem onClick={handleProfile}>Profile</MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+      </Menu>
     </AppBar>
   );
 };
