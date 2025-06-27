@@ -153,6 +153,7 @@ const ClaimsByStatus: React.FC = () => {
         borderRadius: 3,
         boxShadow: 2,
         transition: 'transform 0.2s ease-in-out',
+        
       }}
     >
       <CardHeader
@@ -160,7 +161,7 @@ const ClaimsByStatus: React.FC = () => {
           <Stack
              direction={{ xs: 'column', sm: 'row' }}
             justifyContent="space-between"
-             alignItems={{ xs: 'flex-start', sm: 'center' }}
+             alignItems={{ xs: 'flex-start', sm: 'center' , }}
             spacing={2}
           >
             <Typography
@@ -189,8 +190,8 @@ const ClaimsByStatus: React.FC = () => {
         sx={{ px: 3, pt: 3, pb: 0 }}
       />
       <CardContent 
-      sx={{ px: { xs: 2, sm: 3 }, pt: 1, pb: 3 }}
-      // sx={{ px: 3, pt: 1, pb: 3 }}
+      sx={{ px: { xs: 2, sm: 3 }, pt: 1, '&:last-child': { paddingBottom: 0 } }}
+      
       >
          <Box
                 ref={scrollRef}
@@ -226,15 +227,18 @@ const ClaimsByStatus: React.FC = () => {
             sx={{
               minWidth: 320,
               width: { xs: 320, sm: 400, md: 450 }, 
-              height: 400 ,
+              height: {
+      // xs: 390,  
+      sm: 350   
+    },
             }}
           >
             <PieChart
               series={[
                 {
                   data,
-                  innerRadius: 40,
-                  outerRadius: 80,
+                  // innerRadius: 40,
+                  // outerRadius: 80,
                   arcLabel: (item) =>
                     `${((item.value / total) * 100).toFixed(1)}%`,
                   arcLabelMinAngle: 10,
@@ -242,11 +246,12 @@ const ClaimsByStatus: React.FC = () => {
               ]}
               slotProps={{
                 legend: {
-                  direction: 'horizontal',
-                  position: { vertical: 'bottom', horizontal: 'center' },
+                  direction: 'vertical',
+                  position: { vertical: 'middle', horizontal: 'center' },
                 },
               }}
-              height={250}
+              height={300}
+              width={300}
               sx={{
                 '.MuiChartsLegend-series text': {
                   fontSize: 13,

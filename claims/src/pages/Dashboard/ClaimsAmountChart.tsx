@@ -196,7 +196,7 @@ const ClaimAmountChart: React.FC = () => {
         }
         sx={{ px: { xs: 2, sm: 3 }, pt: 3, pb: 0 }}
       />
-      <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, pb: 3 }}>
+      <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, '&:last-child': { paddingBottom: 0 },}}>
                  <Box
                         ref={scrollRef}
                         onPointerDown={handlePointerDown}
@@ -231,7 +231,10 @@ const ClaimAmountChart: React.FC = () => {
             sx={{
               minWidth: `${months.length * 100}px`,
               width: '100%',
-              height:  400 ,
+              height: {
+                xs: 390,
+                sm: 350
+              },
             }}
           >
             <BarChart

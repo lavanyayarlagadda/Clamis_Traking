@@ -155,7 +155,7 @@ const InsurancePerformance: React.FC = () => {
         sx={{ px: { xs: 2, sm: 3 }, pt: 3, pb: 0 }}
       />
 
-      <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, pb: 3 }}>
+      <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, '&:last-child': { paddingBottom: 0 } }}>
        <Box
               ref={scrollRef}
               onPointerDown={handlePointerDown}
@@ -191,8 +191,11 @@ const InsurancePerformance: React.FC = () => {
               // minWidth: data.length * 100,
               // height: { xs: 260, sm: 300, md: 320 },
               minWidth:{xs:500,sm:450},
-              height: 'auto',
-              maxHeight: 400,
+              height: {
+                xs: 390,
+                sm: 334
+              },
+              // maxHeight: 400,
             }}>
             <LineChart
               height={300}

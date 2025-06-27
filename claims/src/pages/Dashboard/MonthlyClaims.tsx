@@ -190,7 +190,7 @@ const MonthlyClaimsTrend: React.FC = () => {
         sx={{ px: 3, pt: 3, pb: 0 }}
       />
 
-      <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, pb: 3 }}>
+      <CardContent sx={{ px: { xs: 2, sm: 3 }, pt: 1, '&:last-child': { paddingBottom: 0 } }}>
    <Box
   ref={scrollRef}
   onPointerDown={handlePointerDown}
@@ -226,7 +226,7 @@ const MonthlyClaimsTrend: React.FC = () => {
             sx={{
               minWidth: `${months.length * 80}px`,
               width: '100%',
-              height:  350 
+              height:  350 ,
             }}
           >
             <LineChart
