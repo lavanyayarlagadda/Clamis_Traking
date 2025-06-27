@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FilterList } from "@mui/icons-material";
 import { unreconciledClaimsData, unreconciledClaimsOther ,claimsData} from "./data";
-import { DynamicTabs } from "../../components/reusable/tabs";
+import { DynamicTabs } from "../../Components/reusable/tabs";
 import {
   Chip,
   Typography,
@@ -14,10 +14,10 @@ import {
 } from "@mui/material";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
 import DescriptionIcon from '@mui/icons-material/Description';
-import DynamicTable from "../../components/reusable/dynamicTable";
-import { DynamicClaimDialog } from "../../components/reusable/dialog";
+import DynamicTable from "../../Components/reusable/dynamicTable";
+import { DynamicClaimDialog } from "../../Components/reusable/dialog";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
-import { FilterDrawer } from "../../components/reusable/filter";
+import { FilterDrawer } from "../../Components/reusable/filter";
 import ManualReconciliationDialog from "./Manual_reconciled_Dialog";
 
 export interface ClaimRow {
@@ -83,14 +83,14 @@ export default function Claims() {
 const columns = [
    {
     key: "claimNumber",
-    label: "Claim Number",
+    label: "Claim #",
     render: (row: any) => (
       <span style={{ fontWeight: 600, color: "#1E40AF" }}>{row.claimNumber}</span>
     ),
   },
   {
     key: "cardNumberUhid",
-    label: "Card No (UHID)",
+    label: "Card # (UHID)",
     render: (row: any) => (
       <Chip
         label={row.cardNumberUhid ?? "N/A"}
@@ -103,7 +103,7 @@ const columns = [
  
   {
     key: "chequeNumber",
-    label: "Cheque No.",
+    label: "Cheque #",
     render: (row: any) => (
       <span style={{ fontFamily: "monospace", color: "#334155" }}>{row.chequeNumber}</span>
     ),
@@ -344,6 +344,7 @@ const columns = [
           alignItems: "center",
           flexWrap: "wrap",
           mb: 2,
+          mt:1
         }}
       >
         {/* <Box sx={{ mt: 1 }}>

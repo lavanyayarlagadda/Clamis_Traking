@@ -12,6 +12,7 @@ import {
   ListItemText,
   IconButton,
   Divider,
+  Tooltip
 } from "@mui/material";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { Close } from "@mui/icons-material";
@@ -150,7 +151,7 @@ export const DynamicClaimDialog = ({ open, onClose, title, data, pageType }: Dyn
                           <FiberManualRecordIcon
                             sx={{
                               fontSize: 14,
-                              color: item.label.toLowerCase().includes("exception")||item.label.toLowerCase().includes("rejected") ? "#dc3545" : "#4caf50",
+                              color: item.label.toLowerCase().includes("exception") || item.label.toLowerCase().includes("rejected") ? "#dc3545" : "#4caf50",
                               zIndex: 1
                             }}
                           />
@@ -161,12 +162,38 @@ export const DynamicClaimDialog = ({ open, onClose, title, data, pageType }: Dyn
                               {item.label}
                             </Typography>
                           }
+                          // secondary={
+                          //   <Typography variant="body2" color="text.secondary">
+                          //     {item.description}
+                          //   </Typography>
+                          // }
                           secondary={
-                            <Typography variant="body2" color="text.secondary">
-                              {item.description}
-                            </Typography>
+                            item.description.split(" ").length > 4 ? (
+                              <Tooltip title={item.description} arrow>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                  sx={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: 200,
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  {item.description}
+                                </Typography>
+                              </Tooltip>
+                            ) : (
+                              <Typography variant="body2" color="text.secondary">
+                                {item.description}
+                              </Typography>
+                            )
                           }
+
                         />
+
+
                         <Typography variant="caption" sx={{ ml: 2, color: "#999" }}>
                           {item.date}
                         </Typography>

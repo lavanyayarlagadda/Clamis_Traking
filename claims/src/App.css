@@ -44,3 +44,6 @@ html, body, #root {
   height: 100%;
   overflow: auto;
 }
+.css-1dc80h3-MuiTableCell-root {
+  padding:10px !important
+}

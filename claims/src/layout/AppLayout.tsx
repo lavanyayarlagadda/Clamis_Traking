@@ -47,9 +47,9 @@ const AppLayout = () => {
           mt: 9,
           ml: {
             xs: "15px",
-            sm: `20px`,
+            sm: `10px`,
           },
-          pr: 2,
+          pr: '10px',
           transition: "margin-left 0.3s ease",
           overflow: "hidden",
           mb: 2,

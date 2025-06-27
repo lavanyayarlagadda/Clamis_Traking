@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FilterList, Visibility } from "@mui/icons-material";
 import { unreconciledClaimsData, unreconciledClaimsOther } from "./data";
-import { DynamicTabs } from "../../components/reusable/tabs";
+import { DynamicTabs } from "../../Components/reusable/tabs";
 import {
   Chip,
   Typography,
@@ -13,10 +13,10 @@ import {
   Button,
 } from "@mui/material";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
-import DynamicTable from "../../components/reusable/dynamicTable";
-import { DynamicClaimDialog } from "../../components/reusable/dialog";
+import DynamicTable from "../../Components/reusable/dynamicTable";
+import { DynamicClaimDialog } from "../../Components/reusable/dialog";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
-import { FilterDrawer } from "../../components/reusable/filter";
+import { FilterDrawer } from "../../Components/reusable/filter";
 import ManualReconciliationDialog from "./Manual_reconciled_Dialog";
 
 export interface ClaimRow {
@@ -71,62 +71,62 @@ export default function UnReconciledPage() {
     insuranceCompanies: [],
   });
 
-const statusColorMap: Record<string, string> = {
-  "Approved": "#3B82F6", // blue - for approved claims
-  "Settled": "#10B981", // green - for fully settled claims
-  "Enhancement Approved": "#8B5CF6", // purple/violet - for special approval cases
-  "Deposit Not Found": "#F59E0B", // orange/yellow - requires attention
-};
+  const statusColorMap: Record<string, string> = {
+    "Approved": "#3B82F6", // blue - for approved claims
+    "Settled": "#10B981", // green - for fully settled claims
+    "Enhancement Approved": "#8B5CF6", // purple/violet - for special approval cases
+    "Deposit Not Found": "#F59E0B", // orange/yellow - requires attention
+  };
 
 
   const columns = [
-    { key: "claimNumber", label: "Claim Number" },
+    { key: "claimNumber", label: "Claim #" },
     ...(activeTab === "ntr"
       ? [
         {
           key: "cardNumber",
-          label: "Card Number",
+          label: "Card #",
           render: (row: any) => row.cardNumber ?? "N/A",
         },
       ]
       : []),
-    { key: "chequeNumber", label: "Cheque No." },
+    { key: "chequeNumber", label: "Cheque #" },
     {
       key: "claimedAmount",
       label: "Claimed Amount",
-       render: (row: any) => (
-      <span style={{ color: "#3B82F6", fontWeight: 500 }}>
-        ₹{row.claimedAmount?.toLocaleString() ?? "0"}
-      </span>
-    ),
+      render: (row: any) => (
+        <span style={{ color: "#3B82F6", fontWeight: 500 }}>
+          ₹{row.claimedAmount?.toLocaleString() ?? "0"}
+        </span>
+      ),
     },
     {
       key: "approvedAmount",
       label: "Approved Amount",
-       render: (row: any) => (
-      <span style={{ color: "#059669", fontWeight: 500 }}>
-        ₹{row.approvedAmount?.toLocaleString() ?? "0"}
-      </span>
-    ),
+      render: (row: any) => (
+        <span style={{ color: "#059669", fontWeight: 500 }}>
+          ₹{row.approvedAmount?.toLocaleString() ?? "0"}
+        </span>
+      ),
     },
     {
       key: "settledAmount",
       label: "Settled Amount",
-       render: (row: any) => (
-      <span style={{ color: "#3B82F6", fontWeight: 500 }}>
-        ₹{row.settledAmount?.toLocaleString() ?? "0"}
-      </span>
-    ),
+      render: (row: any) => (
+        <span style={{ color: "#3B82F6", fontWeight: 500 }}>
+          ₹{row.settledAmount?.toLocaleString() ?? "0"}
+        </span>
+      ),
     },
 
     {
       key: "depositAmount",
       label: "Deposit Amount",
-       render: (row: any) => (
-      <span style={{ color: "#3B82F6", fontWeight: 500 }}>
-        ₹{row.depositAmount?.toLocaleString() ?? "0"}
-      </span>
-    ),
+      render: (row: any) => (
+        <span style={{ color: "#3B82F6", fontWeight: 500 }}>
+          ₹{row.depositAmount?.toLocaleString() ?? "0"}
+        </span>
+      ),
     },
     {
       key: "status",
@@ -162,36 +162,43 @@ const statusColorMap: Record<string, string> = {
       label: "Claim Age",
     },
     { key: "insuranceCompany", label: "Insurance Company" },
-    { key: "chequeReceivedDate", label: "Cheque Received Date",render: (row: any) => {
-    const formatDate = (dateString: string) => {
-      const date = new Date(dateString);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-      return `${day}-${month}-${year}`;
-    };
-    return( formatDate(row.chequeReceivedDate));}, },
-    { key: "claimedDate", label: "Claimed Date", render: (row: any) => {
-    const formatDate = (dateString: string) => {
-      const date = new Date(dateString);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-      return `${day}-${month}-${year}`;
-    };
-    return( formatDate(row.claimedDate??'N/A'));}, },
+    {
+      key: "chequeReceivedDate", label: "Cheque Received Date", render: (row: any) => {
+        const formatDate = (dateString: string) => {
+          const date = new Date(dateString);
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const year = date.getFullYear();
+          return `${day}-${month}-${year}`;
+        };
+        return (formatDate(row.chequeReceivedDate));
+      },
+    },
+    {
+      key: "claimedDate", label: "Claimed Date", render: (row: any) => {
+        const formatDate = (dateString: string) => {
+          const date = new Date(dateString);
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const year = date.getFullYear();
+          return `${day}-${month}-${year}`;
+        };
+        return (formatDate(row.claimedDate ?? 'N/A'));
+      },
+    },
     {
       key: "depositDate",
       label: "Deposit Date",
       render: (row: any) => {
-    const formatDate = (dateString: string) => {
-      const date = new Date(dateString);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-      return `${day}-${month}-${year}`;
-    };
-    return( formatDate(row.depositDate ?? "N/A"))},
+        const formatDate = (dateString: string) => {
+          const date = new Date(dateString);
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const year = date.getFullYear();
+          return `${day}-${month}-${year}`;
+        };
+        return (formatDate(row.depositDate ?? "N/A"))
+      },
     },
   ];
 
@@ -205,128 +212,183 @@ const statusColorMap: Record<string, string> = {
     color?: "error" | "success" | "warning" | "info";
   };
 
-const getTimeline = (dialogData: any): TimelineStep[] => {
-  const formatDate = (dateStr: string | null | undefined): string => {
-    if (!dateStr) return "N/A";
-    const date = new Date(dateStr);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
+  const getTimeline = (dialogData: any): TimelineStep[] => {
+    const formatDate = (dateStr: string | null | undefined): string => {
+      if (!dateStr) return "N/A";
+      const date = new Date(dateStr);
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    };
+    
+    const baseTimeline: TimelineStep[] = [
+      {
+        label: "Claim Created",
+        description: "Claim created in system",
+        date: formatDate(dialogData.claimCreationDate),
+      },
+      {
+        label: "Claim Submitted",
+        description: "Initial claim submission received",
+        date: formatDate(dialogData.claimedDate),
+      },
+    ];
+
+    if (dialogData.status === "Approved") {
+      baseTimeline.push({
+        label: "Approved",
+        description: "Claim approved for settlement",
+        date: formatDate(dialogData.approvalDate),
+      });
+    }
+
+    if (dialogData.status === "Settled") {
+      baseTimeline.push(
+        {
+          label: "Claim Approved",
+          description: "Claim approved for settlement",
+          date: formatDate(dialogData.approvalDate),
+        },
+        {
+          label: "Claim Settled",
+          description: "The claim amount has been settled successfully.",
+          date: formatDate(dialogData.settledData || ''),
+        }
+      );
+    }
+
+    if (dialogData.status === "Enhancement Approved") {
+      baseTimeline.push(
+        {
+          label: "Claim Approved",
+          description: "Claim approved for settlement",
+          date: formatDate(dialogData.approvalDate),
+        },
+        {
+          label: "Enhancement Submitted",
+          description: "An enhancement request has been submitted for additional claim amount.",
+          date: formatDate(dialogData.enhancementSubmittedDate || ''),
+        },
+        {
+          label: "Enhancement Approved",
+          description: "The enhancement request has been approved and added to the claim.",
+          date: formatDate(dialogData.enhancementApprovedDate || ''),
+        }
+      );
+    }
+console.log(dialogData)
+    if(dialogData.status === 'Deposit Not Found') {
+       baseTimeline.push(
+        {
+          label: "Claim Approved",
+          description: "Claim approved for settlement",
+          date: formatDate(dialogData.approvalDate),
+        },
+       {
+          label: "Claim Settled",
+          description: "The claim amount has been settled successfully.",
+          date: formatDate(dialogData.settledData || ''),
+        },
+        {
+          label: "Deposit Not Found",
+          description: "The claim was marked as settled, but the deposit could not be confirmed in the beneficiary's account.",
+          date: formatDate(dialogData.depositNotFoundDate || ''),
+        }
+      );
+    }
+
+    if (dialogData.status === "Exception") {
+      baseTimeline.push({
+        label: "Exception Raised",
+        description: dialogData.reason || "Exception raised",
+        date: formatDate(dialogData.claimCreationDate),
+        color: "error",
+      });
+    }
+
+    if (dialogData.status === "Rejected") {
+      baseTimeline.push({
+        label: "Rejected",
+        description: dialogData.reason || "Claim rejected by insurer",
+        date: formatDate(dialogData.rejectedDate || dialogData.claimCreationDate),
+        color: "error",
+      });
+    }
+
+    if (dialogData.status === "In Progress") {
+      baseTimeline.push({
+        label: "In Progress",
+        description: "Claim processing is underway",
+        date: formatDate(dialogData.inProgressDate || dialogData.claimCreationDate),
+      });
+    }
+
+    if (dialogData.status === "To Do") {
+      baseTimeline.push({
+        label: "To Do",
+        description: "Awaiting submission of documents/processing",
+        date: formatDate(dialogData.claimCreationDate),
+      });
+    }
+
+    return baseTimeline;
   };
-
-  const baseTimeline: TimelineStep[] = [
-    {
-      label: "Claim Created",
-      description: "Claim created in system",
-      date: formatDate(dialogData.claimCreationDate),
-    },
-    {
-      label: "Claim Submitted",
-      description: "Initial claim submission received",
-      date: formatDate(dialogData.claimedDate),
-    },
-  ];
-
-  if (dialogData.status === "Approved" || dialogData.status === "Settled") {
-    baseTimeline.push({
-      label: "Approved",
-      description: "Claim approved for settlement",
-      date: formatDate(dialogData.approvalDate),
-    });
-  }
-
-  if (dialogData.status === "Exception") {
-    baseTimeline.push({
-      label: "Exception Raised",
-      description: dialogData.reason || "Exception raised",
-      date: formatDate(dialogData.claimCreationDate),
-      color: "error",
-    });
-  }
-
-  if (dialogData.status === "Rejected") {
-    baseTimeline.push({
-      label: "Rejected",
-      description: dialogData.reason || "Claim rejected by insurer",
-      date: formatDate(dialogData.rejectedDate || dialogData.claimCreationDate),
-      color: "error",
-    });
-  }
-
-  if (dialogData.status === "In Progress") {
-    baseTimeline.push({
-      label: "In Progress",
-      description: "Claim processing is underway",
-      date: formatDate(dialogData.inProgressDate || dialogData.claimCreationDate),
-    });
-  }
-
-  if (dialogData.status === "To Do") {
-    baseTimeline.push({
-      label: "To Do",
-      description: "Awaiting submission of documents/processing",
-      date: formatDate(dialogData.claimCreationDate),
-    });
-  }
-
-  return baseTimeline;
-};
 
 
   return (
     <>
-    <Box
-  sx={{
-    display: "flex",
-    flexDirection: { xs: "column", sm: "row" },
-    justifyContent: "space-between",
-    alignItems: { xs: "stretch", sm: "center" },
-    flexWrap: "wrap",
-    mb: 2,
-  }}
->
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
+          justifyContent: "space-between",
+          alignItems: { xs: "stretch", sm: "center" },
+          flexWrap: "wrap",
+          // mb: 2,
+        }}
+      >
         <Box sx={{ mt: 1 }}>
-    <DynamicTabs
-      tabs={[
-        { label: "NTR Vaidyaseva", value: "ntr" },
-        { label: "Private Insurances", value: "other" },
-      ]}
-      currentValue={activeTab}
-      onChange={setActiveTab}
-    />
-  </Box>
+          <DynamicTabs
+            tabs={[
+              { label: "NTR Vaidyaseva", value: "ntr" },
+              { label: "Private Insurances", value: "other" },
+            ]}
+            currentValue={activeTab}
+            onChange={setActiveTab}
+          />
+        </Box>
 
-  {/* Filter Button */}
-  <Box
-    sx={{
-      display: "flex",
-      alignSelf: { xs: "flex-end", sm: "center" },
-      justifyContent: "flex-end",
-      alignItems: "center",
-      gap: 1,
-      mt:'-10px',
-      cursor: "pointer",
-            px: 1, 
-        py: 1.5,
-      borderRadius: 2,
-      backgroundColor: "white",
-      color: "#2563EB",
-      fontSize: "14px",
-      fontWeight: 500,
-      "&:hover": {
-        backgroundColor: "#BAE6FD",
-      },
-    }}
-    onClick={() => setFilterOpen(true)}
-  >
-    <FilterList fontSize="small" />
-    Filter Claims
-  </Box>
-</Box>
-    <DynamicTable
-      key={activeTab}
-       loading={false}
+        {/* Filter Button */}
+        <Box
+          sx={{
+            display: "flex",
+            alignSelf: { xs: "flex-end", sm: "center" },
+            justifyContent: "flex-end",
+            alignItems: "center",
+            gap: 1,
+            // mt:'-10px',
+            cursor: "pointer",
+            px: 1,
+            py: 0.5,
+            borderRadius: 2,
+            backgroundColor: "white",
+            color: "#2563EB",
+            fontSize: "14px",
+            fontWeight: 500,
+            "&:hover": {
+              backgroundColor: "#BAE6FD",
+            },
+          }}
+          onClick={() => setFilterOpen(true)}
+        >
+          <FilterList fontSize="small" />
+          Filter Claims
+        </Box>
+      </Box>
+      <DynamicTable
+        key={activeTab}
+        loading={false}
         title={`Unreconciled Claims - ${activeTab === "ntr" ? "NTR Vaidyaseva" : "Private Insurances"
           }`}
         countLabel={`${currentClaims.length} Claims`}
@@ -388,7 +450,7 @@ const getTimeline = (dialogData: any): TimelineStep[] => {
                 }`,
               "Approved Amount": `₹${dialogData.approvedAmount?.toLocaleString() || 0
                 }`,
-             " Variance": `₹${dialogData.differenceAmount?.toLocaleString() || 0
+              " Variance": `₹${dialogData.differenceAmount?.toLocaleString() || 0
                 }`,
             },
             timeline: getTimeline(dialogData),
