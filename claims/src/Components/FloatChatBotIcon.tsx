@@ -1,13 +1,27 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { IconButton } from "@mui/material";
-import chatBot from "../assets/chatbot.png"; // Your bot image path
+import chatBot from "../assets/chatbot.png";
 
 const FloatingChatIcon = ({ onClick }: { onClick: () => void }) => {
   const constraintsRef = useRef<HTMLDivElement>(null);
-  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+    const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+  const pointerDownPos = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
-  useEffect(() => {
+  const handlePointerDown = (e: React.PointerEvent) => {
+    pointerDownPos.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    const dx = Math.abs(e.clientX - pointerDownPos.current.x);
+    const dy = Math.abs(e.clientY - pointerDownPos.current.y);
+    const moved = dx > 5 || dy > 5;
+
+    if (!moved) {
+      onClick();
+    }
+  };
+    useEffect(() => {
     const updateSize = () =>
       setWindowSize({ width: window.innerWidth, height: window.innerHeight });
     updateSize();
@@ -22,42 +36,51 @@ const FloatingChatIcon = ({ onClick }: { onClick: () => void }) => {
         position: "fixed",
         inset: 0,
         zIndex: 2000,
-        pointerEvents: "none", // let children handle clicks
+        pointerEvents: "none",
       }}
     >
       <motion.div
-        drag
-        dragConstraints={constraintsRef}
-        dragElastic={0.2}
-        dragMomentum={false}
         style={{
           position: "absolute",
           bottom: 16,
           right: 16,
-          width: 64,
-          height: 64,
-          touchAction: "none",
-          pointerEvents: "auto", // clickable
-          zIndex: 1500,
-          cursor: "grab",
+          pointerEvents: "auto",
         }}
       >
-        <IconButton
-          onClick={onClick}
-          sx={{
+        <motion.div
+          drag
+          dragConstraints={constraintsRef}
+          dragElastic={0.2}
+          dragMomentum={false}
+          onPointerDown={handlePointerDown}
+          onPointerUp={handlePointerUp}
+          style={{
             width: 64,
             height: 64,
-            borderRadius: "50%",
-            background: "linear-gradient(135deg, #7C3AED, #9333EA)",
-            color: "white",
-            boxShadow: 6,
-            "&:hover": {
-              background: "linear-gradient(135deg, #6D28D9, #7C3AED)",
-            },
+            cursor: "grab",
+            touchAction: "none",
           }}
         >
-          <img src={chatBot} alt="chatBot" style={{ width: 35, height: 35 }} />
-        </IconButton>
+          <IconButton
+            sx={{
+              width: 64,
+              height: 64,
+              borderRadius: "50%",
+              background: "linear-gradient(135deg, #7C3AED, #9333EA)",
+              color: "white",
+              boxShadow: 6,
+              "&:hover": {
+                background: "linear-gradient(135deg, #6D28D9, #7C3AED)",
+              },
+            }}
+          >
+            <img
+              src={chatBot}
+              alt="chatBot"
+              style={{ width: 35, height: 35, pointerEvents: "none" }}
+            />
+          </IconButton>
+        </motion.div>
       </motion.div>
     </div>
   );
