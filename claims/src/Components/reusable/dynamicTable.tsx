@@ -188,7 +188,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
       <Box
         sx={{
           width: "100%",
-          p: 3,
+          p: 1,
           backgroundColor: "rgba(255, 255, 255, 0.8)",
           borderRadius: 2,
           boxShadow: 3,
@@ -360,12 +360,12 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
                     {columns
                       .filter((col) => selectedColumnKeys.includes(col.key))
                       .map((col) => (
-                        <TableCell key={col.key}>
+                        <TableCell key={col.key} sx={{ padding: "10px" }}>
                           {col.render ? col.render(row) : row[col.key]}
                         </TableCell>
                       ))}
                     {actions.length > 0 && (
-                      <TableCell>
+                      <TableCell sx={{ padding: "10px" }}>
                         {actions.map((action, i) => (
                           <Button
                             key={i}

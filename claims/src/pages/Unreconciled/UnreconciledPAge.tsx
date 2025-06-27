@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FilterList, Visibility } from "@mui/icons-material";
 import { unreconciledClaimsData, unreconciledClaimsOther } from "./data";
-import { DynamicTabs } from "../../components/reusable/tabs";
+import { DynamicTabs } from "../../Components/reusable/tabs";
 import {
   Chip,
   Typography,
@@ -13,10 +13,10 @@ import {
   Button,
 } from "@mui/material";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
-import DynamicTable from "../../components/reusable/dynamicTable";
-import { DynamicClaimDialog } from "../../components/reusable/dialog";
+import DynamicTable from "../../Components/reusable/dynamicTable";
+import { DynamicClaimDialog } from "../../Components/reusable/dialog";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
-import { FilterDrawer } from "../../components/reusable/filter";
+import { FilterDrawer } from "../../Components/reusable/filter";
 import ManualReconciliationDialog from "./Manual_reconciled_Dialog";
 
 export interface ClaimRow {
@@ -80,17 +80,17 @@ const statusColorMap: Record<string, string> = {
 
 
   const columns = [
-    { key: "claimNumber", label: "Claim Number" },
+    { key: "claimNumber", label: "Claim #" },
     ...(activeTab === "ntr"
       ? [
         {
           key: "cardNumber",
-          label: "Card Number",
+          label: "Card #",
           render: (row: any) => row.cardNumber ?? "N/A",
         },
       ]
       : []),
-    { key: "chequeNumber", label: "Cheque No." },
+    { key: "chequeNumber", label: "Cheque #" },
     {
       key: "claimedAmount",
       label: "Claimed Amount",
@@ -283,7 +283,7 @@ const getTimeline = (dialogData: any): TimelineStep[] => {
     justifyContent: "space-between",
     alignItems: { xs: "stretch", sm: "center" },
     flexWrap: "wrap",
-    mb: 2,
+    // mb: 2,
   }}
 >
         <Box sx={{ mt: 1 }}>
@@ -305,10 +305,10 @@ const getTimeline = (dialogData: any): TimelineStep[] => {
       justifyContent: "flex-end",
       alignItems: "center",
       gap: 1,
-      mt:'-10px',
+      // mt:'-10px',
       cursor: "pointer",
             px: 1, 
-        py: 1.5,
+        py: 0.5,
       borderRadius: 2,
       backgroundColor: "white",
       color: "#2563EB",
