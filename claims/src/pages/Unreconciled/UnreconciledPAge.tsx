@@ -221,7 +221,7 @@ export default function UnReconciledPage() {
       const year = date.getFullYear();
       return `${day}-${month}-${year}`;
     };
-    console.log(dialogData)
+    
     const baseTimeline: TimelineStep[] = [
       {
         label: "Claim Created",
@@ -250,10 +250,50 @@ export default function UnReconciledPage() {
           description: "Claim approved for settlement",
           date: formatDate(dialogData.approvalDate),
         },
-          {
+        {
           label: "Claim Settled",
           description: "The claim amount has been settled successfully.",
           date: formatDate(dialogData.settledData || ''),
+        }
+      );
+    }
+
+    if (dialogData.status === "Enhancement Approved") {
+      baseTimeline.push(
+        {
+          label: "Claim Approved",
+          description: "Claim approved for settlement",
+          date: formatDate(dialogData.approvalDate),
+        },
+        {
+          label: "Enhancement Submitted",
+          description: "An enhancement request has been submitted for additional claim amount.",
+          date: formatDate(dialogData.enhancementSubmittedDate || ''),
+        },
+        {
+          label: "Enhancement Approved",
+          description: "The enhancement request has been approved and added to the claim.",
+          date: formatDate(dialogData.enhancementApprovedDate || ''),
+        }
+      );
+    }
+console.log(dialogData)
+    if(dialogData.status === 'Deposit Not Found') {
+       baseTimeline.push(
+        {
+          label: "Claim Approved",
+          description: "Claim approved for settlement",
+          date: formatDate(dialogData.approvalDate),
+        },
+       {
+          label: "Claim Settled",
+          description: "The claim amount has been settled successfully.",
+          date: formatDate(dialogData.settledData || ''),
+        },
+        {
+          label: "Deposit Not Found",
+          description: "The claim was marked as settled, but the deposit could not be confirmed in the beneficiary's account.",
+          date: formatDate(dialogData.depositNotFoundDate || ''),
         }
       );
     }
