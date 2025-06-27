@@ -23,6 +23,8 @@ import {
   endOfYear,
 } from "date-fns";
 import { useState } from "react";
+import { ButtonComponent } from "../../components/reusable/Button";
+import { DropdownComponent, DropdownOption } from "../../components/reusable/Dropdown";
 
 interface Props {
   open: boolean;
@@ -34,6 +36,10 @@ interface Props {
 const DashboardFilterPopover = ({ anchorEl, onClose, onApply,open }: Props) => {
 
   const [type, setType] = useState("today");
+   const [selectedPeriod, setSelectedPeriod] = useState<DropdownOption | null>({
+    label: 'Today',
+    value: 'today',
+  });
 
   const [monthDate, setMonthDate] = useState<Date | null>(new Date());
   const [weekDate, setWeekDate] = useState<Date | null>(new Date());
@@ -77,6 +83,16 @@ const DashboardFilterPopover = ({ anchorEl, onClose, onApply,open }: Props) => {
     onClose();
   };
 
+    const periodOptions: DropdownOption[] = [
+    { label: 'Today', value: 'today' },
+    { label: 'Week', value: 'week' },
+    { label: 'Month', value: 'month' },
+    { label: 'Quarter', value: 'quarter' },
+    { label: 'Year', value: 'year' },
+    { label: 'Custom Range', value: 'custom' },
+  ];
+
+
   return (
     <Popover
       open={open}
@@ -86,7 +102,7 @@ const DashboardFilterPopover = ({ anchorEl, onClose, onApply,open }: Props) => {
         vertical: "top",
         horizontal: "right",
       }}
-       sx={{  display: "flex", padding: 1, mt: 14 }}
+       sx={{  display: "flex", padding: 1, mt: 12 }}
     >
     <Box
   sx={{
@@ -99,21 +115,13 @@ const DashboardFilterPopover = ({ anchorEl, onClose, onApply,open }: Props) => {
   }}
 >
         <Typography variant="subtitle1" mb={1}>
-          Select Period
-        </Typography>
-        <Select
-          fullWidth
-          size="small"
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-        >
-          <MenuItem value="today">Today</MenuItem>
-          <MenuItem value="week">Week</MenuItem>
-          <MenuItem value="month">Month</MenuItem>
-          <MenuItem value="quarter">Quarter</MenuItem>
-          <MenuItem value="year">Year</MenuItem>
-          <MenuItem value="custom">Custom Range</MenuItem>
-        </Select>
+        Select Period
+      </Typography>
+      <DropdownComponent
+        options={periodOptions}
+        value={selectedPeriod}
+        onChange={setSelectedPeriod}
+      />
 
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           {type === "week" && (
@@ -201,25 +209,28 @@ const DashboardFilterPopover = ({ anchorEl, onClose, onApply,open }: Props) => {
   mt={3}
   gap={1}
 >
-  <Button
-    onClick={onClose}
+    <ButtonComponent
+        label="Cancel"
+        onClick={onClose}
+        loading={false}
+        color="error"
+        loaderColor="secondary"
+        variant="outlined"
     size="small"
     sx={{
       width: { xs: "100%", sm: "auto" },
     }}
-  >
-    Cancel
-  </Button>
-  <Button
-    onClick={handleApply}
-    variant="contained"
-    size="small"
+      />
+       <ButtonComponent
+        label="Apply"
+        onClick={handleApply}
+        loading={false}
+        variant="contained"
+        size="small"
     sx={{
       width: { xs: "100%", sm: "auto" },
     }}
-  >
-    Apply
-  </Button>
+      />
 </Box>
 
       </Box>

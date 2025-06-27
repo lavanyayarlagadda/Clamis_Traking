@@ -21,13 +21,15 @@ import CalendarToday from "@mui/icons-material/CalendarToday";
 import ArrowForward from "@mui/icons-material/ArrowForward";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { ButtonComponent } from "./Button";
+import { DropdownComponent, DropdownOption } from "./Dropdown";
 
 interface FilterValues {
   fromDate: Date | null;
   toDate: Date | null;
   insuranceCompanies: string[];
   claimStatus?: string | null;
-  claimAge?: string | null;
+  claimAge?: string | null|number;
 }
 
 interface FilterDrawerProps {
@@ -75,6 +77,17 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
       claimAge: null,
     });
   };
+
+const claimAgeOptions: DropdownOption[] = [
+  { label: "None", value: "" },
+  { label: "0-7 days", value: "0-7" },
+  { label: "7-15 days", value: "7-15" },
+  { label: "15-30 days", value: "15-30" },
+  { label: "30-60 days", value: "30-60" },
+  { label: "60-90 days", value: "60-90" },
+];
+
+
 
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
@@ -220,7 +233,7 @@ sx={{
           </LocalizationProvider>
 
           {/* INSURANCE COMPANIES */}
-          <Box mb={3}>
+          <Box mb={3} mt={2}>
             <Typography variant="subtitle1" fontWeight="bold" mb={1}>
               Insurance Companies
             </Typography>
@@ -267,32 +280,30 @@ sx={{
               })}
             </Box>
             {pageType !== "unreconciliation" && (
-               <Box>
-                <FormControl fullWidth size="small">
-                  <Typography
-                    variant="subtitle1"
-                    fontWeight="bold"
-                    mb={1}
-                    id="claim-age-label"
-                  >
-                    Claim Age (days)
-                  </Typography>
-                  <Select
-                    labelId="claim-age-label"
-                    value={filters.claimAge || ""}
-                    onChange={(e) =>
-                      onChange({ ...filters, claimAge: e.target.value })
-                    }
-                  >
-                    <MenuItem value="">None</MenuItem>
-                    <MenuItem value={0-7}>0-7 days</MenuItem>
-                    <MenuItem value={7-15}>7-15 days</MenuItem>
-                    <MenuItem value={15-30}>15-30 days</MenuItem>
-                    <MenuItem value={30-60}>30-60 days</MenuItem>
-                    <MenuItem value={60-90}>60-90 days</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
+            <Box>
+  <Typography
+    variant="subtitle1"
+    fontWeight="bold"
+    mb={1}
+    id="claim-age-label"
+    mt={2}
+  >
+    Claim Age (days)
+  </Typography>
+ <DropdownComponent
+  options={claimAgeOptions}
+  value={
+    claimAgeOptions.find((opt) => opt.value === filters.claimAge) || null
+  }
+  onChange={(val) =>
+    onChange({
+      ...filters,
+     claimAge: val?.value ?? "",
+    })
+  }
+/>
+
+</Box>
             )}
           </Box>
 
@@ -300,7 +311,7 @@ sx={{
           {pageType === "unreconciliation" && (
             <>
               {/* CLAIM STATUS */}
-              <Box mb={2}>
+              <Box mb={2} mt={2}>
                 <Typography variant="subtitle1" fontWeight="bold" mb={1}>
                   Claim Status
                 </Typography>
@@ -327,34 +338,29 @@ sx={{
                   ))}
                 </Box>
               </Box>
+              <Box sx={{mt:2}}>
+  <Typography
+    variant="subtitle1"
+    fontWeight="bold"
+    mb={1}
+    id="claim-age-label"
+  >
+    Claim Age (days)
+  </Typography>
+ <DropdownComponent
+  options={claimAgeOptions}
+  value={
+    claimAgeOptions.find((opt) => opt.value === filters.claimAge) || null
+  }
+  onChange={(val) =>
+    onChange({
+      ...filters,
+     claimAge: val?.value ?? "",
+    })
+  }
+/>
 
-              {/* CLAIM AGE */}
-              <Box>
-                <FormControl fullWidth size="small">
-                  <Typography
-                    variant="subtitle1"
-                    fontWeight="bold"
-                    mb={1}
-                    id="claim-age-label"
-                  >
-                    Claim Age (days)
-                  </Typography>
-                  <Select
-                    labelId="claim-age-label"
-                    value={filters.claimAge || ""}
-                    onChange={(e) =>
-                      onChange({ ...filters, claimAge: e.target.value })
-                    }
-                  >
-                    <MenuItem value="">None</MenuItem>
-                    <MenuItem value={0-7}>0-7 days</MenuItem>
-                    <MenuItem value={7-15}>7-15 days</MenuItem>
-                    <MenuItem value={15-30}>15-30 days</MenuItem>
-                    <MenuItem value={30-60}>30-60 days</MenuItem>
-                    <MenuItem value={60-90}>60-90 days</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
+</Box>
             </>
           )}
         </Box>
@@ -372,29 +378,30 @@ sx={{
     bgcolor: '#f9fafc',
   }}
 >
-  <Button
-    onClick={handleClear}
-    variant="outlined"
-    color="error"
-    sx={{
+  <ButtonComponent
+      label="Clear"
+      onClick={handleClear}
+      loading={false}
+      color="error"
+      loaderColor="secondary"
+      variant="outlined"
+   sx={{
       borderRadius: 2,
       px: 3,
-      width: { xs: '100%', md: 'auto' }, // full width on mobile
+      width: { xs: '100%', md: 'auto' }, 
     }}
-  >
-    Clear
-  </Button>
-  <Button
-    onClick={onClose}
-    variant="contained"
-    sx={{
+    />
+     <ButtonComponent
+      label="Apply"
+      onClick={onClose}
+      loading={false}
+      variant="contained"
+  sx={{
       borderRadius: 2,
       px: 3,
-      width: { xs: '100%', md: 'auto' }, // full width on mobile
+      width: { xs: '100%', md: 'auto' }, 
     }}
-  >
-    Apply
-  </Button>
+    />
 </Box>
 
       </Box>

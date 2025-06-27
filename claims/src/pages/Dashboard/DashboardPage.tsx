@@ -1,32 +1,10 @@
 import React, { useState } from "react";
 import {
   Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Typography,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  FormControl,
-  InputLabel,
-  IconButton,
   Grid,
-  Button,
 } from "@mui/material";
-
-// import { ClaimAmountChart } from '@/components/dashboard/ClaimAmountChart';
-// import { ClaimsByStatus } from '@/components/dashboard/ClaimsByStatus';
-// import { InsurancePerformance } from '@/components/dashboard/InsurancePerformance';
-// import { SettlementReconciliationTrends } from '@/components/dashboard/SettlementReconciliationTrends';
-// import { ReconciliationStatusDistribution } from '@/components/dashboard/ReconciliationStatusDistribution';
-// import { AgingBucketDistribution } from '@/components/dashboard/AgingBucketDistribution';
 import {
-  CalendarToday,
-  Filter,
   FilterList,
-  FilterOutlined,
-  LocalActivity,
 } from "@mui/icons-material";
 import KPIMetrics from "./KPIMetrics";
 import MonthlyClaimsTrend from "./MonthlyClaims";
@@ -36,26 +14,9 @@ import InsurancePerformance from "./InsurancePerformance";
 import ReconciliationStatusDistribution from "./ReconcilationStatusDistribution";
 import AgingBucketDistribution from "./AginBucketDistribution";
 import SettlementReconciliationTrends from "./SettlementReconciliationTrends";
-import CalendarFilterDialog from "./CalendarFilter";
 import DashboardFilterPopover from "./CalendarFilter";
 
-const CardWrapper = ({ children }: { children: React.ReactNode }) => (
-  <Box
-    sx={{
-      height: "100%",
-      background: "linear-gradient(135deg, #ffffff 0%, #f9fafb 100%)",
-      borderRadius: 3,
-      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
-      transition: "transform 0.2s ease-in-out",
-      "&:hover": {
-        transform: "translateY(-4px)",
-        boxShadow: "0 8px 24px rgba(0, 0, 0, 0.08)",
-      },
-    }}
-  >
-    {children}
-  </Box>
-);
+
 
 const Dashboard: React.FC = () => {
   const [openFilter, setOpenFilter] = useState(false);
