@@ -93,7 +93,7 @@ const Dashboard: React.FC = () => {
           display="grid"
           gridTemplateColumns={{ xs: "1fr", lg: "1fr 1fr" }}
           gap={3}
-          alignItems="start"
+          // alignItems="start"
         >
           <MonthlyClaimsTrend />
 
