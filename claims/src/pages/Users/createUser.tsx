@@ -5,7 +5,7 @@ import { FilterDrawer } from "../../Components/reusable/filter";
 import { ButtonComponent } from "../../Components/reusable/Button";
 import { useNavigate } from "react-router-dom";
 
-const Users = ()=> {
+const CreateUser = ()=> {
   const [filterOpen, setFilterOpen] = useState(false);
   interface FilterValues {
     fromDate: Date | null;
@@ -91,4 +91,4 @@ const Users = ()=> {
   );
 }
 
-export default Users;
+export default CreateUser;

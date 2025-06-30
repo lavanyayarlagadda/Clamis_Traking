@@ -8,6 +8,7 @@ import ClaimsPage from "./pages/claims/Claims";
 import ComingSoon from "./Components/reusable/comingSoon";
 // import WorkQueuePage from './pages/workQueue';
 import Users from "./pages/Users";
+import CreateUser from "./pages/Users/createUser";
 const App = () => (
   <Routes>
     <Route path="/" element={<AppLayout />}>
@@ -20,6 +21,8 @@ const App = () => (
       {/* <Route path="workQueue" element={<WorkQueuePage />} /> */}
       <Route path="/profile" element={<ComingSoon title={"Profile"} />} />
       <Route path='/users' element={<Users/>}/>
+       <Route path='/createUser' element={<CreateUser/>}/>
+        <Route path='/updateUser' element={<CreateUser/>}/>
       {/* <Route path="/login" element={<LoginPage />} /> */}
       <Route
         path="/notifications"

@@ -79,7 +79,11 @@ const Header: React.FC<HeaderProps> = ({
       case "profile":
         return "Profile";
       case "users":
-        return "Users"
+        return "Users";
+         case "createUser":
+        return "Create User";
+         case "updateUser":
+        return "Update User";
       default:
         return "Healthcare Insurance Management";
     }
