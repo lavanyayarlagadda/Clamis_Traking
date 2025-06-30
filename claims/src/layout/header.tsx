@@ -80,9 +80,9 @@ const Header: React.FC<HeaderProps> = ({
         return "Profile";
       case "users":
         return "Users";
-         case "createUser":
+      case "createUser":
         return "Create User";
-         case "updateUser":
+      case "updateUser":
         return "Update User";
       default:
         return "Healthcare Insurance Management";
@@ -138,41 +138,7 @@ const Header: React.FC<HeaderProps> = ({
             overflow: "hidden",
           }}
         >
-          <Box
-            sx={{
-              position: "relative",
-              flex: 1,
-              minWidth: 0,
-              maxWidth: { xs: "110px", sm: "160px", md: "220px" },
-              display: { xs: "none", sm: "block", md: "block" },
-            }}
-          >
-            <Search
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "10px",
-                transform: "translateY(-50%)",
-                width: "16px",
-                height: "16px",
-                color: "#9ca3af",
-              }}
-            />
-            <InputBase
-              placeholder="Search"
-              sx={{
-                pl: 4,
-                pr: 1,
-                py: 0.5,
-                border: "1px solid #d1d5db",
-                borderRadius: "8px",
-                fontSize: "13px",
-                width: "100%",
-                fontWeight: 400,
-                bgcolor: "#fff",
-              }}
-            />
-          </Box>
+
 
           <IconButton sx={{ p: 0.75 }} onClick={handleNotificationsClick}>
             <Badge variant="dot" color="error">

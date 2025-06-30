@@ -4,6 +4,8 @@ import {
   CircularProgress,
   Popper,
   Paper,
+  Box,
+  Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
@@ -23,6 +25,9 @@ interface DropdownComponentProps<T = boolean> {
   loading?: boolean;
   multiple?: T;
   disabled?: boolean;
+  required?:boolean;
+  error?: boolean;
+  helperText?: string;
 }
 
 const StyledPopper = styled(Popper)({
@@ -50,11 +55,29 @@ export const DropdownComponent = <T extends boolean = false>({
   options,
   value,
   onChange,
+   error = false,
+  helperText = "",
   loading = false,
   multiple = false as T,
   disabled = false,
+  required= false
 }: DropdownComponentProps<T>) => {
   return (
+<>
+    <Box display="flex" alignItems="center" gap={0.5}>
+        <Typography
+          variant="body2"
+          sx={{ fontWeight: 500, marginBottom: "4px" }}
+          color="#656565"
+        >
+          {label}
+        </Typography>
+        {required && (
+          <Typography component="span" color="error">
+            *
+          </Typography>
+        )}
+      </Box>
     <Autocomplete
       disablePortal={false}
       multiple={multiple}
@@ -70,12 +93,21 @@ export const DropdownComponent = <T extends boolean = false>({
       renderInput={(params) => (
         <TextField
           {...params}
+           placeholder={`Enter a ${label}`}
           size="small"
-          label={label}
           disabled={disabled}
           fullWidth
+          required
+          error={error}
+            helperText={helperText}
           InputProps={{
             ...params.InputProps,
+                       autoComplete: "new-password",
+              style: {
+                appearance: "none",
+                MozAppearance: "textfield",
+                WebkitAppearance: "none",
+              },
             endAdornment: (
               <>
                 {loading ? <CircularProgress size={18} /> : null}
@@ -83,8 +115,27 @@ export const DropdownComponent = <T extends boolean = false>({
               </>
             ),
           }}
+ sx={{
+"&.MuiAutocomplete-root .MuiOutlinedInput-root.MuiInputBase-sizeSmall": {
+      padding: "4px 12px", 
+      borderRadius: 2,
+    },
+    "& .MuiOutlinedInput-root.MuiInputBase-sizeSmall": {
+      padding: "4px 12px",
+      borderRadius: 2,
+       color: "black",
+                  "&::-ms-reveal": {
+                    display: "none",
+                  },
+                  "&::-ms-clear": {
+                    display: "none",
+                  },
+    },
+
+  }}
         />
       )}
     />
+    </>
   );
 };

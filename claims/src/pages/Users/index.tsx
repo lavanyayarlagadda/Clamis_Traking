@@ -5,7 +5,7 @@ import { FilterDrawer } from "../../Components/reusable/filter";
 import { ButtonComponent } from "../../Components/reusable/Button";
 import { useNavigate } from "react-router-dom";
 
-const Users = ()=> {
+const Users = () => {
   const [filterOpen, setFilterOpen] = useState(false);
   interface FilterValues {
     fromDate: Date | null;
@@ -29,12 +29,10 @@ const Users = ()=> {
           flexDirection: { xs: "column", sm: "row" },
           alignItems: { xs: "stretch", sm: "center" },
           flexWrap: "wrap",
-           justifyContent: "flex-end",
-     gap:4
+          justifyContent: "flex-end",
+          gap: 4,
         }}
       >
-
-
         {/* Filter Button */}
         <Box
           sx={{
@@ -59,36 +57,33 @@ const Users = ()=> {
           onClick={() => setFilterOpen(true)}
         >
           <FilterList fontSize="small" />
-         Users Filter
+          Users Filter
         </Box>
 
-     <ButtonComponent
-      label="Create User"
-      onClick={()=>navigate('/createUser')}
-      loading={false}
-      variant="contained"
-  sx={{
-      borderRadius: 2,
-      px: 1,
-      py:0.5,
-      width: { xs: '100%', md: 'auto' }, 
-    }}
-    />
-
+        <ButtonComponent
+          label="Create User"
+          onClick={() => navigate("/createUser")}
+          loading={false}
+          variant="contained"
+          sx={{
+            borderRadius: 2,
+            px: 1,
+            py: 0.25,
+            width: { xs: "100%", md: "auto" },
+          }}
+        />
       </Box>
-
 
       <FilterDrawer
         open={filterOpen}
         onClose={() => setFilterOpen(false)}
         filters={filters}
         onChange={setFilters}
-        roles={["Users","Admin"]}
+        roles={["Users", "Admin"]}
         pageType="users"
       />
-
     </>
   );
-}
+};
 
 export default Users;
