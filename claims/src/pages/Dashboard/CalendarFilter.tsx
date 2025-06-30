@@ -23,8 +23,8 @@ import {
   endOfYear,
 } from "date-fns";
 import { useState } from "react";
-import { ButtonComponent } from "../../components/reusable/Button";
-import { DropdownComponent, DropdownOption } from "../../components/reusable/Dropdown";
+import { ButtonComponent } from "../../Components/reusable/Button";
+import { DropdownComponent, DropdownOption } from "../../Components/reusable/Dropdown";
 
 interface Props {
   open: boolean;

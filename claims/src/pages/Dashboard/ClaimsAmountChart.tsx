@@ -8,7 +8,7 @@ import {
   Stack,
 } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
-import MultiSelect from '../../components/reusable/MultiSelect';
+import MultiSelect from '../../Components/reusable/MultiSelect';
 
 const insuranceCompanies = [
   'NTR Vaidyaseva',

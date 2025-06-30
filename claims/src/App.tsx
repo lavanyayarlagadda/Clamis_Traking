@@ -5,8 +5,9 @@ import ReportsPage from "./pages/Reports/ReportsPAge";
 import ReconciledPage from "./pages/Reconciled/ReconciledPage";
 import UnReconciledPage from "./pages/Unreconciled/UnreconciledPAge";
 import ClaimsPage from "./pages/claims/Claims";
-import ComingSoon from "./components/reusable/comingSoon";
+import ComingSoon from "./Components/reusable/comingSoon";
 // import WorkQueuePage from './pages/workQueue';
+import Users from "./pages/Users";
 const App = () => (
   <Routes>
     <Route path="/" element={<AppLayout />}>
@@ -18,6 +19,7 @@ const App = () => (
       <Route path="allclaims" element={<ClaimsPage />} />
       {/* <Route path="workQueue" element={<WorkQueuePage />} /> */}
       <Route path="/profile" element={<ComingSoon title={"Profile"} />} />
+      <Route path='/users' element={<Users/>}/>
       {/* <Route path="/login" element={<LoginPage />} /> */}
       <Route
         path="/notifications"

@@ -19,16 +19,12 @@ import {
   ExpandMore,
   Description,
   LocalActivity,
-  InsertDriveFile,
   Check,
   LockClock,
-  Group,
   ChevronLeft,
-  HealthAndSafety,
   ChevronRight,
-  LibraryBooks,
   ReceiptLong,
-  FolderSpecial
+People
 } from '@mui/icons-material';
 import { useLocation, Link } from 'react-router-dom';
 
@@ -58,8 +54,12 @@ const menuItems = [
 
     ],
   },
+  {id:'users',
+    label:'Users',
+    icon:People,
+    color:'blue'
+  }
  
-  //   { id: 'workQueue', label: 'Work Queue', icon: Group, color: '#a855f7' },
 ];
 
 const DrawerContent = ({

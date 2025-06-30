@@ -78,6 +78,8 @@ const Header: React.FC<HeaderProps> = ({
         return "Notifications";
       case "profile":
         return "Profile";
+      case "users":
+        return "Users"
       default:
         return "Healthcare Insurance Management";
     }

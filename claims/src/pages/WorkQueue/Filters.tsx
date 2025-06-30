@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 import {
   DropdownComponent,
   DropdownOption,
-} from "../../components/reusable/Dropdown";
+} from "../../Components/reusable/Dropdown";
 
 const people: DropdownOption[] = ["Alice", "Bob", "Charlie"].map((name) => ({
   label: name,

@@ -11,7 +11,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { PieChart } from '@mui/x-charts/PieChart';
-import MultiSelect from '../../components/reusable/MultiSelect';
+import MultiSelect from '../../Components/reusable/MultiSelect';
 
 const insuranceCompanies = [
   'NTR Vaidyaseva',

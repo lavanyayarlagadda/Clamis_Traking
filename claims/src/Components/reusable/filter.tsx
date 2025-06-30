@@ -5,15 +5,8 @@ import {
   Box,
   Typography,
   IconButton,
-  Button,
   Chip,
-  TextField,
-  Divider,
   InputAdornment,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -21,8 +14,9 @@ import CalendarToday from "@mui/icons-material/CalendarToday";
 import ArrowForward from "@mui/icons-material/ArrowForward";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { ButtonComponent } from "./Button";
 import { DropdownComponent, DropdownOption } from "./Dropdown";
+import { ButtonComponent } from "./Button";
+
 
 interface FilterValues {
   fromDate: Date | null;
