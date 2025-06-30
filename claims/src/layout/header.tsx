@@ -19,6 +19,7 @@ import {
   Menu as MenuIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/hooks/useAuth";
 
 interface HeaderProps {
   isSidebarOpen: boolean;
@@ -32,6 +33,7 @@ const Header: React.FC<HeaderProps> = ({
   onSidebarToggle,
 }) => {
   const theme = useTheme();
+  const { logout }  = useAuth();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
 
@@ -52,6 +54,7 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   const handleLogout = () => {
+    logout();
     handleClose();
     navigate("/login");
   };
