@@ -8,7 +8,7 @@ const FloatingChatIcon = ({ onClick }: { onClick: () => void }) => {
     const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
   const pointerDownPos = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
-  const handlePointerDown = (e: React.PointerEvent) => {
+  const handlePointerDown  = (e: React.PointerEvent) => {
     pointerDownPos.current = { x: e.clientX, y: e.clientY };
   };
 
