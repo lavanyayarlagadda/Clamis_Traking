@@ -9,7 +9,7 @@ import {
   Stack,
   useTheme,
 } from '@mui/material';
-import MultiSelect from '../../components/reusable/MultiSelect';
+import MultiSelect from '../../Components/reusable/MultiSelect';
 
 interface StatusData {
   name: string;

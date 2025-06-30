@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import FiltersPane from "./Filters";
 import { FilterList } from "@mui/icons-material";
-import ReusableDrawer from "../../components/reusable/reusableDrawer";
+import ReusableDrawer from "../../Components/reusable/reusableDrawer";
 
 
 import WorkQueueTableGrid from "./workQueueGrid";

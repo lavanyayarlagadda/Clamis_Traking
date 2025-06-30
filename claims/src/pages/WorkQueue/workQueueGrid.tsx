@@ -1,7 +1,7 @@
 // components/WorkQueueTableGrid.tsx
 
 import React from "react";
-import DynamicTable from "../../components/reusable/dynamicTable"
+import DynamicTable from "../../Components/reusable/dynamicTable"
 import { Chip, Stack, Typography } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";

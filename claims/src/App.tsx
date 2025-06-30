@@ -5,7 +5,7 @@ import ReportsPage from "./pages/Reports/ReportsPAge";
 import ReconciledPage from "./pages/Reconciled/ReconciledPage";
 import UnReconciledPage from "./pages/Unreconciled/UnreconciledPAge";
 import ClaimsPage from "./pages/claims/Claims";
-import ComingSoon from "./components/reusable/comingSoon";
+import ComingSoon from "./Components/reusable/comingSoon";
 // import WorkQueuePage from './pages/workQueue';
 const App = () => (
   <Routes>

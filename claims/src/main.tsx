@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { BrowserRouter } from 'react-router-dom';
-import ChatWidget from './components/chatBot';
+import ChatWidget from './Components/chatBot';
 
 
 const theme = createTheme();

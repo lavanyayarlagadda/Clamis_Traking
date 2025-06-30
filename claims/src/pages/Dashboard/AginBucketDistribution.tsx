@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import ApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
-import MultiSelect from "../../components/reusable/MultiSelect";
+import MultiSelect from "../../Components/reusable/MultiSelect";
 
 // Type for each aging bucket data item
 type BucketData = {
