@@ -30,7 +30,7 @@ const Users = () => {
           alignItems: { xs: "stretch", sm: "center" },
           flexWrap: "wrap",
           justifyContent: "flex-end",
-          gap: 4,
+          gap: 2,
         }}
       >
         {/* Filter Button */}

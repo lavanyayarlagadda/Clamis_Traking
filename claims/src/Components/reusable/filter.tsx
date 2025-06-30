@@ -17,14 +17,13 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DropdownComponent, DropdownOption } from "./Dropdown";
 import { ButtonComponent } from "./Button";
 
-
 interface FilterValues {
   fromDate: Date | null;
   toDate: Date | null;
   insuranceCompanies: string[];
   claimStatus?: string | null;
-  claimAge?: string | null|number;
-  roles?:string[];
+  claimAge?: string | null | number;
+  roles?: string[];
 }
 
 interface FilterDrawerProps {
@@ -33,8 +32,8 @@ interface FilterDrawerProps {
   filters: FilterValues;
   onChange: (filters: FilterValues) => void;
   insuranceOptions?: string[];
-  pageType: "reconciliation" | "unreconciliation" |"users";
-  roles?:string[];
+  pageType: "reconciliation" | "unreconciliation" | "users";
+  roles?: string[];
 }
 
 export const FilterDrawer: React.FC<FilterDrawerProps> = ({
@@ -44,7 +43,7 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
   onChange,
   insuranceOptions,
   pageType,
-  roles
+  roles,
 }) => {
   const [openFrom, setOpenFrom] = useState(false);
   const [openTo, setOpenTo] = useState(false);
@@ -75,44 +74,41 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
     });
   };
 
-const claimAgeOptions: DropdownOption[] = [
-  { label: "None", value: "" },
-  { label: "0-7 days", value: "0-7" },
-  { label: "7-15 days", value: "7-15" },
-  { label: "15-30 days", value: "15-30" },
-  { label: "30-60 days", value: "30-60" },
-  { label: "60-90 days", value: "60-90" },
-];
+  const claimAgeOptions: DropdownOption[] = [
+    { label: "None", value: "" },
+    { label: "0-7 days", value: "0-7" },
+    { label: "7-15 days", value: "7-15" },
+    { label: "15-30 days", value: "15-30" },
+    { label: "30-60 days", value: "30-60" },
+    { label: "60-90 days", value: "60-90" },
+  ];
 
-const roleOptions: DropdownOption[] = [
-  { label: "User", value: "User" },
-  { label: "Admin", value: "Admin" },
-];
-
-
+  const roleOptions: DropdownOption[] = [
+    { label: "User", value: "User" },
+    { label: "Admin", value: "Admin" },
+  ];
 
   return (
-   <Drawer
-  anchor="right"
-  open={open}
-  onClose={onClose}
-  PaperProps={{
-    sx: {
-      borderTopLeftRadius: 12,
-      borderBottomLeftRadius: 12,
-      overflow: "hidden", // optional: clips child corners
-    },
-  }}
->
+    <Drawer
+      anchor="right"
+      open={open}
+      onClose={onClose}
+      PaperProps={{
+        sx: {
+          borderTopLeftRadius: 12,
+          borderBottomLeftRadius: 12,
+          overflow: "hidden", // optional: clips child corners
+        },
+      }}
+    >
       <Box
-sx={{
-  width: '100%', // Full width of container
-  maxWidth:{xs:500,sm:600}, // Optional cap to prevent stretching on large screens
-  display: 'flex',
-  flexDirection: 'column',
-  height: '100%',
-}}
-
+        sx={{
+          width: "100%", // Full width of container
+          maxWidth: { xs: 500, sm: 600 }, // Optional cap to prevent stretching on large screens
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+        }}
       >
         {/* HEADER */}
         <Box
@@ -126,7 +122,7 @@ sx={{
           }}
         >
           <Typography variant="h6" fontWeight={600}>
-            {roles ? "Users Filters":"Filter Claims"}
+            {roles ? "Users Filters" : "Filter Claims"}
           </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
@@ -143,7 +139,7 @@ sx={{
                 sx={{
                   display: "flex",
                   gap: "8px",
-                  flexDirection: { md: "row", sm: "row",xs:'column' },
+                  flexDirection: { md: "row", sm: "row", xs: "column" },
                 }}
               >
                 <Box
@@ -152,10 +148,11 @@ sx={{
                   flex="1"
                   maxWidth="170px"
                 >
-                  <Typography variant="subtitle1" fontWeight="bold" mb={1}>
+                  <Typography variant="body2" sx={{ color: "#656565", mb: 1 }}>
                     From Date
                   </Typography>
                   <DatePicker
+                    label="From Date"
                     open={openFrom}
                     onOpen={() => setOpenFrom(true)}
                     onClose={() => setOpenFrom(false)}
@@ -191,7 +188,9 @@ sx={{
                   />
                 </Box>
 
-                <ArrowForward sx={{ alignSelf: "center", marginTop: {sm:4} }} />
+                <ArrowForward
+                  sx={{ alignSelf: "center", marginTop: { sm: 4 } }}
+                />
 
                 <Box
                   display="flex"
@@ -199,7 +198,7 @@ sx={{
                   flex="1"
                   maxWidth="170px"
                 >
-                  <Typography variant="subtitle1" fontWeight="bold" mb={1}>
+                  <Typography variant="body2" sx={{ color: "#656565", mb: 1 }}>
                     To Date
                   </Typography>
                   <DatePicker
@@ -246,87 +245,82 @@ sx={{
           </LocalizationProvider>
 
           {/* INSURANCE COMPANIES */}
-          {insuranceOptions && 
-          <Box mb={3} mt={2}>
-            <Typography variant="subtitle1" fontWeight="bold" mb={1}>
-              Insurance Companies
-            </Typography>
-            <Box display="flex" flexWrap="wrap" gap={1}>
-              {insuranceOptions && insuranceOptions.map((company) => {
-                const isSelected = filters.insuranceCompanies.includes(company);
-                return (
-                  <Chip
-                    key={company}
-                    label={company}
-                    clickable={!isSelected}
-                    onClick={() => {
-                      if (!isSelected) {
-                        onChange({
-                          ...filters,
-                          insuranceCompanies: [
-                            ...filters.insuranceCompanies,
-                            company,
-                          ],
-                        });
-                      }
-                    }}
-                    onDelete={
-                      isSelected
-                        ? () =>
+          {insuranceOptions && (
+            <Box mb={3} mt={2}>
+              <Typography variant="body2" sx={{ color: "#656565", mb: 1 }}>
+                Insurance Companies
+              </Typography>
+              <Box display="flex" flexWrap="wrap" gap={1} mb={1}>
+                {insuranceOptions &&
+                  insuranceOptions.map((company) => {
+                    const isSelected =
+                      filters.insuranceCompanies.includes(company);
+                    return (
+                      <Chip
+                        key={company}
+                        label={company}
+                        clickable={!isSelected}
+                        onClick={() => {
+                          if (!isSelected) {
                             onChange({
                               ...filters,
-                              insuranceCompanies:
-                                filters.insuranceCompanies.filter(
-                                  (c) => c !== company
-                                ),
-                            })
-                        : undefined
+                              insuranceCompanies: [
+                                ...filters.insuranceCompanies,
+                                company,
+                              ],
+                            });
+                          }
+                        }}
+                        onDelete={
+                          isSelected
+                            ? () =>
+                                onChange({
+                                  ...filters,
+                                  insuranceCompanies:
+                                    filters.insuranceCompanies.filter(
+                                      (c) => c !== company
+                                    ),
+                                })
+                            : undefined
+                        }
+                        sx={{
+                          backgroundColor: isSelected ? "#4DB6AC" : "#e0e0e0",
+                          color: isSelected ? "#fff" : "#000",
+                          "& .MuiChip-deleteIcon": {
+                            color: "#fff",
+                          },
+                        }}
+                      />
+                    );
+                  })}
+              </Box>
+              {pageType !== "unreconciliation" && (
+                <Box>
+                  <DropdownComponent
+                    label="Claim Age (days)"
+                    options={claimAgeOptions}
+                    value={
+                      claimAgeOptions.find(
+                        (opt) => opt.value === filters.claimAge
+                      ) || null
                     }
-                    sx={{
-                      backgroundColor: isSelected ? "#4DB6AC" : "#e0e0e0",
-                      color: isSelected ? "#fff" : "#000",
-                      "& .MuiChip-deleteIcon": {
-                        color: "#fff",
-                      },
-                    }}
+                    onChange={(val) =>
+                      onChange({
+                        ...filters,
+                        claimAge: val?.value ?? "",
+                      })
+                    }
                   />
-                );
-              })}
+                </Box>
+              )}
             </Box>
-            {pageType !== "unreconciliation" && (
-            <Box>
-  <Typography
-    variant="subtitle1"
-    fontWeight="bold"
-    mb={1}
-    id="claim-age-label"
-    mt={2}
-  >
-    Claim Age (days)
-  </Typography>
- <DropdownComponent
-  options={claimAgeOptions}
-  value={
-    claimAgeOptions.find((opt) => opt.value === filters.claimAge) || null
-  }
-  onChange={(val) =>
-    onChange({
-      ...filters,
-     claimAge: val?.value ?? "",
-    })
-  }
-/>
-
-</Box>
-            )}
-          </Box>
-}
+          )}
           {/* Extra Filters for "unreconciliation" */}
           {pageType === "unreconciliation" && (
             <>
               {/* CLAIM STATUS */}
               <Box mb={2} mt={2}>
-                <Typography variant="subtitle1" fontWeight="bold" mb={1}>
+                <Typography variant="body2" sx={{ color: "#656565", mb: 1 }}>
                   Claim Status
                 </Typography>
                 <Box display="flex" gap={1} flexWrap="wrap">
@@ -352,102 +346,85 @@ sx={{
                   ))}
                 </Box>
               </Box>
-              <Box sx={{mt:2}}>
-  <Typography
-    variant="subtitle1"
-    fontWeight="bold"
-    mb={1}
-    id="claim-age-label"
-  >
-    Claim Age (days)
-  </Typography>
- <DropdownComponent
-  options={claimAgeOptions}
-  value={
-    claimAgeOptions.find((opt) => opt.value === filters.claimAge) || null
-  }
-  onChange={(val) =>
-    onChange({
-      ...filters,
-     claimAge: val?.value ?? "",
-    })
-  }
-/>
-
-</Box>
+              <Box sx={{ mt: 2 }}>
+                <DropdownComponent
+                  label="Claim Age (days)"
+                  options={claimAgeOptions}
+                  value={
+                    claimAgeOptions.find(
+                      (opt) => opt.value === filters.claimAge
+                    ) || null
+                  }
+                  onChange={(val) =>
+                    onChange({
+                      ...filters,
+                      claimAge: val?.value ?? "",
+                    })
+                  }
+                />
+              </Box>
             </>
           )}
 
-{pageType === "users" && roles && (
-  <Box sx={{ mt: 2 }}>
-    <Typography
-      variant="subtitle1"
-      fontWeight="bold"
-      mb={1}
-      id="claim-age-label"
-    >
-      Roles
-    </Typography>
-    <DropdownComponent
-      options={roleOptions}
-      value={
-        roleOptions.find((opt) =>
-          filters.roles?.includes(opt.value as string)
-        ) || null
-      }
-      onChange={(val) =>
-        onChange({
-  ...filters,
-  roles: val?.value ? [String(val.value)] : [],
-})
-
-      }
-    />
-  </Box>
-)}
-
+          {pageType === "users" && roles && (
+            <Box sx={{ mt: 2 }}>
+              <DropdownComponent
+                label="Roles"
+                options={roleOptions}
+                value={
+                  roleOptions.find((opt) =>
+                    filters.roles?.includes(opt.value as string)
+                  ) || null
+                }
+                onChange={(val) =>
+                  onChange({
+                    ...filters,
+                    roles: val?.value ? [String(val.value)] : [],
+                  })
+                }
+              />
+            </Box>
+          )}
         </Box>
-
 
         {/* FOOTER */}
         <Box
-  sx={{
-    p: 2,
-    borderTop: '1px solid #e0e0e0',
-    display: 'flex',
-    flexDirection: {  sm: 'row', md: 'row' }, 
-    justifyContent: 'space-between',
-    alignItems: 'stretch',
-    gap: 2, // space between buttons
-    bgcolor: '#f9fafc',
-  }}
->
-  <ButtonComponent
-      label="Clear"
-      onClick={handleClear}
-      loading={false}
-      color="error"
-      loaderColor="secondary"
-      variant="outlined"
-   sx={{
-      borderRadius: 2,
-      px: 3,
-      width: { xs: '100%', md: 'auto' }, 
-    }}
-    />
-     <ButtonComponent
-      label="Apply"
-      onClick={onClose}
-      loading={false}
-      variant="contained"
-  sx={{
-      borderRadius: 2,
-      px: 3,
-      width: { xs: '100%', md: 'auto' }, 
-    }}
-    />
-</Box>
-
+          sx={{
+            p: 2,
+            borderTop: "1px solid #e0e0e0",
+            display: "flex",
+            flexDirection: { sm: "row", md: "row" },
+            justifyContent: "space-between",
+            alignItems: "stretch",
+            gap: 2, // space between buttons
+            bgcolor: "#f9fafc",
+          }}
+        >
+          <ButtonComponent
+            label="Clear"
+            onClick={handleClear}
+            loading={false}
+            color="error"
+            loaderColor="secondary"
+            variant="outlined"
+            sx={{
+              borderRadius: 2,
+              px: 3,
+              width: { xs: "100%", md: "auto" },
+            }}
+          />
+          <ButtonComponent
+            label="Apply"
+            onClick={onClose}
+            loading={false}
+            variant="contained"
+            sx={{
+              borderRadius: 2,
+              px: 3,
+              width: { xs: "100%", md: "auto" },
+            }}
+          />
+        </Box>
       </Box>
     </Drawer>
   );
