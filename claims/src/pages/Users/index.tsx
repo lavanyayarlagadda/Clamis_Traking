@@ -86,8 +86,8 @@ const Users = ()=> {
         onClose={() => setFilterOpen(false)}
         filters={filters}
         onChange={setFilters}
-        insuranceOptions={["ICICI", "Star", "Religare"]}
-        pageType="reconciliation"
+        roles={["Users","Admin"]}
+        pageType="users"
       />
 
     </>

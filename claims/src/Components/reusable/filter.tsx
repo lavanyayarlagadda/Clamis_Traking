@@ -24,6 +24,7 @@ interface FilterValues {
   insuranceCompanies: string[];
   claimStatus?: string | null;
   claimAge?: string | null|number;
+  roles?:string[];
 }
 
 interface FilterDrawerProps {
@@ -31,8 +32,9 @@ interface FilterDrawerProps {
   onClose: () => void;
   filters: FilterValues;
   onChange: (filters: FilterValues) => void;
-  insuranceOptions: string[];
-  pageType: "reconciliation" | "unreconciliation";
+  insuranceOptions?: string[];
+  pageType: "reconciliation" | "unreconciliation" |"users";
+  roles?:string[];
 }
 
 export const FilterDrawer: React.FC<FilterDrawerProps> = ({
@@ -42,6 +44,7 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
   onChange,
   insuranceOptions,
   pageType,
+  roles
 }) => {
   const [openFrom, setOpenFrom] = useState(false);
   const [openTo, setOpenTo] = useState(false);
@@ -81,10 +84,26 @@ const claimAgeOptions: DropdownOption[] = [
   { label: "60-90 days", value: "60-90" },
 ];
 
+const roleOptions: DropdownOption[] = [
+  { label: "User", value: "User" },
+  { label: "Admin", value: "Admin" },
+];
+
 
 
   return (
-    <Drawer anchor="right" open={open} onClose={onClose}>
+   <Drawer
+  anchor="right"
+  open={open}
+  onClose={onClose}
+  PaperProps={{
+    sx: {
+      borderTopLeftRadius: 12,
+      borderBottomLeftRadius: 12,
+      overflow: "hidden", // optional: clips child corners
+    },
+  }}
+>
       <Box
 sx={{
   width: '100%', // Full width of container
@@ -107,7 +126,7 @@ sx={{
           }}
         >
           <Typography variant="h6" fontWeight={600}>
-            Filter Claims
+            {roles ? "Users Filters":"Filter Claims"}
           </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
@@ -227,12 +246,13 @@ sx={{
           </LocalizationProvider>
 
           {/* INSURANCE COMPANIES */}
+          {insuranceOptions && 
           <Box mb={3} mt={2}>
             <Typography variant="subtitle1" fontWeight="bold" mb={1}>
               Insurance Companies
             </Typography>
             <Box display="flex" flexWrap="wrap" gap={1}>
-              {insuranceOptions.map((company) => {
+              {insuranceOptions && insuranceOptions.map((company) => {
                 const isSelected = filters.insuranceCompanies.includes(company);
                 return (
                   <Chip
@@ -300,7 +320,7 @@ sx={{
 </Box>
             )}
           </Box>
-
+}
           {/* Extra Filters for "unreconciliation" */}
           {pageType === "unreconciliation" && (
             <>
@@ -357,7 +377,37 @@ sx={{
 </Box>
             </>
           )}
+
+{pageType === "users" && roles && (
+  <Box sx={{ mt: 2 }}>
+    <Typography
+      variant="subtitle1"
+      fontWeight="bold"
+      mb={1}
+      id="claim-age-label"
+    >
+      Roles
+    </Typography>
+    <DropdownComponent
+      options={roleOptions}
+      value={
+        roleOptions.find((opt) =>
+          filters.roles?.includes(opt.value as string)
+        ) || null
+      }
+      onChange={(val) =>
+        onChange({
+  ...filters,
+  roles: val?.value ? [String(val.value)] : [],
+})
+
+      }
+    />
+  </Box>
+)}
+
         </Box>
+
 
         {/* FOOTER */}
         <Box
