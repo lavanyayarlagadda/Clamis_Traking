@@ -154,7 +154,11 @@ export default function UnReconciledPage() {
       render: (row: any) => {
         const diff = (row.claimedAmount ?? 0) - (row.settledAmount ?? 0);
         const display = `₹${Math.abs(diff).toLocaleString()}`;
-        return diff === 0 ? "₹0" : display;
+        return (
+          <span style={{ color: "#3B82F6", fontWeight: 500 }}>
+            {diff === 0 ? "₹0" : display}
+          </span>
+        );
       },
     },
     {
@@ -221,7 +225,7 @@ export default function UnReconciledPage() {
       const year = date.getFullYear();
       return `${day}-${month}-${year}`;
     };
-    
+
     const baseTimeline: TimelineStep[] = [
       {
         label: "Claim Created",
@@ -277,15 +281,15 @@ export default function UnReconciledPage() {
         }
       );
     }
-console.log(dialogData)
-    if(dialogData.status === 'Deposit Not Found') {
-       baseTimeline.push(
+    console.log(dialogData)
+    if (dialogData.status === 'Deposit Not Found') {
+      baseTimeline.push(
         {
           label: "Claim Approved",
           description: "Claim approved for settlement",
           date: formatDate(dialogData.approvalDate),
         },
-       {
+        {
           label: "Claim Settled",
           description: "The claim amount has been settled successfully.",
           date: formatDate(dialogData.settledData || ''),
