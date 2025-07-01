@@ -91,7 +91,7 @@ const LoginPage = () => {
       bgcolor="#f9f9f9"
     >
       <Paper elevation={3} sx={{ padding: 4, width: 400 }}>
-        <Typography variant="h5" gutterBottom textAlign="center">
+        <Typography variant="h5" gutterBottom textAlign="center" fontWeight="bold">
           Login
         </Typography>
         <form onSubmit={handleSubmit}>
