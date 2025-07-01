@@ -6,9 +6,18 @@ import {
   Typography,
   Paper,
   Stack,
+  Checkbox,
+  FormControlLabel,
+  Link
 } from "@mui/material";
+import EmailIcon from "@mui/icons-material/Email";
+import LockIcon from "@mui/icons-material/Lock";
+
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import TextFieldComponent from "../../Components/reusable/TextField";
+
+
 
 const LoginPage = () => {
   const { login } = useAuth();
@@ -21,6 +30,15 @@ const LoginPage = () => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" })); // clear error on change
+  };
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({ ...prev, username: e.target.value }));
+    setErrors((prev) => ({ ...prev, username: "" }));
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({ ...prev, password: e.target.value }));
+    setErrors((prev) => ({ ...prev, password: "" }));
   };
 
   const validate = () => {
@@ -72,34 +90,42 @@ const LoginPage = () => {
       bgcolor="#f9f9f9"
     >
       <Paper elevation={3} sx={{ padding: 4, width: 400 }}>
-        <Typography variant="h5" gutterBottom>
+        <Typography variant="h5" gutterBottom textAlign="center">
           Login
         </Typography>
-        <form onSubmit={handleSubmit} noValidate>
-          <Stack spacing={2}>
-            <TextField
-              label="Username"
-              name="username"
+        <form onSubmit={handleSubmit}>
+          <Box display="flex" flexDirection="column" gap={2}>
+            <TextFieldComponent
+              label="Email"
+              placeholder="Enter your email"
               value={form.username}
-              onChange={handleChange}
+              onChange={handleEmailChange}
               error={!!errors.username}
               helperText={errors.username}
-              fullWidth
+              icon={<EmailIcon fontSize="small" />}
+              required
             />
-            <TextField
+            <TextFieldComponent
               label="Password"
+              placeholder="Enter your password"
               type="password"
-              name="password"
               value={form.password}
-              onChange={handleChange}
+              onChange={handlePasswordChange}
               error={!!errors.password}
               helperText={errors.password}
-              fullWidth
+              icon={<LockIcon fontSize="small" />}
+              required
             />
-            <Button variant="contained" type="submit" color="primary" fullWidth>
-              Log In
+            <Box display="flex" justifyContent="space-between" alignItems="center">
+              <FormControlLabel control={<Checkbox />} label="Remember me" />
+              <Link href="/forgotPassword" fontSize="14px">
+                Forgot Password?
+              </Link>
+            </Box>
+            <Button type="submit" variant="contained" fullWidth sx={{ borderRadius: 3 }}>
+              Sign In
             </Button>
-          </Stack>
+          </Box>
         </form>
       </Paper>
     </Box>

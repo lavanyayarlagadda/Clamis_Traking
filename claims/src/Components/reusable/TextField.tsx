@@ -41,7 +41,7 @@ const TextFieldComponent: React.FC<ReusableInputProps> = ({
   disabled,
   required = false,
   endIcon,
- onKeyDown 
+  onKeyDown
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -117,13 +117,13 @@ const TextFieldComponent: React.FC<ReusableInputProps> = ({
           />
         </LocalizationProvider>
       ) : (
-         type !== "password" ? (
+        type !== "password" ? (
           <Tooltip title={value}>
             <TextField
               placeholder={`Enter a ${label}`}
               value={value}
               onChange={onChange}
-              type={showPassword && type === "password" ? "text" : type}
+              type={showPassword && type === "text" ? "password" : type}
               fullWidth
               variant="outlined"
               error={error}
@@ -199,7 +199,7 @@ const TextFieldComponent: React.FC<ReusableInputProps> = ({
                       "&:focus": { outline: "none" },
                     }}
                   >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>
               ),
@@ -207,9 +207,7 @@ const TextFieldComponent: React.FC<ReusableInputProps> = ({
             inputProps={{
               autoComplete: "new-password",
               style: {
-                appearance: "none",
-                MozAppearance: "textfield",
-                WebkitAppearance: "none",
+                textAlign: "left", // ✅ prevents reversed text
               },
             }}
             sx={{
@@ -218,16 +216,13 @@ const TextFieldComponent: React.FC<ReusableInputProps> = ({
                 "& input": {
                   padding: "6px 12px",
                   color: "black",
-                  "&::-ms-reveal": {
-                    display: "none",
-                  },
-                  "&::-ms-clear": {
-                    display: "none",
-                  },
+                  "&::-ms-reveal": { display: "none" },
+                  "&::-ms-clear": { display: "none" },
                 },
               },
             }}
           />
+
         )
 
       )}
