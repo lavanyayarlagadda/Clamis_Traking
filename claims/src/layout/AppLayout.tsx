@@ -3,6 +3,7 @@ import { Box, CssBaseline } from "@mui/material";
 import Header from "./header";
 import Sidebar from "./sideBar";
 import { Outlet, useLocation } from "react-router-dom";
+import ChatWidget from "../Components/chatBot";
 
 const AppLayout = () => {
   const location = useLocation();
@@ -56,6 +57,7 @@ const AppLayout = () => {
         })}
       >
         <Outlet />
+        <ChatWidget/>
       </Box>
     </Box>
   );

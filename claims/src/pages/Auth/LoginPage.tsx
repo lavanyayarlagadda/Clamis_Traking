@@ -25,6 +25,7 @@ const LoginPage = () => {
 
   const [form, setForm] = useState({ username: "", password: "" });
   const [errors, setErrors] = useState({ username: "", password: "" });
+   const [rememberMe, setRememberMe] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -116,12 +117,22 @@ const LoginPage = () => {
               icon={<LockIcon fontSize="small" />}
               required
             />
-            <Box display="flex" justifyContent="space-between" alignItems="center">
-              <FormControlLabel control={<Checkbox />} label="Remember me" />
-              <Link href="/forgotPassword" fontSize="14px">
+                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", mt: 1 }}>
+            <FormControlLabel 
+              control={
+                <Checkbox 
+                  checked={rememberMe} 
+                  onChange={(e) => setRememberMe(e.target.checked)} 
+                />
+              } 
+              label="Remember me" 
+            />
+            <Box onClick={() => navigate('/forgotPassword')}>
+              <Typography variant="body2" sx={{ cursor: "pointer" }} color="primary">
                 Forgot Password?
-              </Link>
+              </Typography>
             </Box>
+          </Box>
             <Button type="submit" variant="contained" fullWidth sx={{ borderRadius: 3 }}>
               Sign In
             </Button>
