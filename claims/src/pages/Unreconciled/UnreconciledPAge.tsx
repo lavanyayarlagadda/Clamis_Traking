@@ -391,6 +391,8 @@ export default function UnReconciledPage() {
         </Box>
       </Box>
       <DynamicTable
+       setting={true}
+      download={true}
         key={activeTab}
         loading={false}
         title={`Unreconciled Claims - ${activeTab === "ntr" ? "NTR Vaidyaseva" : "Private Insurances"

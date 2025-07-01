@@ -48,6 +48,8 @@ type DynamicTableProps = {
   iconColor?: string;
   defaultColumnKeys?: string[];
   minColumns?: number;
+  setting?:boolean;
+  download?:boolean;
 };
 
 const DynamicTable: React.FC<DynamicTableProps> = ({
@@ -62,6 +64,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
   defaultColumnKeys,
   minColumns = 5,
   loading = false,
+  setting = false,
+  download = false
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -230,6 +234,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+            {download && 
             <Tooltip title="Download CSV" arrow>
               <IconButton
                 onClick={handleDownload}
@@ -244,8 +249,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
               >
                 <DownloadIcon fontSize="small" />
               </IconButton>
-            </Tooltip>
-
+            </Tooltip>}
+{setting &&
             <Tooltip title="Manage Columns" arrow>
               <IconButton
                 onClick={handleSettingsClick}
@@ -261,6 +266,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
                 <Settings fontSize="small" />
               </IconButton>
             </Tooltip>
+}
           </Box>
         </Box>
 

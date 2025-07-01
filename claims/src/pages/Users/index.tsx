@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Filter, FilterList, Visibility } from "@mui/icons-material";
+import { Filter, FilterList, People, Visibility } from "@mui/icons-material";
 import { Box, Chip, Grid, Switch, FormControlLabel, Tooltip, IconButton } from "@mui/material";
 import { FilterDrawer } from "../../Components/reusable/filter";
 import { ButtonComponent } from "../../Components/reusable/Button";
@@ -159,12 +159,14 @@ const Users = () => {
       phoneNumber: "9876543210",
       userTypeName: "Admin",
       createdDate: "2024-12-01T10:30:00Z",
+      displayName:"JD",
       active: true,
     },
     {
       id: 2,
       firstName: "Jane",
       lastName: "Smith",
+      displayName:"JS",
       email: "jane.smith@example.com",
       phoneNumber: "8765432109",
       userTypeName: "User",
@@ -175,6 +177,7 @@ const Users = () => {
       id: 3,
       firstName: "Amit",
       lastName: "Sharma",
+      displayName:"AS",
       email: "amit.sharma@example.com",
       phoneNumber: "9988776655",
       userTypeName: "Viewer",
@@ -185,6 +188,7 @@ const Users = () => {
       id: 4,
       firstName: "Sara",
       lastName: "Ali",
+      displayName:"SA",
       email: "sara.ali@example.com",
       phoneNumber: "9123456789",
       userTypeName: "Editor",
@@ -195,6 +199,7 @@ const Users = () => {
       id: 5,
       firstName: "Rahul",
       lastName: "Verma",
+      displayName:"RV",
       email: "rahul.verma@example.com",
       phoneNumber: "9988001122",
       userTypeName: "Admin",
@@ -206,7 +211,7 @@ const Users = () => {
 
   const baseActions = [
     {
-      label: "Edit",
+      label: "Update",
       icon: <Edit fontSize="small" color="primary" />,
       onClick: (row: any) => {
         navigate("/updateUser", { state: { rowData: row } });
@@ -237,7 +242,6 @@ const Users = () => {
           gap: 2,
         }}
       >
-        {/* Filter Button */}
         <Box
           sx={{
             display: "flex",
@@ -300,14 +304,16 @@ const Users = () => {
 
         <DynamicTable
           // key={activeTab}
+           setting={false}
+      download={false}
           loading={false}
           title="Overview"
           countLabel={`${users.length} Users`}
           columns={columns}
           data={users}
-          chipColor={"#EF4444"}
-          iconColor={"#EF4444"}
-          // Icon={ReportProblemOutlinedIcon}
+          chipColor={"#3b82f6"}
+          iconColor={"#3b82f6"}
+           Icon={People}
           actions={baseActions}
           minColumns={8}
         />

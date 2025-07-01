@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { DropdownComponent, DropdownOption } from "../../Components/reusable/Dropdown";
 import { ButtonComponent } from "../../Components/reusable/Button";
 import TextFieldComponent from "../../Components/reusable/TextField"; // Assuming this is the correct default export
+import { useLocation } from "react-router-dom";
 
 const roleOptions: DropdownOption[] = [
   { label: "User", value: "User" },
@@ -31,6 +32,8 @@ const CreateUserForm = () => {
     phone: "+91",
     role: null,
   });
+
+   const location = useLocation()
 
   const [errors, setErrors] = useState<ValidationErrors>({});
 
@@ -83,14 +86,39 @@ const CreateUserForm = () => {
     }
   };
 
+    const rowData = location.state?.rowData
+
+useEffect(() => {
+  if (rowData) {
+    const roleMap: Record<number, string> = {
+      1: "Admin",
+      2: "User",
+    };
+
+    const userTypeId = Number(rowData.userTypeId);
+    const roleLabel = roleMap[userTypeId] || "User";
+    const matchedRole = roleOptions.find((r) => r.label === roleLabel) || null;
+
+    setFormData({
+      firstName: rowData.firstName || "",
+      lastName: rowData.lastName || "",
+      displayName: rowData.displayName || "",
+      email: rowData.email || "",
+      phone: rowData.phone || "+91",
+      role: matchedRole,
+    });
+  }
+}, [rowData]);
+
+
   return (
-    <Box>
+   <Box style={{ backgroundColor: 'white', borderRadius: '12px', padding: '16px 24px' }}>
       <Typography variant="h6" mb={2} fontWeight={500}>
-        Create New User
+        {rowData ? "Update User" : "Create New User"}
       </Typography>
 
       <Grid container spacing={2}>
-        {/* First Name */}
+
         <Grid size={{xs:12,sm:6,md:4}}>
           <TextFieldComponent
             label="First Name"
@@ -104,7 +132,6 @@ const CreateUserForm = () => {
           />
         </Grid>
 
-        {/* Last Name */}
         <Grid size={{xs:12,sm:6,md:4}}>
           <TextFieldComponent
             label="Last Name"
@@ -118,7 +145,6 @@ const CreateUserForm = () => {
           />
         </Grid>
 
-        {/* Display Name */}
         <Grid size={{xs:12,sm:6,md:4}}>
 
           <TextFieldComponent
@@ -133,7 +159,6 @@ const CreateUserForm = () => {
           />
         </Grid>
 
-        {/* Email */}
         <Grid size={{xs:12,sm:6,md:4}}>
           <TextFieldComponent
             label=" Email"
@@ -148,7 +173,6 @@ const CreateUserForm = () => {
           />
         </Grid>
 
-        {/* Phone */}
         <Grid size={{xs:12,sm:6,md:4}}>
           <TextFieldComponent
             label="Phone Number"
@@ -177,7 +201,7 @@ const CreateUserForm = () => {
 
       <Box mt={4} display="flex" justifyContent="flex-end">
         <ButtonComponent
-          label="Create User"
+          label={rowData ? "Update User":"Create User"}
           variant="contained"
           loading={false}
           onClick={handleSubmit}

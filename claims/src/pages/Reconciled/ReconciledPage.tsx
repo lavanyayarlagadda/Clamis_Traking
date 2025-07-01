@@ -263,6 +263,8 @@ export default function ReconciledPage() {
       />
 
       <DynamicTable
+       setting={true}
+      download={true}
         loading={false}
         key={activeTab}
         title={`Reconciled Claims - ${activeTab === "ntr" ? "NTR Vaidyaseva" : "Private Insurances"

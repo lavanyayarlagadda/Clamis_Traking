@@ -384,6 +384,8 @@ const columns = [
       
       </Box>
       <DynamicTable
+      setting={true}
+      download={true}
         title="Claims"
         loading={false}
         countLabel={`${currentClaims.length} Claims`}

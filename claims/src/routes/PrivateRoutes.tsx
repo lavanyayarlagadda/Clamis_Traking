@@ -2,7 +2,8 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import AppLayout from "../layout/AppLayout";
 import AuthGuard from "../auth/guards/AuthGurad";
-// Lazy imports
+import Profile from "../pages/Profile/profile";
+
 const Dashboard = React.lazy(() => import("../pages/Dashboard/DashboardPage"));
 const Reports = React.lazy(() => import("../pages/Reports/ReportsPAge"));
 const Claims = React.lazy(() => import("../pages/claims/Claims"));
@@ -30,7 +31,7 @@ export const privateRoutes = [
       { path: "users", element: <Users /> },
       { path: "createUser", element: <CreateUser /> },
       { path: "updateUser", element: <CreateUser /> },
-      { path: "profile", element: <ComingSoon title="Profile" /> },
+      { path: "profile", element: <Profile /> },
       { path: "notifications", element: <ComingSoon title="Notifications" /> },
     ],
   },

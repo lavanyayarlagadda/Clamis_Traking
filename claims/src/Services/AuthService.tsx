@@ -10,7 +10,7 @@ export const LoginApi = async (username: string, password: string) => {
     });
     return response.data;
   } catch (error) {
-    handleError(error);
+    // handleError(error);
     console.error("Login failed:", error);
     throw error;
   }

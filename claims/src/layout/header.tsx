@@ -1,21 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
   IconButton,
-  InputBase,
-  Badge,
   Avatar,
   Box,
   Typography,
   useMediaQuery,
   useTheme,
-  Menu,
-  MenuItem,
+  Badge,
+  Popper,
+  Paper,
+  Divider,
+  Button,
+  Fade,
 } from "@mui/material";
 import {
+  AccountCircle,
   CircleNotifications,
-  Search,
+  Logout,
   Menu as MenuIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -33,29 +36,31 @@ const Header: React.FC<HeaderProps> = ({
   onSidebarToggle,
 }) => {
   const theme = useTheme();
-  const { logout }  = useAuth();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
+  const { logout, user } = useAuth();
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const [popperAnchorEl, setPopperAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
+  const isPopperOpen = Boolean(popperAnchorEl);
 
   const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+    setPopperAnchorEl(popperAnchorEl ? null : event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleClosePopper = () => {
+    setPopperAnchorEl(null);
   };
 
   const handleProfile = () => {
-    handleClose();
+    handleClosePopper();
     navigate("/profile");
   };
 
   const handleLogout = () => {
     logout();
-    handleClose();
+    handleClosePopper();
     navigate("/login");
   };
 
@@ -90,6 +95,22 @@ const Header: React.FC<HeaderProps> = ({
       default:
         return "Healthcare Insurance Management";
     }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popperAnchorEl && !popperAnchorEl.contains(event.target as Node)) {
+        handleClosePopper();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [popperAnchorEl]);
+
+  const getInitials = (name: string) => {
+    const parts = name.split(" ");
+    return parts.length >= 2 ? parts[0][0] + parts[1][0] : name.slice(0, 2);
   };
 
   return (
@@ -131,19 +152,8 @@ const Header: React.FC<HeaderProps> = ({
           </Typography>
         </Box>
 
-        <Box
-          display="flex"
-          alignItems="center"
-          gap={1}
-          sx={{
-            flexShrink: 0,
-            minWidth: 0,
-            overflow: "hidden",
-          }}
-        >
-
-
-          <IconButton sx={{ p: 0.75 }} onClick={handleNotificationsClick}>
+        <Box display="flex" alignItems="center" gap={1}>
+          <IconButton onClick={handleNotificationsClick}>
             <Badge variant="dot" color="error">
               <CircleNotifications sx={{ fontSize: 20 }} />
             </Badge>
@@ -154,22 +164,103 @@ const Header: React.FC<HeaderProps> = ({
               sx={{
                 width: 28,
                 height: 28,
+                fontSize: "0.875rem",
                 background: "linear-gradient(to right, #3b82f6, #10b981)",
               }}
-            />
+            >
+              {getInitials(user?.name || "U")}
+            </Avatar>
           </IconButton>
         </Box>
       </Toolbar>
-      <Menu
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
+
+      <Popper
+        open={isPopperOpen}
+        anchorEl={popperAnchorEl}
+        placement="bottom-end"
+        transition
+        disablePortal
+        modifiers={[{ name: "offset", options: { offset: [0, 8] } }]}
       >
-        <MenuItem onClick={handleProfile}>Profile</MenuItem>
-        <MenuItem onClick={handleLogout}>Logout</MenuItem>
-      </Menu>
+        {({ TransitionProps }) => (
+          <Fade {...TransitionProps} timeout={200}>
+            <Paper
+              elevation={4}
+              sx={{
+                p: 2,
+                width: 300,
+                borderRadius: 2,
+                backgroundColor: "#fff",
+              }}
+            >
+              <Box display="flex" alignItems="center" gap={2} mb={1}>
+                <Avatar
+                  sx={{
+                    bgcolor: "primary.main",
+                    width: 48,
+                    height: 48,
+                    fontSize: 18,
+                  }}
+                >
+                  {getInitials(user?.name || "U")}
+                </Avatar>
+                <Box>
+                  <Typography fontWeight={600}>
+                    {" "}
+                    {user?.name || "Unknown User"}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" noWrap>
+                    {user?.email || "unknown@example.com"}
+                  </Typography>
+                  {user?.role && (
+                    <Typography
+                      variant="caption"
+                      sx={{ color: "primary.main", fontWeight: 500 }}
+                    >
+                      {user.role}
+                    </Typography>
+                  )}
+                </Box>
+              </Box>
+
+              <Divider sx={{ my: 1 }} />
+
+              <Box display="flex" flexDirection="column" gap={1}>
+                <Button
+                  startIcon={<AccountCircle />}
+                  onClick={handleProfile}
+                  fullWidth
+                  sx={{
+                    justifyContent: "flex-start",
+                    textTransform: "none",
+                    color: "text.primary",
+                  }}
+                >
+                  My Profile
+                </Button>
+
+                <Divider />
+
+                <Button
+                  startIcon={<Logout />}
+                  onClick={handleLogout}
+                  fullWidth
+                  sx={{
+                    justifyContent: "flex-start",
+                    textTransform: "none",
+                    color: "error.main",
+                    "&:hover": {
+                      backgroundColor: "#ffeef0",
+                    },
+                  }}
+                >
+                  Sign out
+                </Button>
+              </Box>
+            </Paper>
+          </Fade>
+        )}
+      </Popper>
     </AppBar>
   );
 };
