@@ -19,8 +19,14 @@ import { ButtonComponent } from "./Button";
 
 import { useSelector, UseDispatch, useDispatch } from "react-redux";
 import { RootState } from "../../Services/store";
+
+//static dropdown data
 import { staticClaimStatuses } from "../../constants/staticClaimStatus";
+import { staticInsuranceNames } from "../../constants/staticInsuranceNames"
+
+//reducers
 import { setClaimStatuses } from "../../Services/apis/slices/claimStatusSlice";
+import { setInsurancesCompaniesList } from "../../Services/apis/slices/insuranceCompaniesSlice";
 
 interface FilterValues {
   fromDate: Date | null;
@@ -36,7 +42,7 @@ interface FilterDrawerProps {
   onClose: () => void;
   filters: FilterValues;
   onChange: (filters: FilterValues) => void;
-  insuranceOptions?: string[];
+  // insuranceOptions?: string[];
   pageType: "reconciliation" | "unreconciliation" | "users";
   roles?: string[];
 }
@@ -46,7 +52,7 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
   onClose,
   filters,
   onChange,
-  insuranceOptions,
+  // insuranceOptions,
   pageType,
   roles,
 }) => {
@@ -54,6 +60,7 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
   const dispatch = useDispatch();
 
   const claimStatuses = useSelector((state: RootState) => state.claimStatus.data);
+  const insuranceCompanies = useSelector((state: RootState) => state.insuranceCompany.data)
   const [openFrom, setOpenFrom] = useState(false);
   const [openTo, setOpenTo] = useState(false);
   console.log("claimStatuses", claimStatuses)
@@ -61,6 +68,12 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
   useEffect(() => {
     dispatch(setClaimStatuses(staticClaimStatuses));
   }, [claimStatuses, dispatch])
+
+  useEffect(() => {
+    dispatch(setInsurancesCompaniesList(staticInsuranceNames));
+  }, [insuranceCompanies, dispatch])
+
+  console.log("insuranceCompanies", insuranceCompanies)
 
   const handleDateChange = (
     value: Date | null,
@@ -259,54 +272,54 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
           </LocalizationProvider>
 
           {/* INSURANCE COMPANIES */}
-          {insuranceOptions && (
+          {insuranceCompanies && insuranceCompanies.length > 0 && (
             <Box mb={3} mt={2}>
               <Typography variant="body2" sx={{ color: "#656565", mb: 1 }}>
                 Insurance Companies
               </Typography>
               <Box display="flex" flexWrap="wrap" gap={1} mb={1}>
-                {insuranceOptions &&
-                  insuranceOptions.map((company) => {
-                    const isSelected =
-                      filters.insuranceCompanies.includes(company);
-                    return (
-                      <Chip
-                        key={company}
-                        label={company}
-                        clickable={!isSelected}
-                        onClick={() => {
-                          if (!isSelected) {
+                {insuranceCompanies.map((companyObj) => {
+                  const companyName = companyObj.insuranceName;
+                  const isSelected =
+                    filters.insuranceCompanies.includes(companyName);
+                  return (
+                    <Chip
+                      key={companyObj.insuranceId}
+                      label={companyName}
+                      clickable={!isSelected}
+                      onClick={() => {
+                        if (!isSelected) {
+                          onChange({
+                            ...filters,
+                            insuranceCompanies: [
+                              ...filters.insuranceCompanies,
+                              companyName,
+                            ],
+                          });
+                        }
+                      }}
+                      onDelete={
+                        isSelected
+                          ? () =>
                             onChange({
                               ...filters,
-                              insuranceCompanies: [
-                                ...filters.insuranceCompanies,
-                                company,
-                              ],
-                            });
-                          }
-                        }}
-                        onDelete={
-                          isSelected
-                            ? () =>
-                              onChange({
-                                ...filters,
-                                insuranceCompanies:
-                                  filters.insuranceCompanies.filter(
-                                    (c) => c !== company
-                                  ),
-                              })
-                            : undefined
-                        }
-                        sx={{
-                          backgroundColor: isSelected ? "#4DB6AC" : "#e0e0e0",
-                          color: isSelected ? "#fff" : "#000",
-                          "& .MuiChip-deleteIcon": {
-                            color: "#fff",
-                          },
-                        }}
-                      />
-                    );
-                  })}
+                              insuranceCompanies:
+                                filters.insuranceCompanies.filter(
+                                  (c) => c !== companyName
+                                ),
+                            })
+                          : undefined
+                      }
+                      sx={{
+                        backgroundColor: isSelected ? "#4DB6AC" : "#e0e0e0",
+                        color: isSelected ? "#fff" : "#000",
+                        "& .MuiChip-deleteIcon": {
+                          color: "#fff",
+                        },
+                      }}
+                    />
+                  );
+                })}
               </Box>
               {pageType !== "unreconciliation" && (
                 <Box>

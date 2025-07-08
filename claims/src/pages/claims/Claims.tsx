@@ -453,12 +453,12 @@ const columns = [
         filters={filters}
         onChange={setFilters}
         pageType="unreconciliation"
-        insuranceOptions={[
-          "ICICI Lombard",
-          "Star Health",
-          "HDFC ERGO",
-          "United India",
-        ]}
+        // insuranceOptions={[
+        //   "ICICI Lombard",
+        //   "Star Health",
+        //   "HDFC ERGO",
+        //   "United India",
+        // ]}
       />
     </>
   );
