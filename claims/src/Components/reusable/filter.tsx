@@ -1,5 +1,5 @@
 // FilterDrawer.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Drawer,
   Box,
@@ -16,6 +16,11 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DropdownComponent, DropdownOption } from "./Dropdown";
 import { ButtonComponent } from "./Button";
+
+import { useSelector, UseDispatch, useDispatch } from "react-redux";
+import { RootState } from "../../Services/store";
+import { staticClaimStatuses } from "../../constants/staticClaimStatus";
+import { setClaimStatuses } from "../../Services/apis/slices/claimStatusSlice";
 
 interface FilterValues {
   fromDate: Date | null;
@@ -45,8 +50,17 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
   pageType,
   roles,
 }) => {
+
+  const dispatch = useDispatch();
+
+  const claimStatuses = useSelector((state: RootState) => state.claimStatus.data);
   const [openFrom, setOpenFrom] = useState(false);
   const [openTo, setOpenTo] = useState(false);
+  console.log("claimStatuses", claimStatuses)
+
+  useEffect(() => {
+    dispatch(setClaimStatuses(staticClaimStatuses));
+  }, [claimStatuses, dispatch])
 
   const handleDateChange = (
     value: Date | null,
@@ -56,9 +70,9 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
       ...filters,
       [field]: value,
       ...(field === "fromDate" &&
-      filters.toDate &&
-      value &&
-      filters.toDate < value
+        filters.toDate &&
+        value &&
+        filters.toDate < value
         ? { toDate: null }
         : {}),
     });
@@ -274,13 +288,13 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
                         onDelete={
                           isSelected
                             ? () =>
-                                onChange({
-                                  ...filters,
-                                  insuranceCompanies:
-                                    filters.insuranceCompanies.filter(
-                                      (c) => c !== company
-                                    ),
-                                })
+                              onChange({
+                                ...filters,
+                                insuranceCompanies:
+                                  filters.insuranceCompanies.filter(
+                                    (c) => c !== company
+                                  ),
+                              })
                             : undefined
                         }
                         sx={{
@@ -324,26 +338,31 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
                   Claim Status
                 </Typography>
                 <Box display="flex" gap={1} flexWrap="wrap">
-                  {["Pending", "Approved", "Rejected"].map((status) => (
-                    <Chip
-                      key={status}
-                      label={status}
-                      clickable
-                      variant={
-                        filters.claimStatus === status ? "filled" : "outlined"
-                      }
-                      color={
-                        filters.claimStatus === status ? "info" : "default"
-                      }
-                      onClick={() =>
-                        onChange({
-                          ...filters,
-                          claimStatus:
-                            filters.claimStatus === status ? null : status,
-                        })
-                      }
-                    />
-                  ))}
+                  {claimStatuses.map((statusObj) => {
+                    const status = statusObj.statusName
+                    return (
+                      <Chip
+                        key={statusObj.claimStatusId}
+                        label={status}
+                        clickable
+                        variant={
+                          filters.claimStatus === status ? "filled" : "outlined"
+                        }
+                        color={
+                          filters.claimStatus === status ? "info" : "default"
+                        }
+                        onClick={() =>
+                          onChange({
+                            ...filters,
+                            claimStatus:
+                              filters.claimStatus === status ? null : status,
+                          })
+                        }
+                      />
+                    )
+
+                  }
+                  )}
                 </Box>
               </Box>
               <Box sx={{ mt: 2 }}>

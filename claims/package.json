@@ -21,7 +21,7 @@
     "@mui/material": "^7.0.1",
     "@mui/x-charts": "^8.5.3",
     "@mui/x-date-pickers": "^8.5.3",
-    "@reduxjs/toolkit": "^2.6.1",
+    "@reduxjs/toolkit": "^2.8.2",
     "apexcharts": "^4.7.0",
     "axios": "^1.10.0",
     "date-fns": "^4.1.0",
