@@ -8,6 +8,12 @@ import {
   Avatar,
   Paper,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@mui/material";
 import {
   Close,
@@ -27,11 +33,39 @@ interface Message {
   text: string;
   isUser: boolean;
   timestamp: Date;
+  tableData?: any[];
+  tableTitle?: string;
 }
+
+interface ApiResponse {
+  answer: string;
+  table_data?: any[];
+  table_title?: string;
+  token_count?: number;
+}
+
+// TypingIndicator component for the animated dots
+const TypingIndicator = () => {
+  const dotStyle = {
+    width: 8,
+    height: 8,
+    borderRadius: '50%',
+    bgcolor: 'grey.500',
+    animation: 'typing-bounce 1.2s infinite ease-in-out',
+  };
+
+  return (
+    <Box sx={{ display: 'flex', gap: '6px', alignItems: 'center', p: '10px' }}>
+      <Box sx={{ ...dotStyle, animationDelay: '0s' }} />
+      <Box sx={{ ...dotStyle, animationDelay: '0.2s' }} />
+      <Box sx={{ ...dotStyle, animationDelay: '0.4s' }} />
+    </Box>
+  );
+};
 
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true); // Default to expanded view
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -46,7 +80,7 @@ const ChatWidget = () => {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, isTyping]); // Also trigger scroll on isTyping change
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
@@ -55,36 +89,36 @@ const ChatWidget = () => {
     };
   }, [isOpen]);
 
-  const generateBotResponse = (userMessage: string): string => {
-    const lower = userMessage.toLowerCase();
-    if (lower.includes("reconciliation rate") && lower.includes("january 2025"))
-      return `Reconciliation Rate January 2025:\nBased on processed claims for January 2025, the reconciliation rate is 89.21%. This indicates that 89.21% of the total claimed amount was successfully settled`;
+  const fetchBotResponse = async (userMessage: string): Promise<ApiResponse> => {
+    try {
+      // Simulate network delay for testing the animation
+      // await new Promise(resolve => setTimeout(resolve, 3000));
+      const response = await fetch('http://127.0.0.1:8000/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question: userMessage }),
+      });
 
-    if (lower.includes("claim summary") && lower.includes("36719688"))
-      return `Claim Summary Claim No. 36719688 (Ravi Kumar Gandu):\nAdmission Discharge: 22-Feb-2024 to 24-Feb-2024\nInsurance Company: The New India Assurance Co. Ltd\nTPA: Medi Assist Insurance TPA India Pvt Ltd\nClaimed Amount: ₹20,000\nApproved Amount: ₹14,600\nCopay: ₹5,400\nShortfall: ₹0\nHospital Discount: ₹2,000\nTDS Deducted: ₹1,460\nSettled Amount: ₹13,140\nPaid via: NEFT (UTR No. AXISCN0559391200 on 20-Mar-2024)\nStatus: Settled\nDiagnosis: CAD, Unstable Angina, T2DM, HTN\nQuery Remarks: Treating doctor certificate and detailed treatment notes were requested.`;
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-    if (lower.includes("total settled amount") && lower.includes("may 2025"))
-      return `Total Settled Amount May 2025:\nThe total settled amount for claims processed in May 2025 is ₹6,47,890.\nThis reflects the final amount paid to hospitals or beneficiaries after all applicable deductions and reconciliations.`;
-
-    if (lower.includes("help"))
-      return "I'm absolutely here to help! Think of me as your personal guide. What would you like to explore together?";
-
-    if (lower.includes("thank"))
-      return "You're so welcome!  It's my pleasure to assist. Anything else on your mind?";
-
-    if (lower.includes("bye") || lower.includes("goodbye"))
-      return "Until next time! I'm always here whenever you need assistance. Have a great day!";
-
-    return `I'm sorry, I didn't quite understand that request.
-
-You can ask me things like:
- "Show claim summary for [Patient Name] or [Claim Number]",
- "What is the reconciliation rate for [Month/Year]?",
- "How many claims were processed this month?"`;
+      const data: ApiResponse = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching bot response:', error);
+      return {
+        answer: "I'm sorry, I encountered an error processing your request. Please try again later.",
+        token_count: 0
+      };
+    }
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
+    
     const userMsg: Message = {
       id: Date.now().toString(),
       text: inputValue,
@@ -95,16 +129,79 @@ You can ask me things like:
     setInputValue("");
     setIsTyping(true);
 
-    setTimeout(() => {
+    try {
+      const response = await fetchBotResponse(userMsg.text);
+      
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),
-        text: generateBotResponse(userMsg.text),
+        text: response.answer,
+        isUser: false,
+        timestamp: new Date(),
+        tableData: response.table_data,
+        tableTitle: response.table_title,
+      };
+      
+      setMessages((prev) => [...prev, botMsg]);
+    } catch (error) {
+      const errorMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "Sorry, I couldn't process your request. Please try again.",
         isUser: false,
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, botMsg]);
+      setMessages((prev) => [...prev, errorMsg]);
+    } finally {
       setIsTyping(false);
-    }, 1000);
+    }
+  };
+
+  const renderTable = (tableData: any[], tableTitle?: string) => {
+    if (!tableData || tableData.length === 0) return null;
+    
+    const columns = Object.keys(tableData[0]);
+    
+    return (
+      <Box sx={{ mt: 2, mb: 1, overflowX: 'auto' }}>
+        {tableTitle && (
+          <Typography variant="subtitle2" fontWeight={600} gutterBottom>
+            {tableTitle}
+          </Typography>
+        )}
+        <TableContainer 
+          component={Paper} 
+          sx={{ 
+            boxShadow: 3,
+            maxWidth: '100%',
+            display: 'block',
+            overflowX: 'auto',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          <Table size="small" aria-label="response table" sx={{ minWidth: 650 }}>
+            <TableHead>
+              <TableRow sx={{ bgcolor: 'primary.light' }}>
+                {columns.map((column) => (
+                  <TableCell key={column} sx={{ fontWeight: 600 }}>
+                    {column.replace(/_/g, ' ')}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tableData.map((row, index) => (
+                <TableRow key={index}>
+                  {columns.map((column) => (
+                    <TableCell key={`${index}-${column}`}>
+                      {row[column]}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+    );
   };
 
   return (
@@ -112,7 +209,7 @@ You can ask me things like:
       {!isOpen && (
         <FloatingChatIcon
           onClick={() => {
-            setIsOpen(true), setIsExpanded(false);
+            setIsOpen(true), setIsExpanded(true); // Open in expanded view by default
           }}
         />
       )}
@@ -128,41 +225,38 @@ You can ask me things like:
             sx={{
               position: "fixed",
               top: {
-                xs: isExpanded ? 170 : 175,
-                sm: isExpanded ? 165 : 170,
-                md: isExpanded ? 150 : 170,
-                lg: isExpanded ? 100 : 50,
-                xl: isExpanded ? 160 : 170,
+                xs: isExpanded ? 20 : 175,
+                sm: isExpanded ? 20 : 170,
+                md: isExpanded ? 20 : 170,
+                lg: isExpanded ? 20 : 50,
+                xl: isExpanded ? 20 : 170,
               },
-              bottom: { xs: 70, sm: 100, md: isExpanded ? 20 : 100 },
-              right: { xs: 10, sm: 24 },
+              bottom: { xs: 20, sm: 20, md: isExpanded ? 20 : 100 },
+              right: { xs: 20, sm: 24 },
               left: {
-                xs: isExpanded ? 10 : "auto",
+                xs: isExpanded ? 20 : "auto",
                 sm: "auto",
               },
               width: {
-                xs: isExpanded ? "calc(100% - 20px)" : "calc(100% - 20px)",
-                sm: isExpanded ? "95%" : 400,
-                md: isExpanded ? "85%" : 400,
-                lg: isExpanded ? "75%" : 400,
-                xl: isExpanded ? "65%" : 400,
+                xs: isExpanded ? "calc(100% - 40px)" : "calc(100% - 20px)",
+                sm: isExpanded ? "calc(100% - 48px)" : 400,
+                md: isExpanded ? "calc(100% - 48px)" : 400,
+                lg: isExpanded ? "calc(100% - 48px)" : 400,
+                xl: isExpanded ? "calc(100% - 48px)" : 400,
               },
               height: {
-                xs: isExpanded ? "calc(100vh - 240px)" : 520,
-                sm: isExpanded ? "calc(100vh - 240px)" : 520,
-                md: isExpanded ? "70vh" : 520,
+                xs: isExpanded ? "calc(100vh - 40px)" : 520,
+                sm: isExpanded ? "calc(100vh - 40px)" : 520,
+                md: isExpanded ? "calc(100vh - 40px)" : 520,
               },
               bgcolor: "white",
               borderRadius: 3,
-              boxShadow: 12,
+              boxShadow: 24,
               display: "flex",
               flexDirection: "column",
               overflow: "hidden",
               zIndex: 1200,
               transition: "all 0.3s ease",
-              "@media (min-width:1440px)": {
-                top: isExpanded ? 160 : 170,
-              },
             }}
           >
             {/* Header */}
@@ -231,7 +325,25 @@ You can ask me things like:
             </Box>
 
             {/* Messages */}
-            <Box sx={{ p: 2, flex: 1, overflowY: "auto", bgcolor: "#f9fafb" }}>
+            <Box sx={{ 
+              p: 2, 
+              flex: 1, 
+              overflowY: "auto", 
+              bgcolor: "#f9fafb",
+              '&::-webkit-scrollbar': {
+                width: '6px',
+              },
+              '&::-webkit-scrollbar-track': {
+                background: '#f1f1f1',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                background: '#888',
+                borderRadius: '3px',
+              },
+              '&::-webkit-scrollbar-thumb:hover': {
+                background: '#555',
+              }
+            }}>
               <Stack spacing={2}>
                 {messages.map((msg) => (
                   <Box
@@ -284,6 +396,7 @@ You can ask me things like:
                         }}
                       >
                         <Typography variant="body2">{msg.text}</Typography>
+                        {msg.tableData && renderTable(msg.tableData, msg.tableTitle)}
                         <Stack
                           direction="row"
                           spacing={0.5}
@@ -303,16 +416,54 @@ You can ask me things like:
                   </Box>
                 ))}
                 {isTyping && (
-                  <Typography variant="body2" color="text.secondary">
-                    Assistant is typing...
-                  </Typography>
+                   <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        gap: 1.5,
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Avatar
+                        sx={{
+                          background: "linear-gradient(to right, #7C3AED, rgb(139, 92, 246))",
+                        }}
+                      >
+                         <img
+                            src={chatBot}
+                            alt="chatBot"
+                            style={{ width: 20, height: 20 }}
+                          />
+                      </Avatar>
+                      <Paper
+                        sx={{
+                          p: 0.5, // Reduced padding for the compact animation
+                          background: "white",
+                          borderRadius: 2,
+                          boxShadow: 2,
+                        }}
+                      >
+                        <TypingIndicator />
+                      </Paper>
+                    </Box>
+                  </Box>
                 )}
                 <div ref={messagesEndRef} />
               </Stack>
             </Box>
 
             {/* Input */}
-            <Box sx={{ p: { xs: 0.5, sm: 1 }, borderTop: "1px solid #eee" }}>
+            <Box sx={{ 
+              p: { xs: 0.5, sm: 1 }, 
+              borderTop: "1px solid #eee",
+              background: 'white'
+            }}>
               <Box display="flex" gap={1} p={1} flexWrap="nowrap">
                 <TextField
                   fullWidth
@@ -322,13 +473,27 @@ You can ask me things like:
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                   size="small"
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 2,
+                      background: '#f9fafb',
+                    }
+                  }}
                 />
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim()}
-                  sx={{ px: 2, minWidth: 40 }}
+                  sx={{ 
+                    px: 2, 
+                    minWidth: 40,
+                    borderRadius: 2,
+                    boxShadow: 'none',
+                    '&:hover': {
+                      boxShadow: 'none',
+                    }
+                  }}
                 >
                   <Send />
                 </Button>
@@ -343,6 +508,11 @@ You can ask me things like:
           0% { transform: scale(1); opacity: 1; }
           50% { transform: scale(1.3); opacity: 0.6; }
           100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes typing-bounce {
+          0% { transform: translateY(0); }
+          50% { transform: translateY(-5px); }
+          100% { transform: translateY(0); }
         }
       `}</style>
     </>
